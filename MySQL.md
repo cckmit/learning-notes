@@ -1,5 +1,2293 @@
 # MySQL基础
 
+## 入门
+
+数据库（Database）是按照数据结构来组织、存储和管理数据的仓库，所谓的关系型数据库，是建立在关系模型基础上的数据库，借助于集合代数等数学概念和方法来处理数据库中的数据。
+
+RDBMS即关系数据库管理系统(Relational Database Management System)的特点：
+
+- 数据以表格的形式出现
+- 每行为各种记录名称
+- 每列为记录名称所对应的数据域
+- 许多的行和列组成一张表单
+- 若干的表单组成database
+
+在我们开始学习MySQL 数据库前，让我们先了解下RDBMS的一些术语：
+
+- **数据库:** 数据库是一些关联表的集合。.
+- **数据表:** 表是数据的矩阵。在一个数据库中的表看起来像一个简单的电子表格。
+- **列:** 一列(数据元素) 包含了相同的数据, 例如邮政编码的数据。
+- **行：**一行（=元组，或记录）是一组相关的数据，例如一条用户订阅的数据。
+- **冗余**：存储两倍数据，冗余可以使系统速度更快。
+- **主键**：主键是唯一的。一个数据表中只能包含一个主键。你可以使用主键来查询数据。
+- **外键：**外键用于关联两个表。
+- **复合键**：复合键（组合键）将多个列作为一个索引键，一般用于复合索引。
+- **索引：**使用索引可快速访问数据库表中的特定信息。索引是对数据库表中一列或多列的值进行排序的一种结构。类似于书籍的目录。
+- **参照完整性:** 参照的完整性要求关系中不允许引用不存在的实体。与实体完整性是关系模型必须满足的完整性约束条件，目的是保证数据的一致性。
+
+## 问题
+
+```shell
+# (1) 首先检查网络是否连通
+
+  # 是否能ping通网络
+  ping <ip>
+
+  # 检测端口是否有开放，先要安装telnet工具
+  telnet <ip> <port>
+
+# (2) 从机器内部定位
+  # 查看mysql服务是否开启
+  ps -ef | grep mysqld
+  # 查看tcp端口是否开启
+  netstat -lnpt
+  # 查看mysql是否指定了bind-address
+  vim /etc/mysql/my.cnf
+  #查看mysql的账号是否允许外部连接(需要重启mysql：/etc/init.d/mysqld restart)
+    mysql -u root -p
+    use mysql
+    select user,host from user;
+    update user set host=‘%’ where user=‘root’;
+    或
+    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'mypassword' WITH GRANT OPTION;
+  # 查看防火墙是否开启mysql端口
+    iptables -S
+    /sbin/iptables -I INPUT -p tcp --dport 8011 -j ACCEPT #开启8011端口
+    /etc/init.d/iptables restart
+```
+
+
+
+## 管理
+
+查询是否启动：`    ps -ef | grep mysqld`
+
+登录mysql：` mysql -u root -p` 
+
+选择数据库：` use xxdatabase` 
+
+**常用管理命令**
+
+- **SHOW DATABASES:** 列出 MySQL 数据库管理系统的数据库列表。
+- **SHOW TABLES:** 显示指定数据库的所有表，使用该命令前需要使用 use 命令来选择要操作的数据库。
+- **SHOW COLUMNS FROM 数据表:** 显示数据表的属性，属性类型，主键信息 ，是否为 NULL，默认值等其他信息。
+- **SHOW INDEX FROM 数据表:** 显示数据表的详细索引信息，包括PRIMARY KEY（主键）。
+- **SHOW TABLE STATUS LIKE 数据表:** 该命令将输出MySQL数据库管理系统的性能及统计信息。
+
+## 数据类型
+
+### 整型
+
+| 整型类型  | 字节数 | 有符号范围        | 无符号范围  |
+| :-------- | :----- | :---------------- | :---------- |
+| TINYINT   | 1字节  | (-128，127)       | (0，255)    |
+| SMALLINT  | 2字节  | (-32768，32767)   | (0，65 535) |
+| MEDIUMINT | 3字节  | (-2^26，2 ^26-1)  | (0，2^27-1) |
+| INT       | 4字节  | (-2^31，2 ^31-1)  | (0，2^32-1) |
+| BIGINT    | 8字节  | (-2 ^ 63，2^63-1) | (0，2^64-1) |
+
+可选参数：整型[(M)] [UNSIGNED] [ZEROFILL]
+
+- UNSIGNED：无符号数，例如：age TINYINT UNSIGNED;
+- ZEROFILL：其中参数M表示字节宽度，自动会转为无符号整型，一般适用于学号、编码等宽度无符号数字，可以用0填充，例如：sn TINYINT(6) ZEROFILL;
+
+### 浮点型
+
+注意：浮点数有精度损失的。
+
+| 整型类型 | 字节数 | 有符号范围               | 无符号范围     |
+| :------- | :----- | :----------------------- | :------------- |
+| FLOAT    | 4字节  | (-3.40E+38, -1.17E-38)   | (0, 3.40E+38)  |
+| DOUBLE   | 8字节  | (-1.80E+308, -2.23E-308) | (0, 2.23E+308) |
+
+可选参数：浮点型[(M,D)] [UNSIGNED] [ZEROFILL]
+
+其中M表示显示的值（包括小数位）最大位数，D表示小数位数。 例如：sara FLOAT(7,3) 规定显示的值不会超过7位数字，小数点后面带有 3位数字。
+
+对于小数点后面的位数超过允许范围的值，MySQL 会自动将它四舍五入为最接近它的值。
+
+注意：浮点数有精度损失的。
+
+### 定点型
+
+把整数和小数部分分开存储，比较精确。可选参数：DECIMAL[(M[,D])] [UNSIGNED] [ZEROFILL]
+
+示例：sara DECIMAL(6,2);
+
+### 字符串
+
+| 字符串类型 | 字节数    | 描述及存储需求                  |
+| :--------- | :-------- | :------------------------------ |
+| CHAR       | 0～255    | 定长字符串                      |
+| VARCHAR    | 0～255    | 变长字符串                      |
+| TINYBLOB   | 0～255    | 不超过 255 个字符的二进制字符串 |
+| TINYTEXT   | 0～255    | 短文本字符串                    |
+| BLOB       | 0～65535  | 二进制形式的长文本数据          |
+| TEXT       | 0～65535  | 长文本数据                      |
+| MEDIUMBLOB | 0～2^24-1 | 二进制形式的中等长度文本数据    |
+| MEDIUMTEXT | 0～2^24-1 | 中等长度文本数据                |
+| LOGNGBLOB  | 0～2^32-1 | 二进制形式的极大文本数据        |
+| LONGTEXT   | 0～2^32-1 | 极大文本数据                    |
+
+注意：
+
+- char型，如果不够M个字符，内部用空格补齐，取出时会把右侧空格删除，意味着本身有的空格会被丢弃。varchar类型则不会。
+- 速度上定长比不定长的更快。
+- blob是二进制类型，用来储存图像、音频等类型。可以防止字符集问题导致信息丢失。
+
+
+
+### 枚举和集合
+
+- 枚举：ENUM(‘value1’,‘value2’,…)，插入值时，只能在枚举范围中的一个。
+- 集合：SET(‘value1’,‘value2’,…)，插入值时，值是在集合的一个或多个。
+
+### 日期时间类型
+
+| 类型      | 字节数 | 范围                                     | 格式                |
+| :-------- | :----- | :--------------------------------------- | :------------------ |
+| DATE      | 4      | 1000-01-01～9999-12-31                   | YYYY-MM-DD          |
+| TIME      | 3      | ‘00:00:00’～’23:59:59’                   | HH:MM:SS            |
+| YEAR      | 1      | 1901～2155                               | YYYY                |
+| DATETIME  | 8      | 1000-01-01 00:00:00～9999-12-31 23:59:59 | YYYY-MM-DD HH:MM:SS |
+| TIMESTAMP | 4      | 1970-01-01 00:00:00～2037年某时          | YYYY-MM-DD HH:MM:SS |
+
+注意：TIMESTAMP是系统自动填充的时间戳，效率不高，不建议使用，通常用int unsigned来储存时间戳。
+
+```sql
+# 获取时间戳
+SELECT UNIX_TIMESTAMP() ; #当前时间戳1451588688
+SELECT UNIX_TIMESTAMP('2016-01-01 00:00:00');
+
+# 把日期时间转为时间戳
+SELECT FROM_UNIXTIME(1451588888, '%Y-%m-%d %h:%i:%s'); # 2016-01-01 03:08:08
+```
+
+## 库和数据库表
+
+### 库
+
+数据库就是存放数据的仓库，这个仓库是按照一定的数据结构来组织存储的。
+
+```sql
+# 显示数据库
+show databases;
+
+# 选择数据库
+use dbname;
+
+# 创建数据库
+create database dbname charset utf8;
+
+# 删除数据库
+drop database dbname;
+```
+
+### 数据表
+
+数据表是关系数据库中一个非常重要的对象，是其它对象的基础，也是一系列二维数组的集合，用来存储和操作数据的逻辑结构。
+
+#### 表的列操作
+
+##### **查看表字段信息**
+
+```sql
+# 语法
+DESC 表名
+
+# 示例
+DESC student;
+```
+
+##### **查看表的所有信息**
+
+```sql
+# 语法
+SHOW CREATE TABLE 表名
+
+# 示例
+SHOW CREATE TABLE student;
+```
+
+##### **查看当前库下所有表信息**
+
+```sql
+# 语法
+SHOW TABLE status
+
+# 示例
+# 列形式输出
+SHOW TABLE status \G;
+
+#或过滤表输出
+SHOW TABLE status WHERE name='goods' \G;
+```
+
+##### **创建表**
+
+```sql
+# 语法
+CREATE TABLE 表名(列名 列类型 列属性 ......)
+
+# 示例
+CREATE TABLE student (
+  sid TINYINT UNSIGNED,
+  name VARCHAR(20),
+  age INT
+);
+```
+
+
+
+##### **在原表上添加新的列**
+
+```sql
+# 语法
+ALTER TABLE 表名 ADD COLUMN 列名 列类型 列属性 ......
+
+# 示例
+# 在最后添加列
+ALTER TABLE student ADD COLUMN sn TINYINT(6) ZEROFILL;
+
+# 在指定位置添加列：
+ALTER TABLE user ADD height TINYINT AFTER weight;
+```
+
+##### **删除表**
+
+```sql
+# 语法
+DROP TABLE 表名
+
+# 示例
+DROP TABLE student;
+```
+
+##### **删除列**
+
+```sql
+# 语法
+ALTER TABLE 表名 DROP 列名
+
+# 示例
+ALTER TABLE student DROP COLUMN sn;
+```
+
+
+
+##### **清空表内容**
+
+TRUNCATE相当与drop和create表两个操作。
+
+```sql
+# 语法
+TRUNCATE 表名
+
+# 示例
+TRUNCATE student;
+```
+
+
+
+##### **修改表名称**
+
+```sql
+# 语法
+ALTER TABLE 旧表名 RENAME TO 新表名
+
+# 示例
+ALTER TABLE student RENAME TO stu;
+```
+
+
+
+##### **修改列属性**
+
+```sql
+# 语法
+ALTER TABLE 表名 MODIFY  列名 列类型 列属性
+
+# 示例
+ALTER TABLE student MODIFY sid TINYINT UNSIGNED;
+```
+
+
+
+##### **修改列名称和属性**
+
+```sql
+# 语法
+ALTER TABLE 表名 CHANGE 旧列名 新列名 列类型 列属性
+
+# 示例
+ALTER TABLE student CHANGE sid id INT UNSIGNED;
+```
+
+
+
+##### **添加主键约束**
+
+```sql
+# 语法
+ALTER TABLE 表名 ADD CONSTRAINT PRIMARY KEY 表名(列名)
+
+# 示例
+ALTER TABLE student ADD CONSTRAINT PRIMARY KEY student(sid);
+```
+
+
+
+##### **删除主键约束**
+
+```sql
+# 语法
+ALTER TABLE 表名 DROP PRIMARY KEY
+
+# 示例
+ALTER TABLE student DROP PRIMARY KEY;
+```
+
+
+
+##### **删除查询缓存**
+
+```sql
+# 语法
+RESET QUERY CACHE
+```
+
+###  列的属性
+
+#### **列的默认属性**
+
+实际使用中避免列的默认值为null，创建表时给列一个初始值，在列的类型后面添加NOT NULL DEFAULT值，示例：id INT UNSIGNED NOT NULL DEFAULT 0
+
+#### **主键与自增**
+
+主键(primary key)，能够区分每一行，一般和auto_increment一起使用，有两种方式声明该列为主键：
+
+- 在列的类型之后声明primary key，例如：id INT UNSIGNED PRIMARY KEY
+- 声明完列之后，在最后声明那一列为主键primary key(列名)，PRIMARY KEY(id)
+
+主键与自增搭配使用，例如：id INT PRIMARY KEY AUTO_INCREMENT
+
+提高效率建表原则：定长与变长分离，常用和不常用分离。
+
+
+
+### 表引擎
+
+MySQL常用两种表引擎是Myisam和InnoDB，引擎不同，组织数据方式也不同，新版本MySQL可以统一使用InnoDB，性能比Myisam差别不是太大。
+
+```sql
+CREATE TABLE account(
+  id INT UNSIGNED PRIMARY KEY,
+  name CHAR(10) NOT NULL DEFAULT '',
+  balance INT NOT NULL DEFAULT 0
+)ENGINE innodb CHARSET utf8;
+```
+
+## 增删改查
+
+###  insert 插入数据操作
+
+语法：
+
+- 往哪张表添加行：INSERT INTO 表名
+- 给那几个列添加值：列名称(可省略)
+- VALUES：列对应的值
+
+插入操作时注意事项：列和值必须一一对应，并且符合类型要求。
+
+```sql
+# user表有id、name、age三列
+
+INSERT INTO user (id, name, age) VALUES (1, '张三', 25);
+INSERT INTO user (name, age) VALUES ('李四', 26);
+INSERT INTO user (name) VALUES ('王五');
+
+# 忽略列时需要写完所有对应列的值
+INSERT INTO user VALUES (5, '刘备', 52);
+# 列没有严格对应，执行错误
+#INSERT INTO user  VALUES ('关羽',45);
+
+# 一次插入多行数据
+INSERT INTO user (name, age) VALUES ('关羽', 45),('张飞', 46);
+```
+
+### delete 删除数据操作
+
+语法：
+
+- 删除一张表的数据：DELETE FROM 表名
+- 删掉表中的哪些行：WHERE 表达式
+
+注意事项：删除必须写where约束条件，也不能写常量，如where 1，否则会删除整张表数据。
+
+```sql
+# user表有id、name、age三列
+
+DELETE FROM user WHERE age=26;
+DELETE FROM user WHERE uid>2;
+```
+
+### update 修改数据操作
+
+语法：
+
+- 改哪一张表：UPDATE 表名
+- 改哪几列的值：SET 列名=值1，列名=值2 ……
+- 在哪些行生效：WHERE 表达式
+
+注意事项：一定要有where约束条件，即在哪些行生效。
+
+```sql
+# user表有id、name、age三列
+
+UPDATE user SET age=27 WHERE name='王五';
+
+# 修改多列用逗号隔开
+UPDATE user SET name='赵六',age=28 WHERE uid=4;
+```
+
+### select 查询数据操作
+
+语法：
+
+- 查询哪些列数据：SELECT列名1 列名2 ……
+- 从哪张表查询：FROM 表名
+- 选择哪些行生效：WHERE 表达式
+
+```sql
+# user表有id、name、age三列
+
+SELECT * FROM user; # 实际开发中很少使用
+SELECT * FROM user WHERE name='关羽';
+SELECT name,age FROM user WHERE age<30; # 查询符合条件的指定列
+```
+
+## 综合查询
+
+MySQL的比较运算和逻辑运算符：
+
+| 比较运算符号    | 描述                                                         |
+| :-------------- | :----------------------------------------------------------- |
+| =               | 等于                                                         |
+| <>, !=          | 不等于                                                       |
+| >               | 大于                                                         |
+| <               | 小于                                                         |
+| <=              | 小于等于                                                     |
+| >=              | 大于等于                                                     |
+| BETWEEN         | 在两值之间 >=min&&<=max                                      |
+| NOT BETWEEN     | 不在两值之间                                                 |
+| IN              | 在集合中                                                     |
+| NOT IN          | 不在集合中                                                   |
+| <=, >=          | 严格比较两个NULL值是否相等 两个操作码均为NULL时，其所得值为1；而当一个操作码为NULL时，其所得值为0 |
+| LIKE            | 模糊匹配                                                     |
+| REGEXP 或 RLIKE | 正则式匹配                                                   |
+| IS NULL         | 为空                                                         |
+| IS NOT NULL     | 不为空                                                       |
+
+
+
+| 逻辑运算符号 | 作用     |
+| :----------- | :------- |
+| NOT 或 !     | 逻辑非   |
+| AND          | 逻辑与   |
+| OR           | 逻辑或   |
+| XOR          | 逻辑异或 |
+
+注意事项：
+
+- and比or的优先级高，当表达式比较复杂时，习惯使用括号，避免出现歧义。
+- in用法：in的后面跟着枚举，例如in (3,11)
+- between通常和 and连用，例如 between 100 and 500
+
+示例表数据如下：
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200528090314.png)
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200528090343.png)
+
+### where 条件约束
+
+where是针对磁盘数据文件，后面一般都是列变量的表达式。模糊查询时，百分号%表示匹配所有字符，下划线_表示匹配一个字符。
+
+```sql
+# ⑴ 主键为32的商品
+SELECT goods_id,goods_name,shop_price FROM goods WHERE goods_id=32;
+
+# ⑵ 不属第3栏目的所有商品
+SELECT cat_id,goods_name,shop_price FROM goods WHERE cat_id!=3;
+
+# ⑶ 本店价格高于3000元的商品
+SELECT goods_id,goods_name,shop_price FROM goods WHERE shop_price>3000;
+
+# ⑷ 本店价格低于或等于100元的商品
+SELECT goods_id,goods_name,shop_price FROM goods WHERE shop_price<=100;
+
+# ⑸ 取出第4栏目或第11栏目的商品(不用or)
+SELECT cat_id,goods_name,shop_price FROM goods WHERE cat_id IN (4,11);
+
+# ⑹ 取出100<=价格<=500的商品(不许用and)
+SELECT goods_id,goods_name,shop_price FROM goods WHERE shop_price BETWEEN 100 AND 500;
+
+# ⑺ 不属于第3栏目且不属于第11栏目的商品(and,或not in分别实现)
+SELECT cat_id,goods_name,shop_price FROM goods WHERE (cat_id!=3) && (cat_id!=11);
+SELECT cat_id,goods_name,shop_price FROM goods WHERE cat_id NOT IN (3,11);
+
+# ⑻ 取出价格大于100且小于300,或者大于3000小于4000商品
+SELECT goods_id,goods_name,shop_price FROM goods WHERE (shop_price>100 && shop_price<300) || (shop_price>3000 && shop_price<4000);
+
+# ⑼ 取出第3个栏目下面价格<1000或>3000,并且点击量>5的系列商品
+SELECT cat_id,goods_name,shop_price,click_count FROM goods WHERE (cat_id=3) && (shop_price<1000 || shop_price>3000) && (click_count>=5);
+
+# ⑽ 取出第1个栏目下面的商品(注意:第1栏目下面没商品,但其子栏目下有)
+SELECT cat_id,goods_name,shop_price FROM goods WHERE cat_id IN (2,3,4,5);# 手动查看第1栏目的子栏目有2 3 4 5
+
+# ⑾ 取出名字以"诺基亚"开头的商品
+SELECT cat_id,goods_name,shop_price FROM goods WHERE goods_name LIKE '诺基亚%';
+
+# ⑿ 取出诺基亚N系列的手机
+SELECT goods_id,goods_name,shop_price FROM goods WHERE goods_name LIKE '诺基亚N__';
+
+# ⒀ 取出名字不以"诺基亚"开头的商品
+SELECT goods_id,goods_name,shop_price FROM goods WHERE goods_name NOT LIKE '诺基亚%';
+
+# ⒁ 取出第3个栏目下面价格在1000到3000之间,并且点击量>5 的"诺基亚"开头的商品
+SELECT cat_id,goods_name,shop_price,click_count FROM goods WHERE (cat_id=3) && (shop_price>1000 && shop_price<3000) && (click_count>5) && (goods_name LIKE '诺基亚%');
+
+# ⒂ 把num值处于[20,29]之间,改为20，num值处于[30,39]之间的,改为30
+UPDATE mian SET num=floor(num/10)*10 WHERE num BETWEEN 20 AND 39;
+
+# ⒃ 把good表中商品名为'诺基亚xxxx'的商品,改为'HTCxxxx'
+UPDATE goods SET goods_name=INSERT(goods_name,1,3,'HTC') WHERE goods_name LIKE '诺基亚%'; # 注：字符串位置从1开始
+```
+
+### group 数据分组
+
+使用group时首先会对该列重新排序，再做统计，所以比较耗资源，尽量避免使用。
+
+```sql
+# ⑴ 查出最贵和最便宜的商品的价格
+SELECT max(shop_price),min(shop_price) FROM goods;
+
+# ⑵ 查出最新和最旧的商品编号
+SELECT max(goods_id),min(goods_id) FROM goods;
+
+# ⑶ 查询该店所有商品的库存总量
+SELECT sum(goods_number) FROM goods;
+
+# ⑷ 查询所有商品的平均价格
+SELECT avg(shop_price) FROM goods;
+
+# ⑸ 查询该店一共有多少种商品
+SELECT count(*) FROM goods;
+
+# ⑹ 查询每个栏目下面最贵商品价格、最便宜商品价格、商品平均价格、商品库存量、商品库存总价格、商品种类
+SELECT max(shop_price),min(shop_price),avg(shop_price),sum(goods_number),count(*) FROM goods GROUP BY cat_id;
+```
+
+### having 筛选数据
+
+having是针对where条件结果进行筛选，是对内存数据操作，所以having必须用在where之后。
+
+```sql
+# ⑴ 查询该店的商品比市场价所节省的价格
+SELECT goods_name,market_price-shop_price FROM goods;
+
+# ⑵ 查询每个商品所积压的货款
+SELECT goods_name,shop_price*goods_number FROM goods;
+
+# ⑶ 查询该店积压的总货款
+SELECT sum(shop_price*goods.goods_number) FROM goods;
+
+# ⑷ 查询该店每个栏目下面积压的货款
+SELECT cat_id,sum(shop_price*goods_number) FROM goods GROUP BY cat_id;
+
+# ⑸ 查询比市场价省钱200元以上的商品及该商品所省的钱
+SELECT goods_id,goods_name,(market_price-goods.shop_price) AS save FROM goods HAVING save>200;
+
+# ⑹ 查询积压货款超过2W元的栏目,以及该栏目积压的货款
+SELECT cat_id,sum(shop_price*goods.goods_number) AS catPrice FROM goods GROUP BY cat_id HAVING catPrice>20000;
+
+# ⑺ 查询出2门及2门以上不及格者的平均成绩
+  成绩表result数据如下：
+  +------+---------+-------+
+  | name | subject | score |
+  | 张三 |  数学   |  90    |
+  | 张三 |  语文   |  50    |
+  | 张三 |  地理   |  40    |
+  | 李四 |  语文   |  55    |
+  | 李四 |  政治   |  45    |
+  | 王五 |  政治   |  30    |
+  +------+---------+-------+
+  SELECT name,avg(score),sum(score<60) AS fail FROM result GROUP BY name HAVING fail>=2;
+```
+
+### order by 排序和limit限制取出条目
+
+当按某列排序(默认asc升序，desc降序)无法满足要求时，可以在列的内部再继续排序。实际使用中oder by经常和limit配合一起使用。 limit有两个参数，分别是limit 偏移量，取出条目，可以使用在分页上。
+
+```sql
+# (1)按价格由高到低排序
+SELECT goods_id,goods_name,shop_price FROM goods ORDER BY shop_price ASC;
+
+# (2)按发布时间由早到晚排序
+SELECT goods_id,goods_name,shop_price FROM goods ORDER BY goods_id DESC;
+
+# (3)接栏目由低到高排序,栏目内部按价格由高到低排序
+SELECT cat_id,goods_name,shop_price FROM goods ORDER BY cat_id ASC, shop_price DESC;
+
+# (4)取出价格最高的前三名商品
+SELECT goods_id,goods_name,shop_price FROM goods ORDER BY shop_price DESC LIMIT 0,3;
+
+# (5)取出点击量前三名到前5名的商品
+SELECT goods_name,shop_price,click_count FROM goods ORDER BY click_count DESC LIMIT 0,5;
+```
+
+### 子查询
+
+#### **where子查询**
+
+内层select查询的结果充当外层select的where条件的查询。
+
+```sql
+# 取出每个栏目下最新的商品
+SELECT cat_id,goods_id,goods_name,shop_price FROM goods WHERE goods_id IN (SELECT max(goods_id) FROM goods GROUP BY cat_id);
+```
+
+
+
+#### **from子查询**
+
+内层select作为一张表(AS table)，外层select从内层表取出数据。
+
+```sql
+# 取出每个栏目下最新的商品
+SELECT cat_id,goods_id,goods_name,shop_price FROM (SELECT * FROM goods ORDER BY cat_id ASC,goods_id DESC) AS tmp GROUP BY cat_id;
+```
+
+
+
+#### **exists子查询**
+
+exists指定一个子查询，检测行的存在。该子查询实际上并不返回任何数据，而是返回值True或False。exists子查询能完成的where子查询 in也能完成。
+
+```sql
+# 取出没有商品的栏目
+SELECT * FROM category WHERE NOT exists(SELECT * FROM goods WHERE category.cat_id=goods.cat_id);
+```
+
+
+
+### **子查询练习**
+
+```sql
+# 查询出最新一行商品
+SELECT goods_id,goods_name,shop_price FROM goods WHERE goods_id=(SELECT max(goods_id) FROM goods);
+
+# 查询出编号为19的商品的栏目名称(where和连接查询)
+where子查询：
+SELECT cat_id,cat_name FROM category WHERE cat_id=(SELECT cat_id FROM goods WHERE goods_id=19);
+连接查询：
+SELECT category.cat_id,category.cat_name FROM 
+  category INNER JOIN goods ON category.cat_id=goods.cat_id 
+WHERE goods.goods_id=19;
+
+# 用where和from型子查询方式把每个栏目下面最新的商品取出来
+where子查询：
+SELECT goods_id,cat_id,goods_name FROM goods WHERE goods_id IN
+(SELECT max(goods_id) FROM goods GROUP BY cat_id);
+from子查询：
+SELECT goods_id,cat_id,goods_name FROM 
+(SELECT * FROM goods ORDER BY cat_id ASC,goods_id DESC) AS tmp GROUP BY tmp.cat_id;
+
+# 用exists型子查询,查出所有有商品的栏目
+SELECT * FROM category WHERE exists(SELECT * FROM goods WHERE category.cat_id=goods.cat_id);
+```
+
+## join连接查询
+
+#### **INNER JOIN内连接查询**
+
+把两张独立代表拼接成一张大表，拼接时指定匹配条件。
+
+```sql
+# 语法：
+表1 INNER JOIN 表2 ON 匹配条件
+
+# 把boy表和girl表同一组的人取出来
+SELECT * FROM boy INNER JOIN girl ON boy.hid=girl.hid;
+```
+
+
+
+#### **LEFT JOIN左连接查询**
+
+以左边的表为标准，有匹配条件取出值来，没有则填充默认值。
+
+```sql
+# 以boy表为标准，把boy表和girl表进行同组匹配
+SELECT * FROM boy LEFT JOIN girl ON boy.hid=girl.hid;
+```
+
+
+
+#### **RIGHT JOIN右连接查询**
+
+以右边的表为标准，有匹配条件取出值来，没有则填充默认值。
+
+```sql
+# 以girl表为标准，把boy表和girl表进行同组匹配
+SELECT * FROM boy RIGHT JOIN girl ON boy.hid=girl.hid;
+```
+
+
+
+#### **连接查询练习**
+
+```sql
+# 取出所有商品的商品名,栏目名,价格
+SELECT goods.goods_id,goods.goods_name,category.cat_name,goods.shop_price FROM goods LEFT JOIN category ON goods.cat_id=category.cat_id;
+
+# 取出第4个栏目下的商品的商品名,栏目名,价格
+SELECT goods.goods_id,goods.goods_name,category.cat_name,goods.shop_price FROM goods LEFT JOIN category ON goods.cat_id=category.cat_id WHERE goods.cat_id=4;
+
+# 查出 2006-6-1 到2006-7-1之间举行的所有比赛，并且用以下形式列出：主队名  比分 客队 比赛时间
+表名：m
++-----+------+------+------+------------+
+| mid | hid  | gid  | mres | matime     |
++-----+------+------+------+------------+
+|   1 |    1 |    2 | 2:0  | 2006-05-21 |
+|   2 |    2 |    3 | 1:2  | 2006-06-21 |
+|   3 |    3 |    1 | 2:5  | 2006-06-25 |
+|   4 |    2 |    1 | 3:2  | 2006-07-21 |
++-----+------+------+------+------------+
+
+队名：t
++------+----------+
+| tid  | tname    |
++------+----------+
+|    1 | 国安     |
+|    2 | 申花     |
+|    3 | 公益联队 |
++------+----------+
+
+# 写法一：
+SELECT ttb.tname,ttb.mres,t.tname,ttb.matime FROM (SELECT * FROM m LEFT JOIN t ON m.hid=t.tid)AS ttb LEFT JOIN t ON ttb.gid=t.tid WHERE ttb.matime BETWEEN '2006-06-01' AND '2006-07-01';
+
+# 写法二：
+SELECT t1.tname,mres,t2.tname,matime FROM m LEFT JOIN t AS t1 ON m.hid = t1.tid LEFT JOIN t AS t2 ON m.gid = t2.tid WHERE matime BETWEEN '2006-06-01' AND '2006-07-01';
+```
+
+## union查询
+
+把两条或多条sql查询的结果合并成一个结果集。主要用途：两张不同的表中有相同的列时，把结果集合并，或者简化两个复杂的where条件， 使用条件：两个表的列必须相同，但是例外的是列名称可以不相同。
+
+注意事项：
+
+- 完全相等的行将会合并，合并是耗时的操作，一般不让union合并，使用union all则不合并。
+- union子句中一般不用order by，在union合并后可以再order by。
+
+```sql
+# (1) 合并表a和表b，不合并相同的行
+SELECT * FROM a UNION ALL SELECT * FROM b;
+
+# (2) 对两个表相同id的行进行num列求和。
+SELECT tmp.id,sum(tmp.num) FROM
+(SELECT * FROM a UNION ALL SELECT * FROM b) AS tmp
+GROUP BY tmp.id;
+```
+
+## 索引
+
+### 索引长度
+
+对于定长数据类型(char，int，datetime)，如果有是否为NULL的标记，这个标记需要占用1个字节。
+
+对于变长数据类型(varchar)，除了是否为NULL的标记外，还需要有长度信息，需要占用2个字节，当字段定义为NOT NULL的时候，是否为NULL的标记将不占用字节。
+
+不同的字符集： - latin1编码一个字符一个字节； - gbk编码的为一个字符2个字节； - utf8编码的一个字符3个字节。
+
+创建索引的时候可以指定索引的长度，例如：
+
+> alter table test add index uri(uri(30));
+
+长度30指的是字符的个数，如果为utf8编码varchar(255)，key_length=30*3+2=92个字节。
+
+对于多数名称的前10个字符通常不同的列，用前10个字符作为索引不会比使用列全名创建的索引速度慢很多。另外，使用列的一部分创建索引可以使索引文件大大减小，从而节省了大量的磁盘空间，有可能提高INSERT操作的速度。
+
+### 单列索引
+
+```sql
+# 普通索引
+key 列名(列名)
+key cat_id(cat_id)
+
+# 唯一索引
+unique key
+unique key email(email)
+
+# 主键索引，一张表只能存在一个
+primary key (列名)
+primary key (id)
+
+# 全文索引 fulltext
+# 在中文环境下几乎无效。一般用第三方解决方案sphinx
+```
+
+索引长度：建索引时，可以取列的部分字符作为索引，节省空间， 例如：unique key email(email(10)); 取email列的前10个字符作为索引。
+
+### 多列索引
+
+把两列或多列的值作为整体后再建索引，左前缀规则,例如key xm(xing, ming)
+
+```sql
+CREATE TABLE name (
+  xing CHAR(2),
+  ming CHAR(10),
+  KEY xm(xing,ming)
+);
+
+# 在select前面添加explain关键字，得到结果的possible_key可以查看是否使用到索引查询。
+# 使用索引xm查询
+EXPLAIN SELECT * FROM name WHERE xing='刘' AND ming='备';
+
+# 使用索引xm查询
+EXPLAIN SELECT * FROM name WHERE xing='刘';
+
+# 没有使用索引xm查询
+EXPLAIN SELECT * FROM name WHERE ming='备';
+```
+
+### 冗余索引
+
+在某个列上可能存在多个索引,比如某个表：key xm(xing, ming)，key ming(ming)，对于列ming来说，索引xm和ming两个索引覆盖，叫做冗余索引。
+
+### 索引操作
+
+```sql
+# 查看索引
+SHOW INDEX FROM 表名;
+
+# 删除索引
+ALTER TABLE 表名 DROP INDEX 索引名;
+
+# 添加索引
+# 添加普通索引
+ALTER TABLE 表名 ADD INDEX 索引名(列名...);
+# 添加唯一索引
+ALTER TABLE 表名 ADD UNIQUE 索引名(列名);
+# 添加主键索引
+ALTER TABLE 表名 ADD PRIMARY KEY(列名);
+```
+
+## 事务
+
+### 事务特性(ACID)
+
+- 原子性(Atomicity）：是指某几句sql的影响，要么都发生，要么都不发生。
+- 一致性(Consistency)：事务前后的数据，保持业务上的合理一致。
+- 隔离性(Isolation)：在事务进行过程中，其他事务看不到此事务的任何效果。
+- 持久性(Durability)：事务一旦发生，不能取消，只能通过补偿性事务来抵消效果。
+
+事务与引擎：myisam引擎不支持事务，innodb和BDB引擎支持。
+
+一个完整的事务过程：
+
+- (1) 启动事务：START TRANSACTION;
+- (2) sql执行：增删改查，如果出错，回滚ROLLBACK
+- (3) 结束事务：COMMIT(提交)或ROLLBACK(取消);
+
+注意：commit一旦发生之后，rollback无法回滚。
+
+```bash
+# 示例
+START TRANSACTION;
+UPDATE account SET balance=balance+1000 WHERE name='曹操';
+UPDATE account SET balance=balance-1000 WHERE name='刘备';
+COMMIT;
+```
+
+### 设置事务级别
+
+set session transaction isolation level [read uncommitted | read committed | repeatable read | serializable]
+
+- read uncommitted：可以读未提交的事务内容，称为”脏读”，破坏了事务的隔离性，一般不用。
+- read commited：在一个事务进行过程中，读不到另一个进行事务的操作，但是可以读到另一个结束事务的操作影响，一般不用。
+- repeatable read：在一个事务过程中，所有信息都来自事务开始那一瞬间的信息，不受其他已提交事务的影响，大多数的系统，用此隔离级别，建议使用。
+- serializeable：串行化，把所有事务进行编号，按顺序一个一个来执行，也就取消了事务冲突的可能，隔离级别最高，但事务相互等待的时间会比较长，在实际中使用也不是很多。
+
+## 用户与权限管理
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200531082101.png)
+
+### 用户连接mysql服务器
+
+mysql认证用户依据有3个参数：
+
+- 你从哪里来：host
+- 你是谁：user
+- 你的密码是多少：password
+
+```bash
+# 连接数据库
+mysql -h192.168.8.102 -uroot -p123456;
+
+# 查看当前登录用户
+SELECT user();
+
+# 通过库名mysql里的user表来查看有哪些用户可以登录
+USE mysql;
+DESC user;
+SELECT host,user,password FROM user;
+
+# 修改host域，指定IP能连接起来
+UPDATE user SET host='192.168.8.101' WHERE host='::1';
+FLUSH PRIVILEGES; # 冲刷权限
+
+# 修改用户密码
+UPDATE user SET password=password('123456') WHERE host='192.168.8.101';
+FLUSH PRIVILEGES; # 冲刷权限
+```
+
+### 创建、授权和回收用户
+
+用户常用权限all，creat，drop，insert，update，delete，select ……
+
+```bash
+# 创建一个新用户，注：如果是8.0版本以上，默认使用caching_sha2_password，有些客户端可能不支持
+CREATE USER 'krislin'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
+# 为新用户授权库.表
+GRANT ALL ON *.* TO 'krislin'@'%';
+FLUSH PRIVILEGES; # 冲刷权限
+
+# 新建一个用户并授权
+GRANT [权限1, 权限2......] ON 数据库名.该库下的表名 TO 用户名@主机名 IDENTIFIED BY 密码;
+
+# 示例：
+    # 授权给主机为192.168.8.n局域网内的用户root所有数据库权限
+    GRANT ALL ON *.* TO root@'192.168.8.%' IDENTIFIED BY '123456';
+    FLUSH PRIVILEGES; # 冲刷权限
+
+    # 针对某个库做授权
+    GRANT ALL ON test.* TO root@'192.168.8.%';
+    FLUSH PRIVILEGES; # 冲刷权限
+
+    # 针对某个表授权
+    GRANT select,update,insert ON test.goods TO root@'192.168.8.%';
+    FLUSH PRIVILEGES; # 冲刷权限
+
+
+# 收回用户权限
+REVOKE [权限1, 权限2 ......] ON 数据库名.该库下的表名 FROM 用户名@主机名;
+
+# 示例：
+    # 收回某用户的所有权限
+    REVOKE ALL ON *.* FROM root@'192.168.8.%';
+```
+
+### 跳过mysql认证登录方法
+
+有时候忘记mysql帐号密码或修改了主机ip使得无法登录mysql， 解决办法：
+
+```bash
+# (1) 关闭mysql服务
+/etc/init.d/mysql stop
+
+# (2) 启动mysql服务时添加跳过权限检测
+/usr/local/mysql/bin/mysqld --skip-grant-tables
+
+# (3) 在新的终端登录mysql修改数据库mysql下user表的host、user、name列
+/usr/local/mysql/bin/mysql
+  > use mysql;
+  > select host,user,password from user;
+  > update user set host='ip地址',user='用户名' password=password('你的密码') where 定位那一行;
+
+# 最后重启mysql服务。
+```
+
+## 优化
+
+**表的优化**
+
+列选择原则：
+
+**字段类型优先选择顺序**
+
+> 整型 > date、time > char 、varchar > blob
+
+因为整形、time类型运算快又节省空间；char、varchar要考虑字符集的转换与排序时的校对集(a B排序哪个优先)、速度慢；blob无法使用内存临时表，设计到排序必须在硬盘完成，速度慢。
+
+
+
+**字段长度够用就行(tinyint、 varchar(N))**
+
+因为大的字段浪费内存，影响速度，例如某字段varchar(30)能存下的内容，如果用varchar(100)的话，在联表查询时，varchar(100)要花跟多内存。
+
+
+
+**避免使用null**
+
+因为null不利于索引，要用多一个字节来特殊标注该字段值是否为null，在磁盘上占据多一个字节。一般声明字段时都带有not null define属性
+
+
+
+**对于字段属性分类数量确定而且数量比较少时，优先选择枚举类型enum，例如性别、学历等**
+
+enum列在内部是用整型来存储的
+
+- 优点：当一个表enum列与另一个表的enum相关联时速度最快，当enum成员是char类型，并且字节比较多时，enum依然时整型存储，可以节省IO。
+- 缺点：在碰到与char关联时，需要转化消耗点时间，速度要比enum<->enum和char<->char要慢。
+
+索引优化
+
+理想索引：
+
+- 查询频繁
+- 区分度高
+- 长度小
+- 尽量能覆盖常用查询字段
+
+### B-tree索引
+
+B-tree（多路搜索树，并不是二叉的）是一种常见的数据结构。使用B-tree结构可以显著减少定位记录时所经历的中间过程，从而加快存取速度。按照翻译，B通常认为是Balance的简称。这个数据结构一般用于数据库的索引，综合效率较高，常被用于对检索时间要求苛刻的场合。B-tree可以理解为已经排好序的快速查找数据结构。
+
+
+
+btree的左前缀规则：
+
+- 按f1、f2……建立的复合索引，在where条件中，按f1、f2……由左到右的顺序（当and时不用按顺序），索引才会发挥作用。
+- 如果中间某列没有条件或like条件，导致后面的列，索引用不上。
+- 索引也能用于排序和分组，因为分组要先排序后计算。所以我们的order by或group如果能针对有顺序的表进行，可以避免临时表和文件排序。也就是说我们的order by或group按顺序使用索引的列，则可发挥索引的作用。
+
+B-tree索引的误区：
+
+在表中的常用的列都独立加上索引就以为常用的查询都完全用到索引了。例如user表中的gender和age列都独立加上索引，查询出表中大于60岁的女性的语句。
+
+> select * from user where gender=‘女’ and age>60;
+
+注意：上面语句只能用上gender或age索引，因为是独立索引，同时只能用上一个，上面sql查询要完全使用索引，需要建立多列索引，例如：index(gender,age)
+
+
+
+### hash索引
+
+哈希索引包含以数组形式组织的Bucket集合。哈希函数将索引键映射到哈希索引中对应的Bucket，使用哈希索引必须要使用哈希集群。哈希索引可能是访问数据库中数据的最快方法(时间复杂度为O(1))，但它也有自身的缺点，只支持等值计算，不支持范围搜索或排序。
+
+hash索引查找速度最快，为什么不用hash索引呢？
+
+- 哈希函数计算的结果是随机的，如果在磁盘上随机放置数据，hash找到数据在磁盘位置很快，但是磁盘随机读取数据却很慢。
+- hash无法对范围查询进行优化
+- hash无法利用前缀索引，不能前缀优化。例如在mysql查找列值为zhangsan，B-tree索引支持’zhang’或’zhangsan’关键字索引，而hash必须为’zhangsan’全部搜索。
+- 排序也无法优化
+
+
+
+B-tree索引和hash索引区别：
+
+- hash索引查找数据基本上能一次定位数据，当然有大量碰撞的话性能也会下降。而btree索引就得在节点上挨着查找了，很明显在数据精确查找方面hash索引的效率是要高于btree的。
+- 那么不精确查找呢，也很明显，因为hash算法是基于等值计算的，所以对于“like”等范围查找hash索引无效，不支持。
+- 对于btree支持的联合索引的最优前缀，hash也是无法支持的，联合索引中的字段要么全用要么全不用。
+- hash不支持索引排序，索引值和计算出来的hash值大小并不一定一致。
+
+
+
+### 聚簇索引
+
+聚簇索引：索引和数据混合一起，如InnoDB的id和数据是混合在一起的。有个缺点，当数据文件比较大时，查询数据时不断翻越磁盘扇区的页，使用时间会比较长。
+
+回行：从索引定位到获取磁盘数据的过程，查询时回行时比较耗时，索引查找是快的，回行取数据是慢的。如果能直接从索引中获取数据，将会省去回行过程，提高查询速度，因为索引在内存运行的。
+
+索引覆盖：查询的列恰好时索引的一部分，只在索引就能获取想要的数据，不需要回行到磁盘取数据。如果查询的数据能用到索引覆盖，速度是最快的。用explain 查询语句，看extra项目是否有Using index，如果有则使用到索引覆盖。
+
+MyISAM的索引特点：指向的是数据在磁盘上的位置。
+
+InnoDB的索引特点：
+
+- 主键作为索引，既储存索引值又储存行数据。
+- 次级索引是先指向主键id，然后再从id获取行数据，也就是说InnoDB的索引是间接获取数据，中间多了从id获取数据的过程。
+- 如果没有主键系统把unique key作为主键，如果也没有unique key，系统内部自动生成row id作为主键。
+
+主键值为随机的插入行数据时，主键节点会分裂，对于MyISAM类型的表，影响不是很大，因为节点的包括的内容比较小(只有指向磁盘地址)，在内存里完成，转移数据时耗时小；对于InnoDB类型的表影响比较大，因为表使用的聚簇索引，每个节点都包括行内容，节点分裂时需要转移的数据比较多，耗时也比较多。
+
+高性能索引是使用自动递增的整型，例如定义主键类型id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT; 插入数据时不用指定主键值，让其有规律的自动增加，减少节点分裂的耗时。
+
+
+
+聚簇索引排序慢原因分析
+
+```bash
+# 有一个表结构和引擎如下，有100000行数据。
+
+# 创建表
+CREATE TABLE ts(
+    id CHAR(30) PRIMARY KEY AUTO_INCREMENT,
+    val INT NOT NULL DEFAULT 0,
+    str1 VARCHAR(2000),
+    str2 VARCHAR(2000),
+    KEY idval(id,val)
+)ENGINE innodb CHARSET utf8;
+
+# 查询速度慢
+SELECT id FROM ts ORDER BY id;
+
+# 查询速度快
+SELECT id FROM ts ORDER BY id,val;
+```
+
+查询速度慢的原因：表驱动为InnoDB，主键索引id属于聚簇索引，每个节点包含一行数据内容，而且字段内容比较大，储存时超越磁盘最小块，对主键id排序时会跨很多磁盘的数据块，导致速度很慢。
+
+对联合索引排序快的原因：因为联合索引不是聚簇索引，节点内容很小(只有指向主键id地址)，联合排序时使用了索引覆盖，不需要回行取数据，而且是在内存中完成，索引速度比较快。
+
+当把str1和str2内容比较大的列删除后，两条语句执行速度差别不大。 如果表类驱动型为MyISAM两条语句执行速度差别不大。
+
+
+
+### 多列索引
+
+在建立多列索引后，必须满足左前缀要求(从左到右按顺序，中间不能断开)，索引才能发挥作用，例如多列索引index(a,b,c)
+
+| sql的where语句                    | 索引是否发挥作用  |
+| :-------------------------------- | :---------------- |
+| where a=1                         | √ 使用a列         |
+| where a=1 and b=2                 | √ 使用a、b列      |
+| where a=1 and b=2 and c=3         | √ a、b、c列都使用 |
+| where b=2                         | ×                 |
+| where c=3                         | ×                 |
+| where a=1 and c=3                 | ×                 |
+| where b=2 and c=3                 | ×                 |
+| where a=1 and b>2 and c=3         | √使用a、b列       |
+| where a=1 and b like ‘%2’ and c=3 | √ 使用a、b列      |
+
+使用多列索引误区：查询哪个列索引都会发挥作用。
+
+注意：多列索引一定要结合业务逻辑进行优化，例如查100~200元的男装商品，这条查询涉及到价格和商品栏目两列，可以把这两列作为一个多列索引。
+
+
+
+### 伪哈希索引
+
+在实际中的表的列有可能比较长，例如网址url的列，网址前面的几个字节http://www都是相同的，如果把url列作为索引，前面10个字节都是重复的，要区分网址至少截取16个字节以上，使得索引长度很长。不利于增删改查。
+
+为了解决这个问题，在表中多添加一个url对应hash值的列(例如列名urlhash)，即url值对应唯一hash值，然后使用列urlhash作为索引(整型)，从而大大减少索引的长度，提高查询速度。
+
+
+
+### 延时索引
+
+用大量数据分页优化说明延时索引技巧。 例如显示搜索结果有100000条，分页显示每页20条，sql语句为 SELECT filed FROM table LIMIT (N-1)*20,20;其中N表示第几页。
+
+- 优先从业务逻辑优化，条件是限制分页数量，也就是说搜到100000条结果，给用户显示最多是40页就以及满足客户需求了，查询时间是ms级别。
+
+为什么要限制N的大小呢？因为limit的偏移量(offset)很大时，效率非常低，limit offset,num的工作机制是先查询，然后再跳过offset获取num条数据，当offset很大时，说明查询结果的数据很大，通过开启profile分析sql语句，发现大部分时间都用在Sending data(即回行传输的数据)上了，限制N的大小非常有必要，百度或谷歌都是现在查询结果的页数，一般都是看前几页搜索结果，极少人回去翻页到几十页去看搜索结果。
+
+- 如果不允许从业务逻辑优化，还有个办法就是利用主键id作为查找条件再筛选结果，大量数据查询时间是ms级别。例如sql语句：SELECT filed FROM baidu WHERE id>100000 LIMIT 0,20;
+
+这种优化查询用到索引所以速度也很快，但是条件是要求数据完整性，不允许删除数据。否则会造成每次查询结果不一致，解决办法时不进行物理删除，用逻辑标记删除，最终在页面上显示时，逻辑删除的条目不显示结果即可。
+
+- 延时索引优化，这种方法没有条件限制，大量数据查询时间为秒级别，例如语句SELECT filed FROM table WHERE id IN (SELECT id FROM table WHERE id>200000 LIMIT (N-1)*20,20);
+
+首先查找取出主键id，然后再通过id来取数据，这种通过索引中间过程再从表中取数据过程叫延时索引，延时索引的好处时，节省了大量的回行时间(sending data时间)，提高查询速度。
+
+上面语句的工作过程是通过分页去取主键id，取主键id过程用到了索引覆盖，速度比较快，省去回行过程，获取id之后在回行取表中的内容，因为回行数量很少，sending data时间也少，索引查询速度也快，当数据量很大时，上面语句的据大多数时间都在取id过程上了。
+
+当数据量很大时，利用延时索引比直接取数据速度要快4倍左右。
+
+
+
+### 冗余索引
+
+在某个列上可能存在多个索引，例如：
+
+```sql
+CREATE TABLE user(
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  first_name CHAR(5) NOT NULL DEFAULT '',
+  last_name CHAR(10) NOT NULL DEFAULT '',
+  KEY first_name(first_name),
+  KEY last_name(last_name),
+  KEY full_name(first_name,last_name)
+)ENGINE myisam CHARSET utf8;
+```
+
+表中的列first_name既有独立作为索引，也有联合索引full_name，这叫冗余索引，实际中也会用到，单列查询时可以用到索引，多列查询时也可以用到索引。
+
+注意index AB(A,B)和index BA(B,A)是不同的索引，对于列A或B来说，AB和BA属于冗余索引。
+
+
+
+### 索引的长度和区分度
+
+索引的长度和区分度是矛盾的，长度大区分度高，反之区分度小。到底选多少个字节作为索引长度比较合理呢，需要根据表内容的实际试验。 一般使用方法，针对表截取长度和区分度测试，例如一个中文单词表，共一万多行，有一个字到14个字的行都有。通过测试从1个词开始测试，使用sql语句`SELECT count(distinct left(word,6))/count(*) FROM dict`;
+
+对于一般系统，区别度能达到10%时，索引性能就可以接受。 针对列中的值，从左到右截取来建立索引：
+
+- 截得越短，重复度越高，区分度越低，索引效果越不好。
+- 截得越长，重复度越低，区分度越高，索引效果越好，但是带来负面影响越大，占有空间越大，也会减慢查询速度，增删改操作变慢。
+
+
+
+### 索引与排序
+
+对于带有排序的sql语句，例如下面语句，可能发生2种情况。
+
+> SELECT * FROM goods WHERE cat_id=3 ORDER BY shop_price DESC;
+
+- 跳过排序过程，直接取出最终结果，查询速度快。要达到这个结果，必须事先建立索引，利用索引本身有序的特点，取出来就是有顺序的，所以省略了排序过程，达到查询速度快的效果。
+- 没有索引，先从表中取出数据作为临时表，然后再对临时做排序(在内存或磁盘排序)，排序是比较耗时的，因尽量避免，所以查询速度会比较慢。
+
+所以在碰到有排序的查询时，排序的列尽量作为索引(或联合索引)，目的是取出来的数据本身就是有顺序的，避免排序这个耗时的过程，从而提高查询速度。
+
+## 优化分析
+
+**获取查询和连接数量**
+
+```bash
+# 在mysql命令行查看服务器状态
+SHOW STATUS;
+
+# 在linux命令行查看服务器状态
+mysqladmin -u root -p 123456 ext
+
+# 在linux命令行获取上面三个参数值：
+mysqladmin -u root -p 123456 ext | awk '/Queries/{q=$4} /Threads_connected/{c=$4} /Threads_running/{r=$4} END{printf "%d %d %d\n", q, c, r}'
+```
+
+获得mysql服务器状态数据，主要看3个参数：
+
+- Queries: 查询次数
+- Threads_connected: 线程连接数
+- Threads_running: 线程运行数
+
+一般使用脚本循环获取mysql状态，脚本内容如下：
+
+```bash
+#!/bin/bash
+
+while true
+do
+   mysqladmin -uroot ext | awk '/Queries/{q=$4} /Threads_connected/{c=$4} /Threads_running/{r=$4} END{printf "%d  %d  %d\n", q,c,r}' >> status.txt
+   sleep 1
+done
+```
+
+**mysql进程状态分布**
+
+```bash
+# 在mysql命令行查看服务器状态
+SHOW PROCESSLIST;
+
+# 在linux命令行查看服务器状态：
+mysql -uroot -p123456 -e 'show processlist \G'
+
+# 如果只关心State状态这行，在linux下执行命令获取State
+mysql -uroot -p123456 -e 'show processlist \G' | grep State
+```
+
+一般使用脚本循环获取mysql进程状态，脚本内容如下：
+
+```bash
+#!/bin/bash
+
+while true
+do
+    mysql -uroot -e 'show processlist \G' | grep State >> process.txt
+    usleep 100000
+done
+```
+
+**使用profile记录各个sql执行时间**
+
+```bash
+# (1) 打开profile功能，打开profile功能后，执行的每一条sql语句都会被记录下来。
+SET PROFILING =1;
+
+# (2) 查看执行所有sql耗时时间列表(在phpstorm可以按使用时间排序)，可以找到有问题的语句(耗时比较大的)
+SHOW PROFILES;
+
+# (3) 查看sql语句详细执行过程，可以分析该语句耗时都用在哪个状态下，其中数字72是在SHOW PROFILES命令显示的查询id。
+SHOW PROFILE for query 72;
+
+# (4) 关闭profile功能：
+SET PROFILING =0;
+```
+
+**使用explain分析sql执行效果**
+
+explain分析结果字段说明：
+
+| 属性名        | 说明                                                         |
+| :------------ | :----------------------------------------------------------- |
+| id            | 查询的编号，简单查询通常为1，如果有子查询会增加子查询行编号  |
+| select_type   | (1) simple：不含子查询的简单的查询； (2) primary：含有子查询或派生查询， (subquery表示非from子查询)、(derived表示from型子查询)、 (union)、(union result) |
+| table         | 查询针对的表名，如果原表名加了别名，就显示表的别名，也有可能是null |
+| type          | (1) All: 全表扫描，在磁盘全表扫描是非常慢的，尽量避免出现全表扫描这样的查询； (2) index: 扫描索引的所有节点，因为在内存扫描，性能比All要好，虽然说尽量使用索引，但不希望从头到尾扫描一遍； (3) range: 根据索引做范围扫描，比index性能好； (4) ref: 通过索引列直接引用到某些数据行，比range性能好； (5) eq_ref: 从表中读取一行，在联表查询使用到索引时经常出现，比ref性能好； (6) const |
+| possible_keys | 可能用到的索引                                               |
+| key           | 最终使用的索引                                               |
+| key_len       | 索引的长度，长度越短越好。                                   |
+| ref           | 引用了哪索引或列                                             |
+| rows          | 估计扫描的行                                                 |
+| Extra         | (1) using index：使用索引覆盖； (2) using where：使用了条件查询； (3) using temporary：使用临时表，尽量不出现； (4) using filesort：使用了排序，尽量不出现； (5) range checked for each record：使用了在范围检查每个记录，不要出现扫描的行 |
+
+使用：
+
+explain命令+耗时比较多sql查询语句可以查看该语句是否使用了索引，使用索引说明已经优化过，没有使用索引则对表进行优化。
+
+```bash
+# 查看有索引的查询
+EXPLAIN SELECT * FROM plan_task WHERE id=100000;
+# 从结果可以看出已经使用了索引，type为const，extra为null。
+
+# 查看没有索引的查询
+EXPLAIN SELECT * FROM plan_task WHERE background_color=100000;
+# 从结果看出没有使用到索引，type为ALL，extra为using where。
+```
+
+**开启慢查询日志**
+
+(1) 开启慢查询日志有两种，一是全局变量设置，二是设置配置文件。
+
+全局变量设置：
+
+```bash
+# 将slow_query_log全局变量设置为“ON”状态
+mysql> set global slow_query_log='ON';
+
+# 设置慢查询日志存放的位置
+mysql> set global slow_query_log_file='/usr/local/mysql/data/slow.log';
+
+# 查询超过1秒就记录
+mysql> set global long_query_time=1;
+```
+
+
+
+修改配置文件my.cnf，在[mysqld]下的下方加入下面内容：
+
+```bash
+[mysqld]
+slow_query_log = ON
+slow_query_log_file = /usr/local/mysql/data/slow.log
+long_query_time = 1
+```
+
+重启mysql服务：service mysqld restart
+
+
+
+(2) 查看设置后的参数
+
+```bash
+show variables like 'slow_query%';
++---------------------+--------------------------------+
+| Variable_name       | Value                          |
++---------------------+--------------------------------+
+| slow_query_log      | ON                             |
+| slow_query_log_file | /usr/local/mysql/data/slow.log |
++---------------------+--------------------------------+
+
+show variables like 'long_query_time';
++-----------------+----------+
+| Variable_name   | Value    |
++-----------------+----------+
+| long_query_time | 1.000000 |
++-----------------+----------+
+```
+
+
+
+(3) 验证慢查询查日志是否开启成功
+
+```bash
+# 执行一条慢查询SQL语句
+select sleep(2);
+
+# 查看是否生成慢查询日志
+cat /usr/local/mysql/data/slow.log
+```
+
+
+
+**索引碎片和维护**
+
+索引碎片的形成原因：在长期的数据更改中，索引文件和数据文件都将会产生空洞，形成碎片，索引碎片会对查询速度有影响。
+
+维护索引碎片有两种方法：
+
+```bash
+# 修改表的nop操作，这个操作不影响表数据
+ALTER TABLE 表名 ENGINE 驱动名;
+
+# 释放表空间
+OPTIMIZE TABLE 表名
+
+# 注意：当数据比较大时，维护是很耗时间的，通常在访问量比较少的夜里维护，当数据修改不频繁可以按年来做维护，如果数据修改比较多可以按月来修复。
+```
+
+## 表分区
+
+表分区是把原来一张表按一定方式拆分为多个相同类型的表，同时原来一张表的数据文件也会拆分为多个数据文件，拆分方式可以按范围、散列点方式来分区。
+
+表分区的好处：拆分后可以打开的线程数更多了，因为数据在不同的文件上，文件被锁的可能性会降低，一定程度上提高了读写速度。 例如单个.myd文件都达到了10G，读取数据时效率降低，通过表分区把10拆分为1G，可以提高效率。
+
+对用户使用来说，表有没有分区是无影响的，增删改查操作还是一样。
+
+**按范围来分区**
+
+```bash
+# 例如有一张用户表，按主键id的范围对用户表分区
+CREATE TABLE user(
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, # 主键
+  name VARCHAR(20) NOT NULL DEFAULT '',   # 名称
+  aid TINYINT UNSIGNED NOT NULL DEFAULT 0 # 地区代号
+)ENGINE myisam CHARSET utf8
+  PARTITION BY RANGE (id)(    # 按主键id范围对表进行分区
+  PARTITION u0 VALUES LESS THAN (10), # 第1个分区范围
+  PARTITION u1 VALUES LESS THAN (20), # 第2个分区范围
+  PARTITION u2 VALUES LESS THAN (MAXVALUE)    # 最后一个分区范围
+);
+# 也可以按时间按范围来分表，例如年、月
+```
+
+**按散列点对表进行分区**
+
+```bash
+# 假如有一张地区表和一张用户表，按地区代号对用户表进行分区
+# 地区表：
+CREATE TABLE area(
+  aid INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, # 主键
+  addr VARCHAR(10) NOT NULL DEFAULT '' # 地区名称，不要为null
+)ENGINE myisam CHARSET utf8;
+
+# 用户表：
+CREATE TABLE user(
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, # 主键
+  name VARCHAR(20) NOT NULL DEFAULT '',   # 名称
+  aid TINYINT UNSIGNED NOT NULL DEFAULT 0 # 地区代号
+)ENGINE myisam CHARSET utf8
+  PARTITION BY LIST (aid)(    # 按散列点(地区代号)对表进行分区
+  PARTITION a1 VALUES IN (1), # 按地区代号分区
+  PARTITION a2 VALUES IN (2), # 按地区代号分区
+  PARTITION a3 VALUES IN (3), # 按地区代号分区
+  PARTITION a4 VALUES IN (4)  # 按地区代号分区
+);
+```
+
+## 集群
+
+**主从复制**
+
+MySQL数据库自身提供的主从复制功能，可以方便的实现数据的多处自动备份，实现数据库的拓展。多个数据备份不仅可以加强数据的安全性，通过实现读写分离还能进一步提升数据库的负载性能。
+
+在一主多从的数据库体系中，多个从服务器采用异步的方式更新主数据库的变化，业务服务器在执行写或者相关修改数据库的操作是在主服务器上进行的，读操作则是在各从服务器上进行。
+
+MySQL之间数据复制的基础是二进制日志文件（binary log file）。一台MySQL数据库一旦启用二进制日志后，其作为master，它的数据库中所有操作都会以“事件”的方式记录在二进制日志中，其他数据库作为slave通过一个I/O线程与主服务器保持通信，并监控master的二进制日志文件的变化，如果发现master二进制日志文件发生变化，则会把变化复制到自己的中继日志中，然后slave的一个SQL线程会把相关的“事件”执行到自己的数据库中，以此实现从数据库和主数据库的一致性，也就实现了主从复制。
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200531091948.png)
+
+
+
+配置主从复制流程：
+
+- 主mysql配置binlog
+- 从mysql器配置relaylog
+- 主mysql授权给从mysql器一个帐号
+- 从mysql连接主mysql
+
+```bash
+# (1) 修改主mysql配置文件
+  # 打开配置文件
+  sudo vim /etc/mysql/my.cnf
+  #在[mysqld]字段下
+    # ① 给主mysql起一个名字，在局域网内一般为ip最后一个数字
+    server-id = 101
+    # ② 开启logbin二进制日志，并给logbin起个名字
+    log-bin = mysql_bin
+    # ③ 指定日志格式，分别有mixed(由系统决定row还是statement)、row(记录磁盘变化)、statement(记录执行语句)，各有各的应用场景。
+    binlog-format = mixed
+    # ④ 重启mysql服务器
+    sudo service mysql restart
+
+# (2) 给从mysql添加一个授权帐号
+GRANT REPLICATION CLIENT,REPLICATION SLAVE ON *.* TO 'repl'@'192.168.8.%' IDENTIFIED BY '123456';
+FLUSH PRIVILEGES; # 冲刷权限
+
+# (3) 查看mysql是否具备充当主mysql条件
+SHOW MASTER STATUS;
+
+# (4) 从mysql器也开启binlog
+  # 打开配置文件
+  vim /usr/local/mysql/my.cnf
+  # 在[mysqld]字段下
+    # ① 给从mysql起一个名字，防止多个主从混乱
+    server-id = 102
+    # ② 开启relaylog日志，并给relaylog起个名字
+    relay-log=mysql_relay
+    # ③ 重启mysql服务器：
+    sudo service mysql restart
+
+# (5) 在从mysql通过sql命令指定要复制的主mysql (可以一主多从，不能多主)
+CHANGE MASTER TO
+  MASTER_HOST='192.168.8.101',
+  MASTER_USER = 'repl',
+  MASTER_PASSWORD = '123456',
+  MASTER_LOG_FILE = 'mysql_bin.000003', # 用语句SHOW MASTER STATUS;查看
+  MASTER_LOG_POS = 120; # 用语句SHOW MASTER STATUS;查看
+
+  # 配置连接信息后启动从mysql器功能
+  START SLAVE;
+
+  # 查看从mysql是否连接到主mysql
+  SHOW SLAVE STATUS;
+
+  # 如果有连接错误，ping下能否有网络连接，telnet 判断是否连接上，查看是否开启防火墙service iptables stop
+
+  # 停止主从服务
+  STOP SLAVE
+
+# 注：主从复制的时间间隔一般为毫秒级别，达到秒级别的使用时风险比较大。
+```
+
+**主主复制**
+
+所谓双主备份，其实也就是互做主从复制，每台master既是master，又是另一台服务器的slave。这样，任何一方所做的变更，都会通过复制应用到另外一方的数据库中。
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200531092528.png)
+
+
+
+配置主主复制流程：
+
+- 两台mysql都设置二进制和relay日志
+- 两台mysql都设置replication帐号
+- 两台mysql都设置对方为自己的master
+
+修改两台主mysql配置文件
+
+```bash
+# (1) 编辑配置文件：sudo vim /etc/mysql/my.cnf
+  # 在[mysqld]字段下
+    # ① 给主mysql起一个名字，在局域网内一般为ip最后一个数字，注意两台主mysql名字不能一样。
+    server-id = 101
+    # ② 开启logbin二进制日志，并给logbin起个名字
+    log-bin = mysql_bin
+    # ③ 指定日志格式，分别有mixed（由系统决定row还是statement）、row（记录磁盘变化）、statement（记录执行语句），各有各的应用场景。
+    binlog-format = mixed
+    # ④ 开启relaylog日志，并给relaylog起个名字
+    relay-log=mysql_relay
+    # ⑤ 重启mysql服务器
+    sudo service mysql restart
+
+# (2) 给从mysql添加一个授权帐号，两个主mysql授权帐号可以相同。
+GRANT REPLICATION CLIENT,REPLICATION SLAVE ON *.* TO 'repl'@'192.168.8.%' IDENTIFIED BY '123456';
+FLUSH PRIVILEGES; # 冲刷权限
+
+# (3) 查看两个mysql是否具备充当主mysql条件
+SHOW MASTER STATUS;
+
+# (4) 互相连接对方的mysql
+CHANGE MASTER TO
+  MASTER_HOST='192.168.8.101',
+  MASTER_USER = 'repl',
+  MASTER_PASSWORD = '123456',
+  MASTER_LOG_FILE = 'mysql_bin.000002', # 从SHOW MASTER STATUS查看对方的状态得到
+  MASTER_LOG_POS = 560; # 从SHOW MASTER STATUS查看对方的状态得到
+
+CHANGE MASTER TO
+  MASTER_HOST='192.168.8.102',
+  MASTER_USER = 'repl',
+  MASTER_PASSWORD = '123456',
+  MASTER_LOG_FILE = 'mysql_bin.000005', # 从SHOW MASTER STATUS查看对方的状态得到
+  MASTER_LOG_POS = 1212; # 从SHOW MASTER STATUS查看对方的状态得到
+
+# (5) 配置连接信息后都启动从mysql器功能
+START SLAVE;
+
+# (6) 查看能否互相连接到mysql
+SHOW SLAVE STATUS;
+```
+
+这样设置后会有个主键冲突问题，即(表里有主键，并且是自动增长的，当分别同时插入两台主mysql时，同步的时候就出现主键冲突问题)，解决办法：
+
+```bash
+# (1) 在mysql表设置自动增长步长为2，一个mysql从1开始自动增长1 3 5......，另一个从2开始自动增长2 4 6......
+# 第一台mysql：
+set global auto_increment_increment = 2;
+set global auto_increment_offset = 1;
+set session auto_increment_increment = 2;
+set session auto_increment_offset = 1;
+
+# 第二台mysql：
+set global auto_increment_increment = 2;
+set global auto_increment_offset = 2;
+set session auto_increment_increment=2;
+set session auto_increment_offset = 2;
+
+#注：auto-increment-increment和auto-increment-offset要写到配置文件中，防止下次重启后失效．这种方式也有缺陷，当新增一台主机作为主mysql时，又要从新修改自动增长步长。
+
+# (2) 从业务上统一主键id
+# 比如使用redis的incr命令(自动加1操作)，每插入一行数据前先执行redis的incr命令获取主机id值，然后在插入数据到mysql。
+```
+
+**被动模式下主主复制**
+
+被动模式下主主复制和普通主主复制区别就是设置一台主服务器为只读状态，也就是说把只读的主mysql作为另一个可读写主mysql的备份，当可读写的主mysql主机坏了，只需设置只读的主mysql配置为可读写就可以了，实现mysql无缝切换。
+
+在主主配置的基础上，只需配置一台主mysql设置为只读。
+
+```bash
+# 打开一台主mysql配置文件
+sudo vim /etc/mysql/my.cnf
+# 在[mysqld]字段下添加字段
+read-only=on
+
+# 重启mysql
+sudo service mysql restart
+```
+
+**mysql集群负载均衡**
+
+通过mysql-proxy中间件来管理mysql集群，用户不需要知道集群中有多少个mysql服务器和地址，只需要连接mysql-proxy中间件，用户增删改查操作都是通过mysql-proxy中间件完成，mysql-proxy既可以mysql进行读写分离，也可以负载均衡，如下图所示：
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200531093124.png)
+
+
+
+```bash
+# 安装mysql-proxy中间件
+# 下载源码
+wget http://ftp.ntu.edu.tw/pub/MySQL/Downloads/MySQL-Proxy/mysql-proxy-0.8.4-linux-glibc2.3-x86-64bit.tar.gz
+
+# 解压
+tar zxvf mysql-proxy-0.8.4-linux-glibc2.3-x86-64bit.tar.gz
+
+# 把解压文件夹移动到常用的安装软件目录下并修改名字，
+mv mysql-proxy-0.8.4-linux-glibc2.3-x86-64bit /usr/local/mysql-proxy
+```
+
+ **(1) mysql-proxy说明**
+
+mysql-proxy启动参数思路： - 代理了哪个端口? - 代理了哪写mysql服务? - 对mysql是否进行读写分离?
+
+mysql-proxy是自动负载均衡的，这里的均衡并不是sql语句上的均衡，而是mysql-proxy和用户连接上的均衡，例如当前有20台mysql服务器，有1000个用户连接过来，此时mysql-proxy会把1000个连接数平均分给20台mysql服务器，一旦用户连接上了一台mysql服务器，在用户没有断开连接之前，用户的增删改查或事务操作都是该mysql服务器操作的。
+
+
+
+**(2) 启动mysql-proxy**
+
+```bash
+# 查看帮助
+/usr/local/mysql-proxy/bin/mysql-proxy --help-all
+
+# 普通启动
+/usr/local/mysql-proxy/bin/mysql-proxy -P 192.168.8.102:4040 -b 192.168.8.101:3306 -b 192.168.8.102:3306
+# -P 参数指定mysql-proxy运行的ip地址和端口
+# -b 参数指定mysql服务器的ip地址和端口
+# --daemon 表示在后台启动
+```
+
+
+
+**(3) 设置读写分离mysql启动方式**
+
+```bash
+# mysql-proxy通过一个脚本文件判断用户输入的sql是写入还是读取，脚本位置在/usr/local/mysql-proxy/share/doc/mysql-proxy/rw-splitting.lua
+
+# 读写分离启动mysql-proxy
+/usr/local/mysql-proxy/bin/mysql-proxy -P 192.168.8.102:4040 -b 192.168.8.101:3306 -r 192.168.8.102:3306 -s /usr/local/mysql-proxy/share/doc/mysql-proxy/rw-splitting.lua
+# -P参数指定mysql-proxy运行的ip地址和端口
+# -b参数指定mysql服务器的ip地址和端口
+# -r参数指定只读mysql服务器的ip地址和端口
+# -s参数指定脚本文件的路径
+# --daemon表示在后台启动
+
+# 注：因为-s指定了脚本，脚本有默认最小和最大连接空闲连接数，当连接数超过默认值时，mysql-proxy才会做负载均衡。
+```
+
+## 不常见功能
+
+### 触发器
+
+触发器是一类特殊的事务，可以监视某种数据操作(insert|update|delete)，并触发相关操作(insert|update|delete)。
+
+使用场合：有时碰到表中某些数据改变，希望同时引起改变其他数据改变的需求，利用触发器可以满足这样的需求。例如商城中的有客户下订单后，库存量、购买人数等这些数据需要跟着改变。
+
+作用：在表中某些特定数据变化时自动完成某些查询，运用触发器不仅可以简化程序，并且可以增加程序的灵活性。
+
+创建触发器语法的四要素：
+
+- 监视地点(table表)
+- 监视事件(insert | update | delete)
+- 触发时间(before | after)
+- 触发事件(insert | update | delete)
+
+```bash
+# 创建触发器
+CREATE TRIGGER 触发器名
+  BEFORE 或 AFTER # 触发时间
+  INSERT 或UPDATE 或 DELETE # 监视事件
+  ON 表名 # 监视地点
+  FOR EACH ROW #在mysql中必须写，行级触发器，在oracle可以不写，表示语句级触发器
+  BEGIN # 开始触发
+    sql语句1 sql语句2 ......
+  END # 结束触发
+
+
+# 查看触发器
+SHOW TRIGGERS;
+
+# 删除触发器
+DROP TRIGGER 触发器名;
+```
+
+
+
+监控insert行为时，引用变量用new，监控delete行为时，引用变量用old
+
+```bash
+# (1)订单表插入数据时，触发商品表对应的数据修改的触发器。
+CREATE TRIGGER tr1
+AFTER INSERT
+ON orders
+FOR EACH ROW
+BEGIN
+  UPDATE goods SET num=num-new.much WHERE gid=new.gid;
+END;
+
+# 改进版，当购买数量大于库存数量是，默认为库存数量,防止爆仓。
+CREATE TRIGGER tr4
+BEFORE INSERT
+ON orders
+FOR EACH ROW
+BEGIN
+  DECLARE rnum SMALLINT UNSIGNED DEFAULT 0;
+  SELECT num INTO rnum FROM goods WHERE gid=new.gid;
+  IF new.much>rnum THEN
+    SET new.much = rnum;
+  END IF;
+
+  UPDATE goods SET num=num-new.much WHERE gid=new.gid;
+END;
+
+
+# (2)订单表删除数据时，触发商品表对应的数据修改的触发器（实际中订单只能失效，不能删除）。
+CREATE TRIGGER tr2
+AFTER DELETE
+ON orders
+FOR EACH ROW
+BEGIN
+  UPDATE goods SET num=num+old.much WHERE gid=old.gid;
+END;
+```
+
+
+
+监控update行为时，引用变量update前用old，update后用new。
+
+```bash
+# (3)修改订单表数据时，触发商品表对应的数据修改的触发器。
+CREATE TRIGGER tr3
+BEFORE UPDATE
+ON orders
+FOR EACH ROW
+BEGIN
+  UPDATE goods SET num=num+old.much-new.much WHERE gid=new.gid;
+END;
+```
+
+### 存储过程
+
+把若干条sql语句封装起来并起个名字，在过程中把数据存储到数据库中。
+
+存储过程使用：
+
+```bash
+# 创建存储过程
+CREATE PROCEDURE 名称()
+  BEGIN
+    # sql语句
+  END;
+
+# 调用存储过程
+CALL 存储过程名字();
+
+# 查看存储过程
+SHOW PROCEDURE STATUS;
+
+# 删除存储过程
+DROP PROCEDURE 存储过程名字;
+```
+
+
+
+存储过程是可以编程的，意味着可以使用变量、表达式、控制结构来完成复杂的功能。
+
+**声明变量**
+
+```bash
+# 语法
+DECLARE 变量名 变量类型 [default 默认值]
+  # 注意：声明变量必须在begin和end之间声明。
+  # 变量可以参与sql语句的运算，SET 变量名 := 表达式
+
+# 示例
+CREATE PROCEDURE test1()
+  BEGIN
+    DECLARE leng INT DEFAULT 0;
+    DECLARE widch INT DEFAULT 0;
+    SET leng := 5;
+    SET widch := 6;
+    SELECT leng*widch;
+  END;
+```
+
+
+
+**参数**
+
+参数分为in、 out、 inout类型。in表示输入类型，out表示输出类型，inout表示输入输出类型。
+
+```bash
+# (1)in和out类型
+CREATE PROCEDURE cuArea(in r INT, OUT area INT)
+  BEGIN
+    SET area:=0;# 如果输出area参与运算时必须设置area的初始值，因为null参与运算的值都为null
+    SET area := 3.14*r*r;
+  END;
+
+# 调用：
+CALL cuArea(10,@area);
+SELECT @area;# 结果：314
+
+# (2)inout类型
+CREATE PROCEDURE add_1(INOUT v INT)
+  BEGIN
+    SET v := v + 1;
+  END;
+
+# 定义变量和调用
+SET @v := 1;
+CALL add_1(@v);
+SELECT @v;  # 结果：2
+```
+
+
+
+### **if条件控制结构**
+
+```bash
+# 语法
+IF 条件1 THEN
+ELSEIF条件2 THEN
+......
+ELSE
+END IF;
+# 其中ELSEIF和ELSE可以没有。
+
+# 使用示例
+CREATE PROCEDURE compare(v1 INT,v2 INT)
+  BEGIN
+    IF v1>v2 THEN
+      SELECT concat(v1,'大于',v2);
+    ELSEIF v1<v2 THEN
+      SELECT concat(v1,'小于',v2);
+    ELSE
+      SELECT concat(v1,'等于',v2);
+    END IF;
+  END;
+```
+
+
+
+### **case选择控制结构**
+
+```bash
+# 语法
+CASE 变量
+  WHEN 值 THEN 表达式;
+  ......
+  ELSE 不满足条件最后的默认结果;
+END CASE;
+# 注：else 可以省略。
+
+# 使用示例
+CREATE PROCEDURE cs()
+  BEGIN
+    DECLARE v INT;
+    SET v := floor(rand()*10);
+    CASE v
+      WHEN 0 THEN SELECT '星期日';
+      WHEN 1 THEN SELECT '星期一';
+      WHEN 2 THEN SELECT '星期二';
+      WHEN 3 THEN SELECT '星期三';
+      WHEN 4 THEN SELECT '星期四';
+      WHEN 5 THEN SELECT '星期五';
+      WHEN 6 THEN SELECT '星期六';
+      ELSE SELECT 'unknown day';
+    END CASE;
+  END;
+```
+
+
+
+
+
+### **while循环结构**
+
+```bash
+# 语法
+WHILE 条件 DO
+  执行语句
+END WHILE;
+# 注：避免死循环
+
+# 使用示例
+CREATE PROCEDURE cusum (v INT)
+  BEGIN
+    DECLARE s INT DEFAULT 0;
+    WHILE v>0 DO
+      SET s := s + v;
+      SET v := v-1;
+    END WHILE;
+    SELECT s;
+  END;
+
+# 调用：
+CALL cusum(100);  # 结果：5050
+```
+
+
+
+### **repeat循环结构**
+
+```bash
+# 语法
+REPEAT
+  执行语句......
+UNTIL 条件 END REPEAT;
+
+# 使用示例
+CREATE PROCEDURE cuSum2(v INT)
+  BEGIN
+    DECLARE sum INT DEFAULT 0;
+    REPEAT
+      SET sum := sum+v;
+      SET v:=v-1;
+    UNTIL v<=0 END REPEAT;
+    SELECT sum;
+  END;
+
+# 调用
+CALL cuSum2(100); # 结果：5050
+```
+
+### 游标
+
+一条sql的select语句取出对应的n条资源，取出资源的接口(句柄)就是游标，沿着游标，每次只取出一行，取出的行可以任意的逻辑控制了，而select没有这种功能。
+
+```bash
+# 声明游标
+DECLARE 游标名 CURSOR FOR select语句;
+# 设置触发边界标志
+DECLARE EXIT HANDLER FOR NOT FOUND 表达式;
+# 打开游标
+OPEN 游标名;
+# 取值
+FETCH游标名INTO 变量1, 变量2 ......;
+# 关闭游标
+CLOSE 游标名;
+
+# 用循环读取游标数据，结束条件是判断是否去到最后一条数据(事先计算出来的总数)。
+
+# 使用示例
+CREATE PROCEDURE cursor1()
+  BEGIN
+    DECLARE tmp_name VARCHAR(20);
+    DECLARE tme_num INT;
+    DECLARE cnt INT;
+    DECLARE i INT DEFAULT 0;
+
+    DECLARE get_goods CURSOR FOR SELECT name,num FROM goods;
+    OPEN get_goods;
+    SELECT count(*) INTO cnt FROM goods;
+    WHILE i<cnt DO
+      SET i:=i+1;
+      FETCH get_goods INTO tmp_name,tme_num;# 取一条数据
+      SELECT tmp_name,tme_num;
+    END WHILE;
+
+    CLOSE get_goods;
+  END;
+
+# 调用
+CALL cursor1();
+```
+
+
+
+在mysql的cursor中可以用declare exit或continue handler for not fond来操作越界标志。类似于js中的事件，当读取游标完毕则触发该事件。其中exit和continue的区别是是否执行后面的sql语句。
+
+```bash
+# (1)触发越界后执行exit，不执行后面的sql语句
+CREATE PROCEDURE cursor2()
+  BEGIN
+    DECLARE tmp_name VARCHAR(20);
+    DECLARE tme_num INT;
+    DECLARE isEnd BOOL DEFAULT FALSE;
+
+    DECLARE get_goods CURSOR FOR SELECT name,num FROM goods;
+    DECLARE EXIT HANDLER FOR NOT FOUND SET isEnd:=TRUE ;# 设置触发边界标志
+    OPEN get_goods;
+
+    WHILE !isEnd DO
+      FETCH get_goods INTO tmp_name,tme_num;# 取一条数据
+      SELECT tmp_name,tme_num;
+    END WHILE;
+
+    CLOSE get_goods;
+  END;
+
+# 调用
+CALL cursor2();
+
+# (2)触发越界后执行continue，继续后面的sql语句。
+CREATE PROCEDURE cursor3()
+  BEGIN
+    DECLARE tmp_name VARCHAR(20);
+    DECLARE tme_num INT;
+    DECLARE isEnd BOOL DEFAULT FALSE;
+
+    DECLARE get_goods CURSOR FOR SELECT name,num FROM goods;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET isEnd:=TRUE ;# 设置触发边界标志
+    OPEN get_goods;
+
+    FETCH get_goods INTO tmp_name,tme_num;# 进入循环前先取一条数据
+    WHILE !isEnd DO
+      SELECT tmp_name,tme_num;
+      FETCH get_goods INTO tmp_name,tme_num;# 取一条数据
+    END WHILE;
+
+    CLOSE get_goods;
+  END;
+
+# 调用
+CALL cursor3();
+```
+
+## 导入和导出
+
+**导出数据库**
+
+(1) 导出全库备份到本地的目录
+
+> ```bash
+> mysqldump -u$USER -p$PASSWD -h127.0.0.1 -P3306 –routines –default-character-set=utf8 –lock-all-tables –add-drop-database -A > db.all.sql
+> ```
+
+(2) 导出指定库到本地的目录
+
+> ```bash
+> mysqldump -uroot -p123456 -h192.168.0.54 -P3306 –routines –default-character-set=utf8 –databases taobao > db.sql
+> ```
+
+(3) 导出某个库的表到本地的目录
+
+> ```bash
+> mysqldump -u$USER -p$PASSWD -h127.0.0.1 -P3306 –routines –default-character-set=utf8 –tables mysql user> db.table.sql
+> ```
+
+(4) 导出指定库的表(仅数据)到本地的目录(例如mysql库的user表,带过滤条件)
+
+> ```bash
+> mysqldump -u$USER -p$PASSWD -h127.0.0.1 -P3306 –routines –default-character-set=utf8 –no-create-db –no-create-info –tables mysql user –where=“host=‘localhost’”> db.table.sql
+> ```
+
+(5) 导出某个库的所有表结构
+
+> ```bash
+> mysqldump -u$USER -p$PASSWD -h127.0.0.1 -P3306 –routines –default-character-set=utf8 –no-data –databases mysql > db.nodata.sql
+> ```
+
+(6) 导出某个查询sql的数据为txt格式文件到本地的目录(各数据值之间用”制表符”分隔)，例如sql为’select user,host,password from mysql.user;’
+
+> ```bash
+> mysql -u$USER -p$PASSWD -h127.0.0.1 -P3306 –default-character-set=utf8 –skip-column-names -B -e ‘select user,host,password from mysql.user;’ > mysql_user.txt
+> ```
+
+(7) 导出某个查询sql的数据为txt格式文件到MySQL服务器，登录MySQL,将默认的制表符换成逗号(适应csv格式文件)。指定的路径，mysql要有写的权限。
+
+> ```bash
+> SELECT user,host,password FROM mysql.user INTO OUTFILE ‘/tmp/mysql_user.csv’ FIELDS TERMINATED BY ‘,’;
+> ```
+
+**导入数据库**
+
+(1) 恢复全库数据到MySQL
+
+> ```bash
+> mysql -uroot -p123456 -h192.168.0.54 -P3306 –default-character-set=utf8 < db.sql
+> ```
+
+(2) 恢复某个库的数据(mysql库的user表)
+
+> ```bash
+> mysql -u$USER -p$PASSWD -h127.0.0.1 -P3306 –default-character-set=utf8 mysql < db.table.sql
+> ```
+
+(3) 恢复MySQL服务器上面的txt格式文件(需要FILE权限,各数据值之间用”制表符”分隔)
+
+```bash
+mysql -u$USER -p$PASSWD -h127.0.0.1 -P3306 --default-character-set=utf8
+......
+mysql> use mysql;
+mysql> LOAD DATA INFILE '/tmp/mysql_user.txt' INTO TABLE user ;
+```
+
+(4) 恢复MySQL服务器上面的csv格式文件(需要FILE权限,各数据值之间用”逗号”分隔)
+
+```bash
+mysql -u$USER -p$PASSWD -h127.0.0.1 -P3306 --default-character-set=utf8
+......
+mysql> use mysql;
+mysql> LOAD DATA INFILE '/tmp/mysql_user.csv' INTO TABLE user FIELDS TERMINATED BY ',';
+```
+
+(5) 恢复本地的txt或csv文件到MySQL
+
+```bash
+mysql -u$USER -p$PASSWD -h127.0.0.1 -P3306 --default-character-set=utf8
+......
+mysql> use mysql;
+# txt
+mysql> LOAD DATA LOCAL INFILE '/tmp/mysql_user.csv' INTO TABLE user;
+
+# csv
+mysql> LOAD DATA LOCAL INFILE '/tmp/mysql_user.csv' INTO TABLE user FIELDS TERMINATED BY ',';
+```
+
+(5) 文件导入
+
+```bash
+use o2o;
+set names utf8;
+source D:/o2o.sql
+```
+
+## 安全
+
+**为什么需要安全连接**
+
+SSL(Secure Socket Layer) ：安全套接字层，利用数据加密、身份验证和消息完整性验证机制，为基于TCP等可靠连接的应用层协议提供安全性保证，SSL协议提供的功能主要有：
+
+- 数据传输的机密性：利用对称密钥算法对传输的数据进行加密。
+- 身份验证机制：基于证书利用数字签名方法对服务器和客户端进行身份验证，其中客户端的身份验证是可选的。
+- 消息完整性验证：消息传输过程中使用MAC算法来检验消息的完整性。
+
+数据传输如果不是通过SSL的方式，那么其在网络中数据都是以明文进行传输的，如果传输的是敏感信息(账号、密码)，通过抓包就可以获取到敏感信息。所以在数据库方面，如果客户端连接服务器获取数据需要使用SSL连接，那么在传输过程中，经过加密的数据很难被窃取。
+
+**客户端安全连接**
+
+从mysql5.7之后的版本，在其data目录下有很多后缀为.pem类型的文件，这些.pem文件是用来SSL加密连接的，也就是说mysql5.7之后默认是开启了ssl安全连接功能。
+
+```bash
+# 查看是否开启了SSL/TLS安全连接功能
+SHOW VARIABLES LIKE '%ssl%';
+
+# 如果未开启，使用命令mysql_ssl_rsa_setup生成*.pem文件，默认存放在目录/var/lib/mysql下
+```
+
+从mysql安装目录/var/lib/mysql下复制出来3个客户端安全连接时需要的文件：**client-cert.pem、client-key.pem、ca.pem**。
+
+
+
+**没有强制使用ssl安全连接情况**
+
+默认情况下，mysql配置文件my.cnf的[mysqld]下require_secure_transport = OFF，说明不强制要求ssl连接，但mysql客户端连接时添加选项–ssl-mode也可以使用ssl安全连接，–ssl-mode选项值有以下5种类型：
+
+- DISABLED：不使用安全连接，如果require_secure_transport = ON时则无效。
+- PREFERRED, REQUIRED：使用SSL加密，加密算法没差别。
+- VERIFY_CA, VERIFY_IDENTITY：客户端连接时需附加–ssl-ca等选项。
+
+设置指定用户必须使用ssl传输数据示例：
+
+```bash
+# 使用x509连接
+mysql -h 192.168.101.88 -u zhuyasen -P 33060 --ssl-cert=./client-cert.pem --ssl-key=./client-key.pem --ssl-mode=REQUIRED -p
+
+# 使用x509连接和mysql服务颁发证书ca.pem连接
+mysql -h 192.168.101.88 -u zhuyasen -P 33060 --ssl-mode=VERIFY_CA --ssl-cert=./client-cert.pem --ssl-key=./client-key.pem --ssl-ca=./ca.pem -p
+```
+
+
+
+在require_secure_transport = OFF(不需要ssl连接)，可以设置指定用户必须使用ssl传输数据。
+
+```bash
+# 创建新用户指定该用户使用连接方式：ssl或x509
+CREATE USER 'krislin'@'%' IDENTIFIED WITH mysql_native_password BY '123456' REQUIRE ssl;
+# 授权数据库和表的权限
+GRANT ALL ON *.* TO 'krislin'@'%';
+# 刷新
+FLUSH PRIVILEGES;
+
+# 对于已存在用户也可以是修改连接方式：ssl或x509
+ALTER USER 'zhuyasen'@'%' REQUIRE x509;
+
+# 查看用户表信息
+select host,user,ssl_type,ssl_cipher,x509_issuer,x509_subject,plugin from mysql.user;
+
+# 查看当前用户密文状态
+show status like 'ssl_cipher';
+
+# 如果用户不使用证书连接，返回连接失败(非本机连接)
+mysql -h 192.168.101.88 -u vison -p
+
+# 指定证书连接，连接成功
+mysql -h 192.168.101.88 -u vison --ssl-cert=./client-cert.pem --ssl-key=./client-key.pem -p
+
+# 查看上一条命令状态详情
+\s
+```
+
+
+
+**强制所有用户使用ssl安全连接**
+
+在配置文件my.cnf的[mysqld]下添加参数，强制所有用户传输使用ssl安全传输，
+
+> require_secure_transport = ON
+
+重启mysql后，远程登陆必须使用证书
+
+```bash
+mysql -h 192.168.101.88 -u root -P 33060 --ssl-cert=./client-cert.pem --ssl-key=./client-key.pem -p
+
+mysql -h 192.168.101.88 -u vison -P 33060 --ssl-cert=./client-cert.pem --ssl-key=./client-key.pem --ssl-ca=./ca.pem --ssl-mode=VERIFY_CA -p
+```
+
+
+
+**未使用SS和使用SSL安全性对比**
+
+- 未使用SSL情况下，在数据库服务器端可以通过抓包的方式获取数据，安全性不高。
+- 没有抓到该语句，采用SSL加密后，tshark抓不到数据，安全性高。
+
+
+
+**使用SSL前后性能对比**
+
+- 虽然SSL方式使得安全性提高了，但是相对地使得QPS也降低23%左右，使用连接池或者长连接可能会好许多。
+- 对于非常敏感核心的数据，或者QPS本来就不高的核心数据，可以采用SSL方式保障数据安全性；
+- 对于采用短链接、要求高性能的应用，或者不产生核心敏感数据的应用，性能和可用性才是首要，建议不要采用SSL方式，除非使用云服务商数据强制要求除外。
+
+
+
+**注：如果用户是采用本地localhost或者sock连接数据库，不会使用SSL方式的。**
+
+# MySQL高级
+
 ## MySQL 逻辑架构
 
 大体来说，MySQL 可以分为 Server 层和存储引擎层两部分。
