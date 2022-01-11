@@ -32,21 +32,22 @@ Dao层、Service层、Controller层
 
 ### 1.4 为什么需要MyBatis
 
--  帮助程序员将数据存入到数据库中 
--  方便 
+- 帮助程序员将数据存入到数据库中 、方便
 
--  传统的JDBC代码太复杂了，简化，框架，自动化 
--  不用MyBatis也可以，技术没有高低之分 
+- 传统的JDBC代码太复杂了，简化，框架，自动化 
 
--  优点：    
+- 不用MyBatis也可以，技术没有高低之分 
 
-- - 简单易学
-  - 灵活
+- 优点：    
 
-- - sql和代码的分离，提高了可维护性。
+  - 简单易学、灵活
+
+  - sql和代码的分离，提高了可维护性。
+
   - 提供映射标签，支持对象与数据库的orm字段关系映射
 
-- - 提供对象关系映射标签，支持对象关系组建维护
+  - 提供对象关系映射标签，支持对象关系组建维护
+
   - 提供xml标签，支持编写动态sql
 
 ## 2、第一个Mybatis程序
@@ -168,13 +169,7 @@ public interface UserDao {
 </mapper>
 ```
 
--  测试 
-  **注意点：** 
-  org.apache.ibatis.binding.BindingException: Type interface com.kuang.dao.UserDao is not known to the MapperRegistry. 
-  **MapperRegistry是什么?** 
-  核心配置文件中注册mappers    
-
-- -  junit测试 
+-  junit测试 
 
 ```java
     @Test
@@ -210,7 +205,7 @@ namespace中的包名要和Dao/Mapper接口的包名一致
 
 -  parameterType : 参数类型；    
 
-1. - 编写接口 
+**编写接口**
 
 ```java
 public interface UserMapper {
@@ -221,7 +216,7 @@ public interface UserMapper {
 }
 ```
 
-1. - 编写对应的mapper中的sql语句 
+**编写对应的mapper中的sql语句**
 
 ```java
 <insert id="addUser" parameterType="com.kuang.pojo.User">
@@ -229,9 +224,7 @@ public interface UserMapper {
 </insert>
 ```
 
-
-
-1. - 测试
+测试
 
 ```java
 @Test
@@ -248,9 +241,9 @@ public void test2() {
 }
 ```
 
-1. - **注意：增删改查一定要提交事务**
+**注意：增删改查一定要提交事务**
 
-```plain
+```java
 sqlSession.commit();
 ```
 
@@ -262,16 +255,16 @@ sqlSession.commit();
 
 ### 6. 万能Map
 
-假设，我们的实体类，或者数据库中的表，字段或者参数过多，我们应该考虑使用Map!
+假设，我们的实体类，或者数据库中的表，字段或者参数过多，考虑使用Map
 
-1. UserMapper接口
+UserMapper接口
 
 ```java
 //用万能Map插入用户
 public void addUser2(Map<String,Object> map);
 ```
 
-1. UserMapper.xml
+UserMapper.xml
 
 ```java
 <!--对象中的属性可以直接取出来 传递map的key-->
@@ -280,7 +273,7 @@ public void addUser2(Map<String,Object> map);
 </insert>
 ```
 
-1. 测试
+测试
 
 ```java
     @Test
@@ -309,21 +302,19 @@ Map传递参数，直接在sql中取出key即可！ 【parameter=“map”】
 
 ### 7. 模糊查询
 
-模糊查询这么写？
+模糊查询这么写
 
-1.  Java代码执行的时候，传递通配符% % 
+Java代码执行的时候，传递通配符% % 
 
 ```java
 List<User> userList = mapper.getUserLike("%李%");
 ```
 
-1.  在sql拼接中使用通配符 
+在sql拼接中使用通配符 
 
 ```sql
 select * from user where name like "%"#{value}"%"
 ```
-
-
 
 ## 4、配置解析
 
@@ -332,7 +323,7 @@ select * from user where name like "%"#{value}"%"
 -  mybatis-config.xml 
 -  Mybatis的配置文件包含了会深深影响MyBatis行为的设置和属性信息。 
 
-```plain
+```xml
 configuration（配置）
     properties（属性）
     settings（设置）
@@ -364,7 +355,7 @@ MyBatis默认的事务管理器就是JDBC ，连接池：POOLED
 
 这些属性可以在外部进行配置，并可以进行动态替换。你既可以在典型的 Java 属性文件中配置这些属性，也可以在 properties 元素的子元素中设置。【db.poperties】
 
-1.  编写一个配置文件 db.properties 
+编写一个配置文件 db.properties 
 
 ```xml
 driver=com.mysql.cj.jdbc.Driver
@@ -373,7 +364,7 @@ username=root
 password=root
 ```
 
-1.  在核心配置文件中引入
+在核心配置文件中引入
 
 ```xml
 <!--引用外部配置文件-->
@@ -383,10 +374,9 @@ password=root
 </properties>
 ```
 
-- - 可以直接引入外部文件
-  - 可以在其中增加一些属性配置
-
-- - 如果两个文件有同一个字段，优先使用外部配置文件的
+- 可以直接引入外部文件
+- 可以在其中增加一些属性配置
+- 如果两个文件有同一个字段，优先使用外部配置文件的
 
 ### 4. 类型别名 typeAliases
 
@@ -400,7 +390,7 @@ password=root
 </typeAliases>
 ```
 
-- 也可以指定一个包，每一个在包 `domain.blog` 中的 Java Bean，在没有注解的情况下，会使用 Bean 的首字母小写的非限定类名来作为它的别名。 比如 `domain.blog.Author` 的别名为 `author`,；若有注解，则别名为其注解值。见下面的例子：
+- 也可以指定一个包，每一个在包 `domain.blog` 中的 Java Bean，在没有注解的情况下，会使用 Bean 的首字母小写的非限定类名来作为它的别名。 若有注解，则别名为其注解值。见下面的例子：
 
 ```xml
 <typeAliases>
@@ -430,14 +420,16 @@ public class Author {
 ### 6. 其他配置
 
 - [typeHandlers（类型处理器）](https://mybatis.org/mybatis-3/zh/configuration.html#typeHandlers)
+
 - [objectFactory（对象工厂）](https://mybatis.org/mybatis-3/zh/configuration.html#objectFactory)
 
 - plugins 插件    
 
-- - mybatis-generator-core
+  - mybatis-generator-core
+
   - mybatis-plus
 
-- - 通用mapper
+- 通用mapper
 
 ### 7. 映射器 mappers
 
@@ -538,10 +530,6 @@ MapperRegistry：注册绑定我们的Mapper文件；
 
 结果集映射
 
-id name pwd
-
-id name password
-
 ```xml
 <!--结果集映射-->
 <resultMap id="UserMap" type="User">
@@ -557,10 +545,8 @@ id name password
 ```
 
 - `resultMap` 元素是 MyBatis 中最重要最强大的元素。 
--  ResultMap 的设计思想是，对简单的语句做到零配置，对于复杂一点的语句，只需要描述语句之间的关系就行了。 
-
+- ResultMap 的设计思想是，对简单的语句做到零配置，对于复杂一点的语句，只需要描述语句之间的关系就行了。 
 - `ResultMap` 的优秀之处——你完全可以不用显式地配置它们。 
--  如果这个世界总是这么简单就好了。 
 
 ## 6、日志
 
@@ -607,7 +593,7 @@ id name password
 -  通过定义每一条日志信息的级别，我们能够更加细致地控制日志的生成过程； 
 -  最令人感兴趣的就是，这些可以通过一个[配置文件](https://baike.baidu.com/item/配置文件/286550)来灵活地进行配置，而不需要修改应用的代码。
 
-1.  先导入log4j的包 
+先导入log4j的包 
 
 ```xml
 <dependency>
@@ -617,7 +603,7 @@ id name password
 </dependency>
 ```
 
-1.  log4j.properties 
+log4j.properties 
 
 ```xml
 #将等级为DEBUG的日志信息输出到console和file这两个目的地，console和file的定义在下面的代码
@@ -655,7 +641,7 @@ log4j.logger.java.sq1.PreparedStatement=DEBUG
 Logger logger = Logger.getLogger(UserDaoTest.class);
 ```
 
-1.  日志级别
+- 日志级别
 
 ```java
 logger.info("info: 测试log4j");
@@ -663,10 +649,11 @@ logger.debug("debug: 测试log4j");
 logger.error("error:测试log4j");
 ```
 
-1. 1. info
-   2. debug
+- info
 
-1. 1. error
+- debug
+
+- error
 
 ## 7、分页
 
@@ -682,14 +669,14 @@ SELECT * from user limit startIndex,pageSize
 
 **使用MyBatis实现分页，核心SQL**
 
-1.  接口
+接口
 
 ```java
 //分页
 List<User> getUserByLimit(Map<String,Integer> map);
 ```
 
-1.  Mapper.xml 
+Mapper.xml 
 
 ```xml
 <!--分页查询-->
@@ -698,7 +685,7 @@ List<User> getUserByLimit(Map<String,Integer> map);
 </select>
 ```
 
-1.  测试
+测试
 
 ```java
     @Test
@@ -719,14 +706,14 @@ List<User> getUserByLimit(Map<String,Integer> map);
 
 不再使用SQL实现分页
 
-1.  接口
+接口
 
 ```java
 //分页2
 List<User> getUserByRowBounds();
 ```
 
-1.  mapper.xml 
+mapper.xml 
 
 ```xml
 <!--分页查询2-->
@@ -735,7 +722,7 @@ List<User> getUserByRowBounds();
 </select>
 ```
 
-1.  测试
+测试
 
 ```java
     public void getUserByRowBounds(){
@@ -768,22 +755,20 @@ List<User> getUserByRowBounds();
 
 ### 8.2 使用注解开发
 
-1.  注解在接口上实现 
+注解在接口上实现 
 
 ```java
 @Select("select * from user")
 List<User> getUsers();
 ```
 
-1.  需要在核心配置文件中绑定接口
+需要在核心配置文件中绑定接口
 
 ```xml
 <mappers>
     <mapper class="com.kuang.dao.UserMapper"/>
 </mappers>
 ```
-
-1.  测试 
 
 本质：反射机制实现
 
@@ -810,8 +795,6 @@ int deleteUser(@Param("uid") int id);
 
 - 如果只有一个基本类型的话，可以忽略，但是建议大家都加上
 - 我们在SQL中引用的就是我们这里的@Param()中设定的属性名
-
-**#{} 和 ${}**
 
 ## 9、Lombok
 
@@ -1126,34 +1109,37 @@ public class Blog {
 
 我们再次查询的相同数据的时候，直接走缓存，不走数据库了
 
-1. 什么是缓存[Cache]？    
+**什么是缓存[Cache]？   ** 
 
-- - 存在内存中的临时数据
-  - 将用户经常查询的数据放在缓存（内存）中，用户去查询数据就不用从磁盘上（关系型数据库文件）查询，从缓存中查询，从而提高查询效率，解决了高并发系统的性能问题
+- 存在内存中的临时数据
 
-1. 为什么使用缓存？    
+- 将用户经常查询的数据放在缓存（内存）中，用户去查询数据就不用从磁盘上（关系型数据库文件）查询，从缓存中查询，从而提高查询效率，解决了高并发系统的性能问题
 
-- - 减少和数据库的交互次数，减少系统开销，提高系统效率
+**为什么使用缓存？**
 
-1. 什么样的数据可以使用缓存？    
+- 减少和数据库的交互次数，减少系统开销，提高系统效率
 
-- - 经常查询并且不经常改变的数据 【可以使用缓存】
+**什么样的数据可以使用缓存？**
+
+- 经常查询并且不经常改变的数据 【可以使用缓存】
 
 ### 13.2 MyBatis缓存
 
 - MyBatis包含一个非常强大的查询缓存特性，它可以非常方便的定制和配置缓存，缓存可以极大的提高查询效率。
+
 - MyBatis系统中默认定义了两级缓存：**一级缓存**和**二级缓存**    
 
-- - 默认情况下，只有一级缓存开启（SqlSession级别的缓存，也称为本地缓存）
-  - 二级缓存需要手动开启和配置，他是基于namespace级别的缓存。
+  - 默认情况下，只有一级缓存开启（SqlSession级别的缓存，也称为本地缓存）
 
-- - 为了提高可扩展性，MyBatis定义了缓存接口Cache。我们可以通过实现Cache接口来定义二级缓存。
+  - 二级缓存需要手动开启和配置，他是基于namespace级别的缓存。
+  - 为了提高可扩展性，MyBatis定义了缓存接口Cache。我们可以通过实现Cache接口来定义二级缓存。
 
 ### 13.3 一级缓存
 
 - 一级缓存也叫本地缓存：SqlSession    
 
-- - 与数据库同一次会话期间查询到的数据会放在本地缓存中
+  - 与数据库同一次会话期间查询到的数据会放在本地缓存中
+
   - 以后如果需要获取相同的数据，直接从缓存中拿，没必要再去查询数据库
 
 测试步骤：
@@ -1176,7 +1162,7 @@ public class Blog {
     }
 ```
 
-1.  查看日志输出 
+查看日志输出 
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614865195973-89007834-841e-4d18-8f85-84e2a9cf372b.png)
 
@@ -1195,14 +1181,17 @@ sqlSession.clearCache();
 ### 13.4 二级缓存
 
 - 二级缓存也叫全局缓存，一级缓存作用域太低了，所以诞生了二级缓存
+
 - 基于namespace级别的缓存，一个名称空间，对应一个二级缓存
 
 - 工作机制    
 
-- - 一个会话查询一条数据，这个数据就会被放在当前会话的一级缓存中
+  - 一个会话查询一条数据，这个数据就会被放在当前会话的一级缓存中
+
   - 如果会话关闭了，这个会员对应的一级缓存就没了；但是我们想要的是，会话关闭了，一级缓存中的数据被保存到二级缓存中
 
-- - 新的会话查询信息，就可以从二级缓存中获取内容
+  - 新的会话查询信息，就可以从二级缓存中获取内容
+
   - 不同的mapper查询出的数据会放在自己对应的缓存（map）中
 
 一级缓存开启（SqlSession级别的缓存，也称为本地缓存）
@@ -1212,14 +1201,14 @@ sqlSession.clearCache();
 
 步骤：
 
-1.  开启全局缓存 
+开启全局缓存 
 
 ```xml
 <!--显示的开启全局缓存-->
 <setting name="cacheEnabled" value="true"/>
 ```
 
-1.  在Mapper.xml中使用缓存
+在Mapper.xml中使用缓存
 
 ```xml
 <!--在当前Mapper.xml中使用二级缓存-->
@@ -1230,9 +1219,7 @@ sqlSession.clearCache();
        readOnly="true"/>
 ```
 
-1.  测试    
-
-1. 1. 问题：我们需要将实体类序列化，否则就会报错
+我们需要将实体类序列化，否则就会报错
 
 **小结：**
 
@@ -1259,7 +1246,7 @@ sqlSession.clearCache();
 
 Ehcache是一种广泛使用的开源Java分布式缓存。主要面向通用缓存
 
-1.  导包
+导包
 
 ```xml
 <dependency>
@@ -1269,7 +1256,7 @@ Ehcache是一种广泛使用的开源Java分布式缓存。主要面向通用缓
 </dependency>
 ```
 
-1.  在mapper中指定使用我们的ehcache缓存实现 
+在mapper中指定使用我们的ehcache缓存实现 
 
 ```xml
 <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>

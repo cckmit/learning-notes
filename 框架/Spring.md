@@ -1,5 +1,3 @@
-
-
 # 基础入门
 
 
@@ -10,10 +8,10 @@
 
 - Spring框架以interface21框架为基础，经过重新设计，并不断丰富其内涵，于2004年3月24日发布了1.0正式版
 
-- Spring的理念：使用现有的技术更加容易使用，本身是一个大杂烩，整合了现有的技术框架！
+- Spring的理念：使用现有的技术更加容易使用，本身是一个大杂烩，整合了现有的技术框架
 
-- SSH：Struct2 + Spring + Hibernate（全自动持久化框架）！
-- SSM：SpringMVC + Spring + MyBatis（半自动持久化框架，可自定义性质更强）！
+- SSH：Struct2 + Spring + Hibernate（全自动持久化框架）
+- SSM：SpringMVC + Spring + MyBatis（半自动持久化框架，可自定义性质更强）
 
 Spring Web MVC和Spring-JDBC的pom配置文件：
 
@@ -35,11 +33,11 @@ Spring Web MVC和Spring-JDBC的pom配置文件：
 
 ### 1.2 优点
 
-- Spring是一个开源的免费的框架（容器）！
-- Spring是一个轻量级的、非入侵式的框架！
+- Spring是一个开源的免费的框架（容器）
+- Spring是一个轻量级的、非入侵式的框架
 
 - 控制反转（IoC），面向切面编程（AOP）
-- 支持事务的处理，对框架整合的支持！
+- 支持事务的处理，对框架整合的支持
 
 ### 1.3 组成
 
@@ -51,22 +49,21 @@ Spring Web MVC和Spring-JDBC的pom配置文件：
 
 ### 1.4、扩展
 
-现代化的java开发 -> 基于Spring的开发！
+现代化的java开发 -> 基于Spring的开发
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614904099889-8c9fe42c-fe3b-4986-b9df-ef1940069ac9.png)
 
-
-
 - Spring Boot
 
-- - 一个快速开发的脚手架
+  - 一个快速开发的脚手架
+
   - 基于SpringBoot可以快速开发单个微服务
 
-- - 约定大于配置！
+  - 约定大于配置
 
 - Spring Cloud
 
-- - SpringCloud是基于SpringBoot实现的！
+  - SpringCloud是基于SpringBoot实现的！
 
 因为现在大多数公司都在使用SpringBoot进行快速开发，学习SpringBoot的前提，需要完全掌握Spring及SpringMVC！承上启下的作用！
 
@@ -77,12 +74,6 @@ Spring Web MVC和Spring-JDBC的pom配置文件：
 
 本质上解决了问题，程序员不用再去管理对象的创建，系统的耦合性大大降低，可以更专注在业务的实现上。
 
-这是IoC（控制反转）的原型，反转(理解)：主动权交给了用户
-
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614904805084-e687487f-aa98-4f35-8f2c-01f4d38827d5.png)
-
-
-
 ### IoC本质
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614904861083-7ce23078-1e66-420f-bee6-36c80bb83978.png)
@@ -92,8 +83,6 @@ Spring Web MVC和Spring-JDBC的pom配置文件：
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614904822996-aac3e762-a48f-474a-a70d-73cb6db55a8c.png)
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614904850692-880cd6bc-b989-4942-b6e7-704bd88f4871.png)
-
-
 
 ## 3、HelloSpring
 
@@ -155,6 +144,15 @@ public class Hello {
     <bean id="hello" class="pojo.Hello">
         <property name="str" value="Spring"/>
     </bean>
+    
+     <bean id="userDaomSql" class="dao.UserDaoMysqlImpl"></bean>
+
+    <bean id="userServiceImpl" class="service.UserServiceImp">
+        <!--ref引用spring中已经创建很好的对象-->
+        <!--value是一个具体的值,基本数据类型-->
+        <property name="userDao" ref="userDaomSql"/>
+    </bean>
+    
 </beans>
 ```
 
@@ -176,6 +174,9 @@ public class MyTest {
 		//我们的对象下能在都在spring·中管理了，我们要使用，直接取出来就可以了
 		Hello holle = (Hello) context.getBean("hello");
 		System.out.println(holle.toString());
+        
+         UserServiceImpl userServiceImpl = (UserServiceImpl) context.getBean("userServiceImpl");
+		userServiceImpl.getUser();
 	}
 
 }
@@ -188,43 +189,6 @@ public class MyTest {
 public void setStr(String str) {
 		this.str = str;
 	}
-```
-
-在前面的module试试引入Spring
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-        https://www.springframework.org/schema/beans/spring-beans.xsd">
-
-    <bean id="userDaomSql" class="dao.UserDaoMysqlImpl"></bean>
-
-    <bean id="userServiceImpl" class="service.UserServiceImp">
-        <!--ref引用spring中已经创建很好的对象-->
-        <!--value是一个具体的值,基本数据类型-->
-        <property name="userDao" ref="userDaomSql"/>
-    </bean>
-
-</beans>
-```
-
-第一个module改良后测试
-
-```java
-package holle0;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import service.UserServiceImpl;
-
-public class MyTest0 {
-	public static void main(String[] args) {
-		ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
-		UserServiceImpl userServiceImpl = (UserServiceImpl) context.getBean("userServiceImpl");
-		userServiceImpl.getUser();
-	}
-}
 ```
 
 **总结：**
@@ -403,7 +367,7 @@ import一般用于团队开发使用，它可以将多个配置文件，导入�
 
 ### 6.3、拓展注入
 
-官方文档位置
+官方文档
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614905685152-3eb4a87e-cf21-4a50-97ae-89d60e4ee0a7.png)
 
@@ -476,15 +440,9 @@ User user = context.getBean("user",User.class);//确定class对象，就不用�
 System.out.println(user.toString());
 ```
 
-
-
 ### 6.4、Bean作用域
 
-
-
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614905784203-7766277a-324e-436a-9373-c436ed73e825.png)
-
-
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614905791799-b4ba27fa-f125-4272-a3ea-7186a355ba47.png)
 
@@ -514,11 +472,10 @@ System.out.println(user.toString());
 
 - 自动装配是Spring满足bean依赖的一种方式
 - Spring会在上下文自动寻找，并自动给bean装配属性
-
-1. byType自动装配：byType会自动查找，和自己对象set方法参数的类型相同的bean
-   保证所有的class唯一(类为全局唯一)
-2. byName自动装配：byName会自动查找，和自己对象set对应的值对应的id
-   保证所有id唯一，并且和set注入的值一致
+- byType自动装配：byType会自动查找，和自己对象set方法参数的类型相同的bean
+  保证所有的class唯一(类为全局唯一)
+- byName自动装配：byName会自动查找，和自己对象set对应的值对应的id
+  保证所有id唯一，并且和set注入的值一致
 
 ```xml
 <!-- 找不到id和多个相同class -->
@@ -565,13 +522,7 @@ xml配置 -> byName 自动装配
 </bean>
 ```
 
-
-
 ### 7.2、使用注解实现自动装配
-
-jdk1.5支持的注解，spring2.5支持的注解
-
-The introduction of annotation-based configuration raised the question of whether this approach is “better” than XML.（翻译：基于注释的配置的引入提出了一个问题，即这种方法是否比XML“更好”）
 
 1. 导入context约束
 
@@ -593,7 +544,7 @@ The introduction of annotation-based configuration raised the question of whethe
 </beans>
 ```
 
-#### 7.2.1、[@Autowired ]()
+#### 7.2.1、@Autowired
 
 **默认是byType方式，如果匹配不上，就会byName**
 
@@ -611,9 +562,9 @@ public class People {
 }
 ```
 
-[@Nullable ]() 字段标记了这个注解，说明该字段可以为空 
+@Nullable字段标记了这个注解，说明该字段可以为空 
 
-public name([@Nullable ]() String name){ 
+public name(@Nullable String name){ 
 
 }
 
@@ -626,11 +577,11 @@ public @interface Autowired {
 
 如果定义了Autowire的require属性为false，说明这个对象可以为null，否则不允许为空（false表示找不到装配，不抛出异常）
 
-#### 7.2.2、@Autowired+[@Qualifier ]()
+#### 7.2.2、@Autowired+@Qualifier
 
-**@Autowired不能唯一装配时，需要@Autowired+**[**@Qualifier** ]() 
+**@Autowired不能唯一装配时，需要@Autowired+@Qualifier**
 
-如果[@Autowired自动装配环境比较复杂。自动装配无法通过一个注解完成的时候，可以使用@Qualifier(value ]() = “dog”)去配合使用，指定一个唯一的id对象 
+如果@Autowired自动装配环境比较复杂。自动装配无法通过一个注解完成的时候，可以使用@Qualifier(value = “dog”)去配合使用，指定一个唯一的id对象 
 
 ```java
 public class People {
@@ -643,7 +594,7 @@ public class People {
 }
 ```
 
-#### 7.2.3、[@Resource ]()
+#### 7.2.3、@Resource
 
 **默认是byName方式，如果匹配不上，就会byType**
 
@@ -657,7 +608,7 @@ public class People {
 }
 ```
 
-Autowired是byType，@Autowired+[@Qualifier ]() = byType || byName 
+Autowired是byType，@Autowired+@Qualifier = byType || byName 
 
 Autowired是先byType,如果唯一則注入，否则byName查找。resource是先byName,不符合再继续byType
 
@@ -666,9 +617,9 @@ Autowired是先byType,如果唯一則注入，否则byName查找。resource是�
 @Resource和@Autowired的区别：
 
 - 都是用来自动装配的，都可以放在属性字段上
-- @Autowired通过byType的方式实现，而且必须要求这个对象存在！【常用】
+- @Autowired通过byType的方式实现，而且必须要求这个对象存在
 
-- @Resource默认通过byname的方式实现，如果找不到名字，则通过byType实现！如果两个都找不到的情况下，就报错！【常用】
+- @Resource默认通过byname的方式实现，如果找不到名字，则通过byType实现，如果两个都找不到的情况下，就报错
 - 执行顺序不同：@Autowired通过byType的方式实现。@Resource默认通过byName的方式实现
 
 ## 8、使用注解开发
@@ -696,8 +647,6 @@ Autowired是先byType,如果唯一則注入，否则byName查找。resource是�
 
 ### 8.1、bean
 
-弹幕评论：
-
 有了< context:component-scan>，另一个< context:annotation-config/>标签可以移除掉，因为已经被包含进去了。
 
 ```xml
@@ -716,7 +665,7 @@ public class User {
 }
 ```
 
-### 8.2、属性如何注入[@value ]()
+### 8.2、属性如何注入@value 
 
 ```java
 @Component
@@ -752,7 +701,7 @@ public class User {
 
 @Resource：默认是byName方式，如果匹配不上，就会byType
 
-### 8.5、作用域[@scope ]()
+### 8.5、作用域@scope
 
 ```java
 //原型模式prototype，单例模式singleton
@@ -857,10 +806,6 @@ public class MyTest {
 }
 ```
 
-**会创建两个相同对象问题的说明：**
-
-**弹幕总结 - -> @Bean是相当于< bean>标签创建的对象，而我们之前学的@Component是通过spring自动创建的这个被注解声明的对象，所以这里相当于有两个User对象被创建了。一个是bean标签创建的（@Bean），一个是通过扫描然后使用@Component，spring自动创建的User对象，所以这里去掉@Bean这些东西，然后开启扫描。之后在User头上用@Component即可达到spring自动创建User对象了**
-
 ## 10、动态代理
 
 代理模式是SpringAOP的底层
@@ -959,9 +904,7 @@ public class My {
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614907251554-89227f7e-272b-452a-a1f4-9a16d11a9129.png)
 
-代码翻倍：几十个真实角色就得写几十个代理
-
-AOP横向开发
+代码翻倍：几十个真实角色就得写几十个代理，故引入了AOP横向开发
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614907268099-66eff18d-f043-410e-82b3-8c9c11be3144.png)
 
@@ -969,7 +912,7 @@ AOP横向开发
 
 动态代理和静态角色一样，动态代理底层是反射机制，动态代理中两大类：基于接口，基于类
 
-- 基于接口：JDK的动态代理【使用ing】
+- 基于接口：JDK的动态代理
 - 基于类：cglib
 
 了解两个类
@@ -979,10 +922,6 @@ AOP横向开发
 2、InvocationHandler：调用处理程序
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614907302756-59111a35-45b2-440a-89c0-15fe993ae424.png)
-
-
-
-实例：
 
 接口 Host.java
 
@@ -1422,8 +1361,6 @@ public class MyTest5 {
 输出结果：
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614907987976-3ccb0bff-7c89-42b1-937e-bd2968e20354.png)
-
-
 
 ## 12、整合mybatis
 
@@ -2132,7 +2069,7 @@ public class MyTest7 {
 
 Spring 是个java企业级应用的开源开发框架。Spring主要用来开发Java应用，但是有些扩展是针对构建J2EE平台的web应用。Spring 框架目标是简化Java企业级应用开发，并通过POJO为基础的编程模型促进良好的编程习惯。
 
-## 1、使用Spring框架的好处是什么？
+## 1、使用Spring框架的好处
 
 轻量：Spring 是轻量的，基本的版本大约2MB
 
@@ -2148,7 +2085,7 @@ MVC框架：Spring的WEB框架是个精心设计的框架，是Web框架的一�
 
 异常处理：Spring 提供方便的API把具体技术相关的异常转化为一致的unchecked 异常
 
-## 2、Spring由哪些模块组成？
+## 2、Spring的模块组成？
 
 1. **Core Container - 核心容器（IOC）**
 
@@ -2194,39 +2131,37 @@ MVC框架：Spring的WEB框架是个精心设计的框架，是Web框架的一�
 
 - spring - test：提供对测试功能的支持
 
-## 一、核心容器模块
+### 一、核心容器模块
 
 这是基本的Spring模块，提供spring 框架的基础功能，BeanFactory 是 任何以spring为基础的应用的核心。Spring 框架建立在此模块之上，它使Spring成为一个容器。
 
 **BeanFactory 工厂是工厂模式的一个实现**，提供了控制反转功能，用来把应用的配置和依赖从正真的应用代码中分离。最常用的BeanFactory 实现是XmlBeanFactory 类。它根据XML文件中的定义加载beans。该容器从XML 文件读取配置元数据并用它去创建一个完全配置的系统或应用。
 
-## 二、AOP模块
+### 二、AOP模块
 
 AOP模块用于发给我们的Spring应用做面向切面的开发， 很多支持由AOP联盟提供，这样就确保了Spring和其他AOP框架的共通性。这个模块将元数据编程引入Spring。
 
 
 
-## 三、JDBC抽象和DAO模块
+### 三、JDBC抽象和DAO模块
 
 通过使用JDBC抽象和DAO模块，保证数据库代码的简洁，并能避免数据库资源错误关闭导致的问题，它在各种不同的数据库的错误信息之上，提供了一个统一的异常访问层。它还利用Spring的AOP 模块给Spring应用中的对象提供事务管理服务。
 
 
 
-## 四、对象/关系映射集成模块
+### 四、对象/关系映射集成模块
 
 Spring 通过提供ORM模块，支持我们在直接JDBC之上使用一个对象/关系映射映射(ORM)工具，Spring 支持集成主流的ORM框架，如Hiberate,JDO和 iBATIS SQL Maps。Spring的事务管理同样支持以上所有ORM框架及JDBC。
 
 
 
-## 五、WEB 模块
+### 五、WEB 模块
 
 Spring的WEB模块是构建在application context 模块基础之上，提供一个适合web应用的上下文。这个模块也包括支持多种面向web的任务，如透明地处理多个文件上传请求和程序级请求参数的绑定到你的业务对象。它也有对Jakarta Struts的支持。
 
 ## 3、Spring 配置文件
 
 Spring配置文件是个XML 文件，这个文件包含了类信息，描述了如何配置它们，以及如何相互调用。
-
-
 
 ## 4、Spring IOC 容器
 
@@ -2236,7 +2171,7 @@ Spring IOC 负责创建对象，管理对象（通过依赖注入（DI），装�
 
 **优点**：IOC 或 依赖注入把应用的代码量降到最低。它使应用容易测试，单元测试不再需要单例和JNDI查找机制。最小的代价和最小的侵入性使松散耦合得以实现。IOC容器支持加载服务时的饿汉式初始化和懒加载。
 
-## Spring 依赖注入
+### Spring 依赖注入
 
 依赖注入，是IOC的一个方面，是个通常的概念，它有多种解释。这概念是说你不用创建对象，而只需要描述它如何被创建。你不在代码里直接组装你的组件和服务，但是要在配置文件里描述哪些组件需要哪些服务，之后一个容器（IOC容器）负责把他们组装起来。
 
@@ -2278,21 +2213,21 @@ WebXmlApplicationContext：此容器加载一个XML文件，此文件定义了�
   是ioc 容器最底层的接口，是个ioc容器，是spring用来管理和装配普通bean的ioc容器。
 - FactoryBean是个bean，在IOC容器的基础上给Bean的实现加上了一个简单工厂模式和装饰模式，是一个可以生产对象和装饰对象的工厂bean，由spring管理后，生产的对象是由getObject()方法决定的。
 
-## bean 的转换过程
+### bean 的转换过程
 
 下面这张图演示了一个可用的 bean 是如何从 xml 配置文件中演变过来的。
 
 ![202105092052545181.png](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/202105092052545181.png)
 
-## ApplicationContext 的架构图
+### ApplicationContext 的架构图
 
 ![202105092052551332.png](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/202105092052551332.png)
 
-## loadBean 的全流程
+### loadBean 的全流程
 
 ![202105092052560473.png](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/202105092052560473.png)
 
-## getBean 的全流程
+### getBean 的全流程
 
 ![202105092052566254](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/202105092052566254.png)
 
