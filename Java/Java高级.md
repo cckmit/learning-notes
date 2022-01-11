@@ -10870,10 +10870,10 @@ Java Lambda 表达式的语法结构如下
 
 | 常见函数式接口 | 说明                                                    |
 | -------------- | ------------------------------------------------------- |
-| Function<T,R>  | 表示一个接受T类型的参数，且返回一个R类型结果的函数      |
-| Consumer<T>    | 表示接受一个参数，但不返回任何结果的操作                |
-| Predicate<T>   | 表示接受一个指定类型T的参数，但返回布尔类型的结果的操作 |
-| Supplier<T>    | 表示不接受任何参数，但返回一个T类型的结果的操作         |
+| Function <T,R> | 表示一个接受T类型的参数，且返回一个R类型结果的函数      |
+| Consumer <T>   | 表示接受一个参数，但不返回任何结果的操作                |
+| Predicate <T>  | 表示接受一个指定类型T的参数，但返回布尔类型的结果的操作 |
+| Supplier <T>   | 表示不接受任何参数，但返回一个T类型的结果的操作         |
 |                |                                                         |
 
 ### Base64编码解码
@@ -10882,15 +10882,15 @@ Base64 是一种常见的字符编码解码方式，一般用于将二进制数�
 
 #### Decoder
 
-** java.util.Base64.Decoder 类的方法**
+**java.util.Base64.Decoder 类的方法**
 
-| 方法                               | 说明                                                         |
-| ---------------------------------- | ------------------------------------------------------------ |
-| byte[]decode(byte[]src)            | 使用Base64编码方案解码输入字节数组中的所有字节，将结果写入新分配的输出字节数组。 |
-| intdecode(byte[]src,byte[]dst)     | 使用Base64编码方案解码输入字节数组中的所有字节，将结果写入给定的输出字节数组，从偏移量0开始 |
-| ByteBufferdecode(ByteBufferbuffer) | 使用Base64编码方案解码输入字节缓冲区中的所有字节，将结果写入新分配的ByteBuffer |
-| byte[]decode(Stringsrc)            | 使用Base64编码方案将Base64编码的String解码到新分配的字节数组中 |
-| InputStreamwrap(InputStreamis)     | 返回用于解码Base64编码字节流的输入流                         |
+| 方法                                 | 说明                                                         |
+| ------------------------------------ | ------------------------------------------------------------ |
+| byte[] decode(byte[] src)            | 使用Base64编码方案解码输入字节数组中的所有字节，将结果写入新分配的输出字节数组。 |
+| int decode(byte[] src,byte[] dst)    | 使用Base64编码方案解码输入字节数组中的所有字节，将结果写入给定的输出字节数组，从偏移量0开始 |
+| ByteBuffer decode(ByteBuffer buffer) | 使用Base64编码方案解码输入字节缓冲区中的所有字节，将结果写入新分配的ByteBuffer |
+| byte[] decode(String src)            | 使用Base64编码方案将Base64编码的String解码到新分配的字节数组中 |
+| InputStream wrap(InputStream is)     | 返回用于解码Base64编码字节流的输入流                         |
 
 上面这 5 个方法，可以说都是 `decode` 方法各种重载，接收各种类型的数据，也支持将结果输出为相应类型。
 
@@ -10910,14 +10910,14 @@ Base64 是一种常见的字符编码解码方式，一般用于将二进制数�
 
 **java.util.Base64.Encoder 类的方法**
 
-| 方法                               | 说明                                                         |
-| ---------------------------------- | ------------------------------------------------------------ |
-| []byteencode(byte[]src)            | 使用Base64编码方案将指定字节数组中的所有字节编码并输出到一个新的字节数组中 |
-| intencode(byte[]src,byte[]dst)     | 使用Base64编码方案对指定字节数组中的所有字节进行编码，将结果字节写入给定的输出字节数组，从偏移量0开始 |
-| ByteBufferencode(ByteBufferbuffer) | 使用Base64编码方案将指定字节缓冲区中的所有剩余字节编码并输出到新的ByteBuffer中 |
-| StringencodeToString(byte[]src)    | 使用Base64编码方案将指定的字节数组编码，并转换为字符串       |
-| Base64.EncoderwithoutPadding()     | 返回一个Base64.Encoder实例，该实例与当前实例等效编码，不同的是前者不会在编码字节数据的末尾添加任何填充字符 |
-| OutputStreamwrap(OutputStreamos)   | 使用Base64编码方案包装输出流以编码字节数据                   |
+| 方法                                 | 说明                                                         |
+| ------------------------------------ | ------------------------------------------------------------ |
+| byte[] encode(byte[] src)            | 使用Base64编码方案将指定字节数组中的所有字节编码并输出到一个新的字节数组中 |
+| int encode(byte[] src,byte[] dst)    | 使用Base64编码方案对指定字节数组中的所有字节进行编码，将结果字节写入给定的输出字节数组，从偏移量0开始 |
+| ByteBuffer encode(ByteBuffer buffer) | 使用Base64编码方案将指定字节缓冲区中的所有剩余字节编码并输出到新的ByteBuffer中 |
+| String encodeToString(byte[] src)    | 使用Base64编码方案将指定的字节数组编码，并转换为字符串       |
+| Base64.Encoder withoutPadding()      | 返回一个Base64.Encoder实例，该实例与当前实例等效编码，不同的是前者不会在编码字节数据的末尾添加任何填充字符 |
+| OutputStream wrap(OutputStream os)   | 使用Base64编码方案包装输出流以编码字节数据                   |
 
 上面这 6 个方法，除了 `withoutPadding()` 外，可以说都是 `encode` 方法各种重载，接收各种类型的数据，也支持将结果输出为相应类型。
 
@@ -10929,7 +10929,7 @@ Base64 是一种常见的字符编码解码方式，一般用于将二进制数�
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | Base64.EncodergetEncoder()                                   | 返回一个Base64.Encoder类型的简单编码器                       |
 | Base64.EncodergetMimeEncoder()                               | 返回一个Base64.Encoder类型的MINE编码器                       |
-| Base64.EncodergetMimeEncoder(intlineLength,byte[]lineSeparator) | 返回一个Base64.Encoder类型的使用特定长度和行分隔符的MINE编码器 |
+| Base64.EncodergetMimeEncoder(int lineLength,byte[] lineSeparator) | 返回一个Base64.Encoder类型的使用特定长度和行分隔符的MINE编码器 |
 | Base64.EncodergetUrlEncoder()                                | 返回一个Base64.Encoder类型的URL和文件名安全的编码器          |
 
 ### 方法引用
@@ -10988,18 +10988,18 @@ Optional` 类提供了三个静态方法用于创建 `Optional` 类的实例，�
 
 | 方法/说明                                                    |
 | ------------------------------------------------------------ |
-| booleanequals(Objectobj)判断某个其它的对象是否「等于」此Optional |
-| Optional<T&gts;filter(Predicate<?superT>predicate)如果存在值，并且值与给定谓词匹配，则返回描述值的Optional，否则返回空Optional |
-| <U>Optional<U&gst;flatMap(Function<?superT,Optional<U>>mapper)如果值存在，则将map应用到该值上并返回应用后的结果，如果值不存在，则返回一个空的Optional |
-| Tget()如果此Optional中存在值，则返回该值，否则抛出NoSuchElementException异常 |
-| inthashCode()如果值存在，则返回当前值的哈希值，如果不存在值，则返回0 |
-| voidifPresent(Consumer<?superT>consumer)如果值存在，则使用该值作为参数调用方法consumer。如果值不存在，则什么事情都不做 |
-| booleanisPresent()如果值存在则返回true，否则返回false        |
-| <U>Optional<U>map(Function<?superT,?extendsU>mapper)如果存在值，则将传递的map函数应用于该值，如果结果为非null，则返回描述结果的Optionals |
-| TorElse(Tother)如果值存在则返回值，否则返回other             |
-| TorElseGet(Supplier<?extendsT>other)如果值存在则返回值，否则调用other并返回该调用的结果 |
-| <XextendsThrowable>TorElseThrow(Supplier<?extendsX>>exceptionSupplier)如果值存在，则返回包含的值，否则抛出由开发者提供的异常 |
-| StringtoString()返回此Optional的非空字符串表示形式，一般用于调试 |
+| boolean equals(Object obj)判断某个其它的对象是否「等于」此Optional |
+| Optional<T> filter(Predicate <? super T> predicate)如果存在值，并且值与给定谓词匹配，则返回描述值的Optional，否则返回空Optional |
+| <U> Optional <U> flatMap (Function < ? super T, Optional <U> mapper)如果值存在，则将map应用到该值上并返回应用后的结果，如果值不存在，则返回一个空的Optional |
+| T get()如果此Optional中存在值，则返回该值，否则抛出NoSuchElementException异常 |
+| int hashCode()如果值存在，则返回当前值的哈希值，如果不存在值，则返回0 |
+| void ifPresent(Consumer < ? super T > consumer)如果值存在，则使用该值作为参数调用方法consumer。如果值不存在，则什么事情都不做 |
+| boolean isPresent()如果值存在则返回true，否则返回false       |
+| <U> Optional <U> map (Function < ? super T , ? extends U > mapper)如果存在值，则将传递的map函数应用于该值，如果结果为非null，则返回描述结果的Optionals |
+| T orElse(T other)如果值存在则返回值，否则返回other           |
+| T orElseGet(Supplier < ? extends T > other)如果值存在则返回值，否则调用other并返回该调用的结果 |
+| < X extends Throwable > T orElseThrow (Supplier < ? extends X >  exceptionSupplier )如果值存在，则返回包含的值，否则抛出由开发者提供的异常 |
+| String toString()返回此Optional的非空字符串表示形式，一般用于调试 |
 
 ### 新日期API
 
@@ -11107,8 +11107,9 @@ Java 8 为 Stream 提供了一种新方法 `forEach()`，用于迭代流的每�
 
 下面的代码片段演示了如何使用 `forEach` 打印 `10` 个随机数。
 
-```
-        Random random = new Random();        random.ints().limit(10).forEach(System.out::println);    
+```java
+Random random = new Random();        
+random.ints().limit(10).forEach(System.out::println);    
 ```
 
 上面这个代码片段中，`Random` 对象的 `ints()` 方法会返回一个整数流。而 `limit()` 方法则限制了流中的元素个数。从某些方面说，可以理解为当源产生了 10 个随机数之后就关闭源。
@@ -11119,8 +11120,9 @@ Java 8 为 Stream 提供了一种新方法 `forEach()`，用于迭代流的每�
 
 例如下面的代码，使用 `map()` 方法把求出每个元素的平方，然后过滤掉重复的元素，最后在转换为列表集合
 
-```
-        List<Integer> numbers = Arrays.asList(3, 2, 2, 3, 7, 3, 5);            //获取每个元素的平方        List<Integer> squaresList = numbers.stream().map( i -> i*i).distinct().collect(Collectors.toList());    
+```java
+List<Integer> numbers = Arrays.asList(3, 2, 2, 3, 7, 3, 5);            //获取每个元素的平方        
+List<Integer> squaresList = numbers.stream().map( i -> i*i).distinct().collect(Collectors.toList());    
 ```
 
 `map( i -> i*i)` 操作求取流中每个元素的平方，并返回一个新的流。`distinct()` 方法则用于过滤流中的重复元素。
@@ -11132,7 +11134,8 @@ Java 8 为 Stream 提供了一种新方法 `forEach()`，用于迭代流的每�
 例如下面的代码，使用 `filter()` 方法过滤那些空字符串。
 
 ```java
-        List<String>strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");            int count = strings.stream().filter(string -> string.isEmpty()).count();    
+List<String>strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");            
+int count = strings.stream().filter(string -> string.isEmpty()).count();    
 ```
 
 ##### limit() 方法
@@ -11141,8 +11144,9 @@ Java 8 为 Stream 提供了一种新方法 `forEach()`，用于迭代流的每�
 
 例如下面的代码段演示了如何使用 `limit()` 方法只输出 10 个随机数
 
-```
-        Random random = new Random();        random.ints().limit(10).forEach(System.out::println);    
+```java
+Random random = new Random();        
+random.ints().limit(10).forEach(System.out::println);    
 ```
 
 ##### sorted() 方法
@@ -11151,8 +11155,9 @@ Java 8 为 Stream 提供了一种新方法 `forEach()`，用于迭代流的每�
 
 下面的范例演示了如何按照排序顺序打印 10 个随机数
 
-```
-        Random random = new Random();        random.ints().limit(10).sorted().forEach(System.out::println);    
+```java
+Random random = new Random();        
+random.ints().limit(10).sorted().forEach(System.out::println);    
 ```
 
 #### 并发处理
@@ -11165,8 +11170,9 @@ Java 8 为 Stream 提供了一种新方法 `forEach()`，用于迭代流的每�
 
 例如下面的代码用于打印序列中的空字符串的数量
 
-```
-        List<String> strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");            //get count of empty string        int count = strings.parallelStream().filter(string -> string.isEmpty()).count();    
+```java
+List<String> strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");            //get count of empty string        
+int count = strings.parallelStream().filter(string -> string.isEmpty()).count();    
 ```
 
 因为 `stream()` 返回是串行流，而 `parallelStream()` 返回的是并行流。因此在串行和并行之间切换是非常简单的。
@@ -11179,14 +11185,16 @@ Java 8 为 Stream 提供了一种新方法 `forEach()`，用于迭代流的每�
 
 比如 `Collectors.toList()` 方法可以将流中的元素收集起来，并转换为列表
 
-```
-        List<String>strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");        List<String> filtered = strings.stream().filter(string -> !string.isEmpty()).collect(Collectors.toList());            System.out.println("Filtered List: " + filtered);    
+```java
+List<String>strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");        
+List<String> filtered = strings.stream().filter(string -> !string.isEmpty()).collect(Collectors.toList());         System.out.println("Filtered List: " + filtered);    
 ```
 
 比如 `Collectors.joining()` 方法可以将流中的元素收集起来，并使用指定的字符串拼接符拼接成一个字符串。
 
-```
-        List<String>strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");        String mergedString = strings.stream().filter(string -> !string.isEmpty()).collect(Collectors.joining(", "));            System.out.println("Merged String: " + mergedString);    
+```java
+List<String>strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");        
+String mergedString = strings.stream().filter(string -> !string.isEmpty()).collect(Collectors.joining(", "));     System.out.println("Merged String: " + mergedString);    
 ```
 
 #### 统计 ( Statistics )
@@ -11197,23 +11205,28 @@ Java 8 同时新增了大量的统计收集器来来获取流中的元素的一�
 
 例如下面的代码，先调用 `summaryStatistics()` 方法返回统计概要，然后调用 `getMax()` 方法获取最大值
 
-```
-        List numbers = Arrays.asList(3, 2, 2, 3, 7, 3, 5);            IntSummaryStatistics stats = integers.stream().mapToInt((x) -> x).summaryStatistics();            System.out.println("Highest number in List : " + stats.getMax());    
+```java
+List numbers = Arrays.asList(3, 2, 2, 3, 7, 3, 5);            
+IntSummaryStatistics stats = integers.stream().mapToInt((x) -> x).summaryStatistics();            
+System.out.println("Highest number in List : " + stats.getMax());    
 ```
 
 例如下面的代码，先调用 `summaryStatistics()` 方法返回统计概要，然后调用 `getMin()` 和 `getSum()` 方法获取最小值和所有数字之和
 
-```
-        List numbers = Arrays.asList(3, 2, 2, 3, 7, 3, 5);            IntSummaryStatistics stats = integers.stream().mapToInt((x) -> x).summaryStatistics();            System.out.println("Lowest number in List : " + stats.getMin());        System.out.println("Sum of all numbers : " + stats.getSum());    
+```java
+List numbers = Arrays.asList(3, 2, 2, 3, 7, 3, 5);            
+IntSummaryStatistics stats = integers.stream().mapToInt((x) -> x).summaryStatistics();            
+System.out.println("Lowest number in List : " + stats.getMin());        
+System.out.println("Sum of all numbers : " + stats.getSum());    
 ```
 
 例如下面的代码，先调用 `summaryStatistics()` 方法返回统计概要，然后调用 `getAverage()` 方法获取平均值
 
+```java
+List numbers = Arrays.asList(3, 2, 2, 3, 7, 3, 5);            
+IntSummaryStatistics stats = integers.stream().mapToInt((x) -> x).summaryStatistics();            
+System.out.println("Average of all numbers : " + stats.getAverage());    
 ```
-        List numbers = Arrays.asList(3, 2, 2, 3, 7, 3, 5);            IntSummaryStatistics stats = integers.stream().mapToInt((x) -> x).summaryStatistics();            System.out.println("Average of all numbers : " + stats.getAverage());    
-```
-
-
 
 # 五、JVM
 
@@ -11221,7 +11234,7 @@ Java 8 同时新增了大量的统计收集器来来获取流中的元素的一�
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/5401760-cde4aefdad5438ca.png)
 
-## 一、方法区
+## 方法区
 
 - **方法区为JVM中的线程所共有的**
 - 在Hotspot种方法区称为永久代，划入了GC范围，但在Java 8后取消了永久代的概念，从而转为元空间，共享本地内存。
@@ -11294,18 +11307,18 @@ String str4 = str1 + str2; //本质上会优化为StringBuilder的append
 String s1 = new String("xyz"); //创建了2个对象和1个引用
 ```
 
-## 二、堆
+## 堆
 
 - **堆为JVM中的线程所共有的**
 
 - 堆中存储对象、数组，不存放基本类型和对象引用。
 
-## 三、栈
+## 栈
 
 - **栈为JVM中的线程所私有的**
 - 每个线程包含一个栈区，栈中保存基本数据类型和对象的引用，其他线程访问不了，栈分为：基本类型变量区、执行环境上下文、操作指令区
 
-## 四、JVM类加载
+## JVM类加载
 
 - JVM采用父类委托机制，包括了四种类加载器 
 
@@ -11321,7 +11334,7 @@ String s1 = new String("xyz"); //创建了2个对象和1个引用
 
 
 
-## 五、CMS垃圾收集器
+## CMS垃圾收集器
 
 - CMS是老年代垃圾收集器，手机过程中可以与用户线程并发操作，可与其他新生代收集器配合使用，**CMS牺牲了系统的吞吐量追求垃圾速度。**
 

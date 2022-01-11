@@ -1175,6 +1175,32 @@ JDBC API提供以下接口和类 -
 		2. session没有数据大小限制，Cookie有
 		3. session数据安全，Cookie相对于不安全
 
+# MVC
+
+1. jsp演变历史
+	1. 早期只有servlet，只能使用response输出标签数据，非常麻烦
+	2. 后来又jsp，简化了Servlet的开发，如果过度使用jsp，在jsp中即写大量的java代码，有写html表，造成难于维护，难于分工协作
+	3. 再后来，java的web开发，借鉴mvc开发模式，使得程序的设计更加合理性
+
+2. MVC：
+	1. M：Model，模型。JavaBean
+		* 完成具体的业务操作，如：查询数据库，封装对象
+	2. V：View，视图。JSP
+		* 展示数据
+	3. C：Controller，控制器。Servlet
+		* 获取用户的输入
+		* 调用模型
+		* 将数据交给视图进行展示
+
+3. 优缺点：
+
+   	1. 优点：
+   		1. 耦合性低，方便维护，可以利于分工协作
+   		2. 重用性高
+
+   2. 缺点：
+   	1. 使得项目架构变得复杂，对开发人员要求高
+
 # JSP
 
 1. 概念：
@@ -1189,20 +1215,18 @@ JDBC API提供以下接口和类 -
 	
 4. JSP的内置对象：
 	* 在jsp页面中不需要获取和创建，可以直接使用的对象
-	
 	* jsp一共有9个内置对象。
 	
 	  - 		 变量名					真实类型						作用
-	    		* pageContext				PageContext					当前页面共享数据，还可以获取其他八个内置对象
-	    		* request					HttpServletRequest			一次请求访问的多个资源(转发)
-	    		* session					HttpSession					一次会话的多个请求间
-	    		* application				ServletContext				所有用户间共享数据
-	    		* response					HttpServletResponse			响应对象
-	    		* page						Object						当前页面(Servlet)的对象  this
-	    		* out						JspWriter					输出对象，数据输出到页面上
-	    		* config					ServletConfig				Servlet的配置对象
-	    		* exception					Throwable					异常对象
-	
+	  - 		 pageContext			PageContext					当前页面共享数据，还可以获取其他八个内置对象
+	  - 		 request					HttpServletRequest			一次请求访问的多个资源(转发)
+	  - 		 session					HttpSession					一次会话的多个请求间
+	  - 		 application			   ServletContext				所有用户间共享数据
+	  - 		 response				 HttpServletResponse			响应对象
+	  - 		 page					   Object						当前页面(Servlet)的对象  this
+	  - 		 out						  JspWriter					输出对象，数据输出到页面上
+	  - 		 config					  ServletConfig				Servlet的配置对象
+	  - 		 exception				 Throwable					异常对象
 	* 常见：
 		* request
 		* response
@@ -1210,14 +1234,15 @@ JDBC API提供以下接口和类 -
 			* response.getWriter()和out.write()的区别：
 				* 在tomcat服务器真正给客户端做出响应之前，会先找response缓冲区数据，再找out缓冲区数据。
 				* response.getWriter()数据输出永远在out.write()之前
-
+	
 4. 使用
    1. 指令
    2. 作用：用于配置JSP页面，导入资源文件
    3. 格式：
-     <%@ 指令名称 属性名1=属性值1 属性名2=属性值2 ... %>
+       <%@ 指令名称 属性名1=属性值1 属性名2=属性值2 ... %>
    4. 分类：
      1. page： 配置JSP页面的
+   
      	* contentType：等同于response.setContentType()
      		1. 设置响应体的mime类型以及字符集
      		2. 设置当前jsp页面的编码（只能是高级的IDE才能生效，如果使用低级工具，则需要设置pageEncoding属性设置当前页面的字符集）
@@ -1226,7 +1251,7 @@ JDBC API提供以下接口和类 -
      	* isErrorPage：标识当前也是是否是错误页面。
      		* true：是，可以使用内置对象exception
      		* false：否。默认值。不可以使用内置对象exception
-
+   
 5. 注释:
 
    - html注释：
@@ -1234,3 +1259,218 @@ JDBC API提供以下接口和类 -
 
    - jsp注释：推荐使用
      <%-- --%>：可以注释所有
+
+## EL表达式
+
+1. 概念：Expression Language 表达式语言
+2. 作用：替换和简化jsp页面中java代码的编写
+3. 语法：${表达式}
+4. 注意：
+	* jsp默认支持el表达式的。如果要忽略el表达式
+		1. 设置jsp中page指令中：isELIgnored="true" 忽略当前jsp页面中所有的el表达式
+		2.  \ ${表达式} ：忽略当前这个el表达式
+
+
+5. 使用：
+	1. 运算：
+		* 运算符：
+			1. 算数运算符： + - * /(div) %(mod)
+			2. 比较运算符： > < >= <= == !=
+			3. 逻辑运算符： &&(and) ||(or) !(not)
+			4. 空运算符： empty
+				* 功能：用于判断字符串、集合、数组对象是否为null或者长度是否为0
+				* ${empty list}:判断字符串、集合、数组对象是否为null或者长度为0
+				* ${not empty str}:表示判断字符串、集合、数组对象是否不为null 并且 长度>0
+	2. 获取值
+		1. el表达式只能从域对象中获取值
+		2. 语法：
+			1. ${域名称.键名}：从指定域中获取指定键的值
+				* 域名称：
+					1. pageScope		--> pageContext
+					2. requestScope 	--> request
+					3. sessionScope 	--> session
+					4. applicationScope --> application（ServletContext）
+				* 举例：在request域中存储了name=张三
+				* 获取：${requestScope.name}
+
+			2. ${键名}：表示依次从最小的域中查找是否有该键对应的值，直到找到为止。
+
+			
+			
+			3. 获取对象、List集合、Map集合的值
+				1. 对象：${域名称.键名.属性名}
+					* 本质上会去调用对象的getter方法
+
+				2. List集合：${域名称.键名[索引]}
+
+				3. Map集合：
+					* ${域名称.键名.key名称}
+					* ${域名称.键名["key名称"]}
+	
+	3. 隐式对象：
+		* el表达式中有11个隐式对象
+		* pageContext：
+			* 获取jsp其他八个内置对象
+				* ${pageContext.request.contextPath}：动态获取虚拟目录
+
+## JSTL
+
+1. 概念：JavaServer Pages Tag Library  JSP标准标签库
+	* 是由Apache组织提供的开源的免费的jsp标签		<标签>
+
+2. 作用：用于简化和替换jsp页面上的java代码		
+
+3. 使用步骤：
+	1. 导入jstl相关jar包
+	2. 引入标签库：taglib指令：  <%@ taglib %>
+	3. 使用标签
+
+4. 常用的JSTL标签
+	1. if:相当于java代码的if语句
+		1. 属性：
+            * test 必须属性，接受boolean表达式
+                * 如果表达式为true，则显示if标签体内容，如果为false，则不显示标签体内容
+                * 一般情况下，test属性值会结合el表达式一起使用
+   		    
+      	    注意： c:if标签没有else情况，想要else情况，则可以在定义一个c:if标签
+	   
+	2. choose:相当于java代码的switch语句
+   	1. 使用choose标签声明         			相当于switch声明
+        2. 使用when标签做判断         			相当于case
+	     3. 使用otherwise标签做其他情况的声明    	相当于default
+	
+	3. foreach:相当于java代码的for语句
+
+# Filter
+
+1. 概念：
+	* 生活中的过滤器：净水器、空气净化、土匪
+	* web中的过滤器：当访问服务器的资源时，过滤器可以将请求拦截下来，完成一些特殊的功能。
+	* 过滤器的作用：
+		* 一般用于完成通用的操作。如：登录验证、统一编码处理、敏感字符过滤...
+
+2. 快速入门：
+	1. 步骤：
+		1. 定义一个类，实现接口Filter
+		2. 复写方法
+		3. 配置拦截路径
+			1. web.xml
+			2. 注解
+	2. 代码：
+		
+		```java
+				@WebFilter("/*")//访问所有资源之前，都会执行该过滤器
+				public class FilterDemo1 implements Filter {
+				    @Override
+				    public void init(FilterConfig filterConfig) throws ServletException {
+				
+				    }
+				
+				    @Override
+				    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+				        System.out.println("filterDemo1被执行了....");
+				
+				
+				        //放行
+				        filterChain.doFilter(servletRequest,servletResponse);
+				
+				    }
+				
+				    @Override
+				    public void destroy() {
+				
+				    }
+				}
+		```
+		
+
+
+3. 过滤器细节：
+	1. web.xml配置
+	
+	  ```xml
+	  	<filter>
+	  	        <filter-name>demo1</filter-name>
+	  	        <filter-class>cn.itcast.web.filter.FilterDemo1</filter-class>
+	  	    </filter>
+	  	    <filter-mapping>
+	  	        <filter-name>demo1</filter-name>
+	  			<!-- 拦截路径 -->
+	  	        <url-pattern>/*</url-pattern>
+	  	    </filter-mapping>
+	  ```
+	
+	  
+	
+	2. 过滤器执行流程
+		1. 执行过滤器
+		2. 执行放行后的资源
+		3. 回来执行过滤器放行代码下边的代码
+		
+	3. 过滤器生命周期方法
+		1. init:在服务器启动后，会创建Filter对象，然后调用init方法。只执行一次。用于加载资源
+		2. doFilter:每一次请求被拦截资源时，会执行。执行多次
+		3. destroy:在服务器关闭后，Filter对象被销毁。如果服务器是正常关闭，则会执行destroy方法。只执行一次。用于释放资源
+		
+	4. 过滤器配置详解
+		* 拦截路径配置：
+			1. 具体资源路径： /index.jsp   只有访问index.jsp资源时，过滤器才会被执行
+			2. 拦截目录： /user/*	访问/user下的所有资源时，过滤器都会被执行
+			3. 后缀名拦截： *.jsp		访问所有后缀名为jsp资源时，过滤器都会被执行
+			4. 拦截所有资源：/*		访问所有资源时，过滤器都会被执行
+		* 拦截方式配置：资源被访问的方式
+			* 注解配置：
+				* 设置dispatcherTypes属性
+					1. REQUEST：默认值。浏览器直接请求资源
+					2. FORWARD：转发访问资源
+					3. INCLUDE：包含访问资源
+					4. ERROR：错误跳转资源
+					5. ASYNC：异步访问资源
+			* web.xml配置
+				* 设置<dispatcher></dispatcher>标签即可
+		
+	5. 过滤器链(配置多个过滤器)
+		* 执行顺序：如果有两个过滤器：过滤器1和过滤器2
+			1. 过滤器1
+			2. 过滤器2
+			3. 资源执行
+			4. 过滤器2
+			5. 过滤器1 
+	
+		* 过滤器先后顺序问题：
+			1. 注解配置：按照类名的字符串比较规则比较，值小的先执行
+				* 如： AFilter 和 BFilter，AFilter就先执行了。
+			2. web.xml配置： <filter-mapping>谁定义在上边，谁先执行
+	
+	# Listener
+	
+	* 概念：web的三大组件之一。
+		* 事件监听机制
+			* 事件	：一件事情
+			* 事件源 ：事件发生的地方
+			* 监听器 ：一个对象
+			* 注册监听：将事件、事件源、监听器绑定在一起。 当事件源上发生某个事件后，执行监听器代码
+	
+	
+	* ServletContextListener:监听ServletContext对象的创建和销毁
+		* 方法：
+			* void contextDestroyed(ServletContextEvent sce) ：ServletContext对象被销毁之前会调用该方法
+			* void contextInitialized(ServletContextEvent sce) ：ServletContext对象创建后会调用该方法
+			
+		* 步骤：
+			1. 定义一个类，实现ServletContextListener接口
+			
+			2. 复写方法
+			
+			3. 配置
+				1. web.xml
+				
+				   ```xml
+				   					<listener>
+				    					 <listener-class>cn.itcast.web.listener.ContextLoaderListener</listener-class>
+				   					</listener>
+				   
+				   ```
+				
+				2. 注解：@WebListener
+
