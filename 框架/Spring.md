@@ -4,14 +4,9 @@
 
 ## 1.、Spring
 
-### 1.1、简介
-
-- Spring框架以interface21框架为基础，经过重新设计，并不断丰富其内涵，于2004年3月24日发布了1.0正式版
+### 1.1 简介
 
 - Spring的理念：使用现有的技术更加容易使用，本身是一个大杂烩，整合了现有的技术框架
-
-- SSH：Struct2 + Spring + Hibernate（全自动持久化框架）
-- SSM：SpringMVC + Spring + MyBatis（半自动持久化框架，可自定义性质更强）
 
 Spring Web MVC和Spring-JDBC的pom配置文件：
 
@@ -41,13 +36,9 @@ Spring Web MVC和Spring-JDBC的pom配置文件：
 
 ### 1.3 组成
 
-
-
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614904072127-b0dffb54-9463-4142-a851-13ef568443ec.png)
 
-
-
-### 1.4、扩展
+### 1.4 扩展
 
 现代化的java开发 -> 基于Spring的开发
 
@@ -194,10 +185,40 @@ public void setStr(String str) {
 **总结：**
 
 - 所有的类都要装配的beans.xml 里面；
-
 - 所有的bean 都要通过容器去取；
-
 - 容器里面取得的bean，拿出来就是一个对象，用对象调用方法即可；
+
+**ApplicationContext的三个常用实现类**
+
+* **ClassPathXmlApplicationContext**
+
+ 它可以加载路径下的配置文件，要求配置文件必须在路径下，否则加载不了
+
+~~~java
+ApplicationContext ac = new ClassPathXmlApplicationContext("beans.xml");
+~~~
+
+- **FileSyetemXmlApplicationContext**
+
+它可以加载磁盘下任意路径下的配置文件（必须有访问权限）
+
+加载方式如下：
+
+~~~java
+ApplicationContext ac = new FileSystemXmlApplicationContex("C:\\user\\greyson\\...")
+~~~
+
+- **AnnotationConfigApplicationContext**
+
+它是用于读取注解创建容器的
+
+**核心容器的两个接口引发出来的问题**
+
+- ApplicationContext：它在创建核心容器时，创建对象采取的策略是采用立即加载的方式，即只要一读取完配置文件就马上创建配置文件中配置的对象
+  - 单例对象适用
+  - 开发中常采用此接口
+- BeanFactory: 它在构建核心容器时，创建对象的策略是采用延迟加载的方式，什么时候获取 id 对象了，什么时候就创建对象。
+  - 多例对象适用
 
 ## 4、IoC创建对象的方式
 

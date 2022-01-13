@@ -1,12 +1,12 @@
-# 1、 SpringBoot简介
+#  SpringBoot简介
 
-## 1.1、回顾什么是Spring
+## 回顾什么是Spring
 
 Spring是一个开源框架，2003 年兴起的一个轻量级的Java 开发框架，作者：Rod Johnson 。
 
 Spring是为了解决企业级应用开发的复杂性而创建的，简化开发。
 
-## 1.2、Spring是如何简化Java开发的
+## Spring是如何简化Java开发的
 
 为了降低Java开发的复杂性，Spring采用了以下4种关键策略：
 
@@ -18,11 +18,22 @@ Spring是为了解决企业级应用开发的复杂性而创建的，简化开�
 
 4、通过切面和模版减少样式代码，RedisTemplate，xxxTemplate；
 
-## 1.3、什么是SpringBoot
+## 什么是SpringBoot
 
-Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于 Spring 框架的应用程序。Spring Boot 以约定大于配置的核心思想，默认帮我们进行了很多设置，多数 Spring Boot 应用只需要很少的 Spring 配置。同时它集成了大量常用的第三方库配置（例如 Redis、MongoDB、Jpa、RabbitMQ、Quartz 等等），Spring Boot 应用中这些第三方库几乎可以零配置的开箱即用。
+Spring Boot期望通过结合自动配置和starters来解决了这个问题。 另外，Spring Boot还提供了一些功能，可以更快地构建可用于生产环境的应用程序。
 
-## 1.4、Spring Boot的主要优点：
+Spring Boot Starter是一组被依赖第三方类库的集合。
+
+如果你要开发一个web应用程序，就通过包管理工具(如maven)引入spring-boot-starter-web就可以了，而不用分别引入下面这么多依赖类库，spring-boot-starter-web一次性帮你引入下面的这些常用类库。
+
+- Spring — spring 核心, beans, context上下文, AOP面向切面
+- Web MVC — Spring MVC
+- Jackson — JSON数据的序列化与反序列化
+- Validation — Hibernate参数校验及校验API
+- 嵌入式 Servlet Container — Tomcat
+- 日志框架Logging — logback, slf4j
+
+## Spring Boot的主要优点：
 
 - 为所有Spring开发者更快的入门
 
@@ -36,9 +47,9 @@ Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架�
 
 中文文档： https://www.springcloud.cc/spring-boot.html
 
-# 2、微服务介绍
+# 微服务介绍
 
-## 2.1、什么是微服务
+## 什么是微服务
 
  随着互联网的发展，网站应用的规模不断扩大，常规的垂直应用架构已无法应对，分布式服务架构以及流动计算架构势在必行，亟需一个治理系统确保架构有条不紊的演进。
 
@@ -72,7 +83,7 @@ all in one的架构方式，我们把所有的功能单元放在一个应用里�
 
 优点：节省了调用资源、每个功能元素的服务都度是一个可替换的、可独立升级的软件代码。
 
-## 2.2、如何构建微服务
+## 如何构建微服务
 
 一个大型系统的微服务架构，各功能模块通过http相互请求调用。比如一个电商系统，查缓存、连数据库、浏览页面、结账、支付等服务都是一个个独立的功能服务，都被微化了，它们作为一个个微服务共同构建了一个庞大的系统。如果修改其中的一个功能，只需要更新升级其中一个功能服务单元即可。
 
@@ -86,27 +97,33 @@ all in one的架构方式，我们把所有的功能单元放在一个应用里�
 
 spring为我们想清楚了整个从开始构建应用到大型分布式应用全流程方案。
 
-# 3、第一个SpringBoot程序
+# 第一个SpringBoot程序
 
 Spring官方提供了非常方便的工具让我们快速构建应用
 
 Spring Initializr： https://start.spring.io/
 
-## 3.1、创建SpringBoot项目
+## 创建SpringBoot项目
 
 **创建方式一：**使用Spring Initializr 的 Web页面创建项目
 
 **创建方式二：**使用 IDEA 直接创建项目
 
-删除项目目录下不需要的文件，通过上面步骤完成了基础项目的创建。就会自动生成以下文件。
+项目结构目录整体上符合maven规范要求：
 
-1、程序的主启动类
+| 目录位置                                  | 功能                                                         |
+| ----------------------------------------- | ------------------------------------------------------------ |
+| src/main/java                             | 项目java文件存放位置，初始化包含主程序入口 XxxApplication，可以通过直接运行该类来 启动 Spring Boot应用 |
+| src/main/resources                        | 存放静态资源，图片、CSS、JavaScript、web页面模板文件等       |
+| src/test                                  | 单元测试代码目录                                             |
+| .gitignore                                | git版本管理排除文件                                          |
+| target文件夹                              | 项目代码构建打包结果文件存放位置，不需要人为维护             |
+| pom.xml                                   | maven项目配置文件                                            |
+| application.properties（application.yml） | 用于存放程序的各种依赖模块的配置信息，比如服务端口，数据库连接配置等 |
 
-2、一个 application.properties 配置文件
-
-3、一个 测试类
-
-4、一个 pom.xml
+- src/main/resources/static主要用来存放css、图片、js等开发用静态文件
+- src/main/resources/public用来存放可以直接用于访问的html文件
+- src/main/resources/templates用来存放web开发模板文件
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -155,7 +172,7 @@ Spring Initializr： https://start.spring.io/
 
 
 
-## 3.2、Hello World
+## Hello World
 
 在主程序的同级目录下，新建一个controller包，一定要在同级目录下，否则识别不到
 
@@ -172,7 +189,7 @@ public class HelloSpringBoot {
 
 访问 http://localhost:8080/hello
 
-## 3.3、将项目打成jar包
+## 将项目打成jar包
 
 若遇到错误，可以配置打包时跳过项目运行测试用例
 
@@ -194,7 +211,7 @@ public class HelloSpringBoot {
 
 如果打包成功，则会在target目录下生成一个 jar 包，便可在其他地方运行
 
-## 3.4、彩蛋
+## 彩蛋
 
 1、修改项目的端口号
 
@@ -204,9 +221,9 @@ public class HelloSpringBoot {
 
 图案可以到：https://www.bootschool.net/ascii 这个网站生成，然后拷贝到文件中即可！
 
-# 4、运行原理初探
+# 运行原理初探
 
-## 4.1、父依赖
+## 父依赖
 
 其中它主要是依赖一个父项目，主要是管理项目的资源过滤及插件！
 
@@ -232,7 +249,7 @@ public class HelloSpringBoot {
 
 这是真正管理SpringBoot应用里面所有依赖版本的地方，SpringBoot的版本控制中心；
 
-## 4.2、启动器 spring-boot-starter
+## 启动器 spring-boot-starter
 
 ```xml
 <dependency>
@@ -249,7 +266,7 @@ spring-boot-starter-web：帮我们导入了web模块正常运行所依赖的组
 
 SpringBoot将所有的功能场景都抽取出来，做成starter （启动器），只需要在项目中引入这些starter即可，所有相关的依赖都会导入进来。
 
-## 4.3、主启动类
+## 主启动类
 
 默认的主启动类
 
@@ -270,8 +287,16 @@ public class SpringbootApplication {
 作用：标注在某个类上说明这个类是SpringBoot的主配置类 ， SpringBoot就应该运行这个类的main方法来启动SpringBoot应用；是个复合注解。
 
 ```java
+@Target({ElementType.TYPE})			//可以给一个类型进行注解，比如类、接口、枚举
+@Retention(RetentionPolicy.RUNTIME)  //可以保留到程序运行的时候，它会被加载进入到 JVM 中
+@Documented						   //将注解中的元素包含到 Javadoc 中去。
+@Inherited						   //继承，比如A类上有该注解，B类继承A类，B类就也拥有该注解
 @SpringBootConfiguration
-@EnableAutoConfiguration
+@EnableAutoConfiguration			//开启自动配置
+/*
+*创建一个配置类，在配置类上添加 @ComponentScan 注解。
+*该注解默认会扫描该类所在的包下所有的配置类，相当于之前的 <context:component-scan>。
+*/
 @ComponentScan(
     excludeFilters = {@Filter(
     type = FilterType.CUSTOM,
@@ -282,8 +307,6 @@ public class SpringbootApplication {
 )}
 )
 public @interface SpringBootApplication {
-    // ......
-}
 ```
 
 **@ComponentScan**
@@ -304,15 +327,27 @@ public @interface SpringBootConfiguration {}
 public @interface Configuration {}
 ```
 
- @Configuration：说明这是一个配置类 ，配置类就是对应Spring的xml 配置文件；
+-  @Configuration：说明这是一个配置类 ，配置类就是对应Spring的xml 配置文件；
 
- @Component：说明启动类本身也是Spring中的一个组件而已，负责启动应用！
+- @Component：说明启动类本身也是Spring中的一个组件而已，负责启动应用！
 
 **@EnableAutoConfiguration ：自动配置功能**，告诉SpringBoot开启自动配置功能，这样自动配置才能生效；
 
+```java
+ @Target({ElementType.TYPE})
+ @Retention(RetentionPolicy.RUNTIME)
+ @Documented
+ @Inherited
+ @AutoConfigurationPackage
+ @Import({AutoConfigurationImportSelector.class})
+ public @interface EnableAutoConfiguration
+```
+
+- @Import({AutoConfigurationImportSelector.class}) ：给容器导入组件 ；AutoConfigurationImportSelector ：自动配置导入选择器。
+
 点进注解接续查看：
 
-**@AutoConfigurationPackage ：自动配置包**
+- **@AutoConfigurationPackage ：自动配置包**
 
 ```java
 @Import({Registrar.class})    //导入选择器包注册
@@ -324,10 +359,6 @@ public @interface AutoConfigurationPackage {
 @import ：Spring底层注解@import ， 给容器中导入一个组件
 
 Registrar.class 作用：将主启动类的所在包及包下面所有子包里面的所有组件扫描到Spring容器 ；
-
-@Import({AutoConfigurationImportSelector.class}) ：给容器导入组件 ；
-
-AutoConfigurationImportSelector ：自动配置导入选择器。
 
 1、这个类中有一个这样的方法
 
@@ -453,13 +484,13 @@ public SpringApplication(ResourceLoader resourceLoader, Class... primarySources)
 
 
 
-## 4.4、run方法流程分析
+## run方法流程分析
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615214764080-a6a130cc-aa11-4ea0-9d6b-e2a1083b20b3.png)![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615214771249-cc3aacb1-9377-41e4-a8f7-a6e0c8ba43e9.png)
 
-# 5、yaml配置注入
+# yaml配置注入
 
-## 5.1、配置文件
+## 配置文件
 
 SpringBoot使用一个全局的配置文件 ， 配置文件名称是固定的
 
@@ -473,9 +504,9 @@ SpringBoot使用一个全局的配置文件 ， 配置文件名称是固定的
 
 语法结构 ：key：空格 value
 
-**配置文件的作用 ：**修改SpringBoot自动配置的默认值，因为SpringBoot在底层都给我们自动配置好了；
+**全局配置文件的作用**：修改SpringBoot自动配置的默认值，SpringBoot在底层给我们做自动加载。
 
-## 5.2、yaml概述
+## yaml概述
 
 在开发的yaml时，YAML 的意思其实是：“Yet Another Markup Language”（仍是一种标记语言）
 
@@ -502,7 +533,7 @@ server:
  port: 8080
 ```
 
-## 5.2.1、yaml基础语法
+## yaml基础语法
 
 说明：语法要求严格！
 
@@ -570,7 +601,7 @@ server:
   port: 8082
 ```
 
-## 5.3、yaml注入配置文件
+## yaml注入配置文件
 
 yaml文件更强大的地方在于，他可以给我们的实体类直接注入匹配值！
 
@@ -702,7 +733,7 @@ class DemoApplicationTests {
 
 结果：所有值全部注入成功！
 
-## 5.4、加载指定的配置文件
+## 加载指定的配置文件
 
 **@PropertySource ：**加载指定的配置文件；
 
@@ -746,7 +777,7 @@ private Integer age;
 private Boolean boss;
 ```
 
-## 5.5、配置文件占位符
+## 配置文件占位符
 
 配置文件还可以编写占位符生成随机数
 
@@ -770,7 +801,7 @@ person:
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615215422356-3384ce1d-6ef5-4cd2-82bf-e2c8751a4ee9.png)
 
-## 5.6、回顾properties配置
+## 回顾properties配置
 
 配置文件除了yml还有我们之前常用的properties ，
 
@@ -835,7 +866,7 @@ class DemoApplicationTests {
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615215544163-4eaf9a81-9d0c-4db4-9ab1-db5954a9d816.png)
 
-## 5.7、对比小结
+## 对比小结
 
 @Value这个使用起来并不友好！我们需要为每个属性单独注解赋值，比较麻烦；我们来看个功能对比图
 
@@ -855,9 +886,7 @@ class DemoApplicationTests {
 - 如果我们在某个业务中，只需要获取配置文件中的某个值，可以使用一下 @value；
 - 如果说，我们专门编写了一个JavaBean来和配置文件进行一一映射，就直接@configurationProperties，不要犹豫！
 
-# 6、JSR303数据校验
-
-## 6.1、先看看如何使用
+# JSR303数据校验
 
 需要先导入依赖
 
@@ -884,7 +913,7 @@ public class Person {
 
 使用数据校验，可以保证数据的正确性；
 
-## 6.2、常见参数
+## 常见参数
 
 ```java
 @NotNull(message="名字不能为空")
@@ -914,11 +943,11 @@ Booelan检查
 
 除此以外，我们还可以自定义一些数据校验规则
 
-# 7、 多环境切换
+#  多环境切换
 
 profile是Spring对不同环境提供不同配置功能的支持，可以通过激活不同的环境版本，实现快速切换环境；
 
-## 7.1、多配置文件
+## 多配置文件
 
 我们在主配置文件编写的时候，文件名可以是 application-{profile}.properties/yml , 用来指定多个环境版本；
 
@@ -939,7 +968,7 @@ spring.profiles.active=dev
 #springboot的多环境配置： 可以选择激活哪一个配置文件
 ```
 
-## 7.2、yaml的多文档模块
+## yaml的多文档模块
 
 和properties配置文件中一样，但是使用yml去实现不需要创建多个配置文件，更加方便了 !
 
@@ -964,7 +993,7 @@ spring:
 
 注意：如果yml和properties同时都配置了端口，并且没有激活其他环境 ， 默认会使用properties配置文件的！
 
-## 7.3、配置文件加载位置
+## 配置文件加载位置
 
 外部加载配置文件的方式十分多，我们选择最常用的即可，在开发的资源文件中进行配置！
 
@@ -995,7 +1024,7 @@ server.servlet.context-path=/kuang
 
 
 
-## 7.4、拓展，运维小技巧
+## 拓展，运维小技巧
 
 指定位置加载配置文件
 
@@ -1007,7 +1036,7 @@ server.servlet.context-path=/kuang
 java -jar spring-boot-config.jar --spring.config.location=F:/application.properties
 ```
 
-# 8、自动配置原理
+# 自动配置原理
 
 配置文件到底能写什么？怎么写？
 
@@ -1015,7 +1044,7 @@ SpringBoot官方文档中有大量的配置，我们无法全部记住
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615216859342-03d93c43-f68c-4c01-aefa-665a7ebf2a36.png)
 
-## 8.1、分析自动配置原理
+## 分析自动配置原理
 
 ```java
 //表示这是一个配置类，和以前编写的配置文件一样，也可以给容器中添加组件；
@@ -1084,11 +1113,9 @@ public class HttpProperties {
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615217228439-ab3f2519-bd84-46a5-a3d4-9669497e4034.png)
 
-
-
 这就是自动装配的原理！
 
-## 8.2、精髓
+## 精髓
 
 1、SpringBoot启动会加载大量的自动配置类
 
@@ -1102,7 +1129,7 @@ public class HttpProperties {
 
 **xxxxProperties:封装配置文件中相关属性；**
 
-## 8.3、了解：@Conditional
+## 了解：@Conditional
 
 了解完自动装配的原理后，我们来关注一个细节问题，自动配置类必须在一定的条件下才能生效；
 
@@ -1125,9 +1152,314 @@ Negative matches:（没有启动，没有匹配成功的自动配置类：负匹
 
 Unconditional classes: （没有条件的类）
 
-# 9、自定义starter
+# MVC自动配置原理
 
-## 9.1、说明
+**官网阅读**
+
+地址 ：https://docs.spring.io/spring-boot/docs/2.2.5.RELEASE/reference/htmlsingle/#boot-features-spring-mvc-auto-configuration
+
+Spring Boot为Spring MVC提供了自动配置，可与大多数应用程序完美配合。
+
+以下是SpringBoot对SpringMVC的默认配置
+
+**`org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration`**
+
+自动配置在Spring的默认值之上添加了以下功能：
+
+- 包含`ContentNegotiatingViewResolver`和`BeanNameViewResolver`。--> 视图解析器
+- 支持服务静态资源，包括对WebJars的支持（[官方文档中有介绍](https://docs.spring.io/spring-boot/docs/2.2.1.RELEASE/reference/html/spring-boot-features.html#boot-features-spring-mvc-static-content)）。--> 静态资源文件夹路径
+- 自动注册`Converter`，`GenericConverter`和`Formatter`beans。--> 转换器，格式化器
+- 支持`HttpMessageConverters`（[官方文档中有介绍](https://docs.spring.io/spring-boot/docs/2.2.1.RELEASE/reference/html/spring-boot-features.html#boot-features-spring-mvc-message-converters)）。--> SpringMVC用来转换Http请求和响应的；User---Json；
+- 自动注册`MessageCodesResolver`（[官方文档中有介绍](https://docs.spring.io/spring-boot/docs/2.2.1.RELEASE/reference/html/spring-boot-features.html#boot-features-spring-message-codes)）。--> 定义错误代码生成规则
+- 静态`index.html`支持。--> 静态首页访问
+- 定制`Favicon`支持（[官方文档中有介绍](https://docs.spring.io/spring-boot/docs/2.2.1.RELEASE/reference/html/spring-boot-features.html#boot-features-spring-mvc-favicon)）。--> 网站图标
+- 自动使用`ConfigurableWebBindingInitializer`bean（[官方文档中有介绍](https://docs.spring.io/spring-boot/docs/2.2.1.RELEASE/reference/html/spring-boot-features.html#boot-features-spring-mvc-web-binding-initializer)）。
+
+如果想保留 Spring Boot MVC 的功能，并且需要添加其他 [MVC 配置](https://docs.spring.io/spring/docs/5.1.3.RELEASE/spring-framework-reference/web.html#mvc)（拦截器，格式化程序和视图控制器等），可以添加自己的 `WebMvcConfigurer` 类型的 `@Configuration` 类，但**不能**带 `@EnableWebMvc` 注解。
+
+如果想自定义 `RequestMappingHandlerMapping`、`RequestMappingHandlerAdapter` 或者 `ExceptionHandlerExceptionResolver` 实例，可以声明一个 `WebMvcRegistrationsAdapter` 实例来提供这些组件。
+
+如果您想完全掌控 Spring MVC，可以添加自定义注解了 `@EnableWebMvc` 的 @Configuration 配置类。
+
+**视图解析器**
+
+视图解析器：根据方法的返回值得到视图对象（View），视图对象决定如何渲染（转发？重定向？）:
+
+- 自动配置了ViewResolver
+- ContentNegotiatingViewResolver：组合所有的视图解析器的；
+
+ WebMvcAutoConfiguration ， 然后搜索ContentNegotiatingViewResolver。找到如下方法！
+
+```java
+@Bean
+@ConditionalOnBean({ViewResolver.class})
+@ConditionalOnMissingBean(
+    name = {"viewResolver"},
+    value = {ContentNegotiatingViewResolver.class}
+)
+public ContentNegotiatingViewResolver viewResolver(BeanFactory beanFactory) {
+    ContentNegotiatingViewResolver resolver = new ContentNegotiatingViewResolver();
+    resolver.setContentNegotiationManager((ContentNegotiationManager)beanFactory.getBean(ContentNegotiationManager.class));
+    // ContentNegotiatingViewResolver使用所有其他视图解析器来定位视图，因此它应该具有较高的优先级
+    resolver.setOrder(Ordered.HIGHEST_PRECEDENCE);
+    return resolver;
+}
+```
+
+找到对应的解析视图的代码；
+
+```java
+@Nullable // 注解说明：@Nullable 即参数可为null
+public View resolveViewName(String viewName, Locale locale) throws Exception {
+    RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
+    Assert.state(attrs instanceof ServletRequestAttributes, "No current ServletRequestAttributes");
+    List<MediaType> requestedMediaTypes = this.getMediaTypes(((ServletRequestAttributes)attrs).getRequest());
+    if (requestedMediaTypes != null) {
+        // 获取候选的视图对象
+        List<View> candidateViews = this.getCandidateViews(viewName, locale, requestedMediaTypes);
+        // 选择一个最适合的视图对象，然后把这个对象返回
+        View bestView = this.getBestView(candidateViews, requestedMediaTypes, attrs);
+        if (bestView != null) {
+            return bestView;
+        }
+    }
+    // .....
+}
+```
+
+getCandidateViews中看到他是把所有的视图解析器拿来，进行while循环，挨个解析！
+
+```java
+Iterator var5 = this.viewResolvers.iterator();
+```
+
+所以得出结论：ContentNegotiatingViewResolver 这个视图解析器就是用来组合所有的视图解析器的
+
+再研究下他的组合逻辑，看到有个属性viewResolvers，看看它是在哪里进行赋值的！
+
+```java
+protected void initServletContext(ServletContext servletContext) {
+    // 这里它是从beanFactory工具中获取容器中的所有视图解析器
+    // ViewRescolver.class 把所有的视图解析器来组合的
+    Collection<ViewResolver> matchingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.obtainApplicationContext(), ViewResolver.class).values();
+    ViewResolver viewResolver;
+    if (this.viewResolvers == null) {
+        this.viewResolvers = new ArrayList(matchingBeans.size());
+        Iterator var3 = matchingBeans.iterator();
+    }
+    // ...............
+}
+```
+
+1、我们在我们的主程序中去写一个视图解析器来试试；
+
+```java
+// 如果 想DIY一些定制化的功能，只要写这个组件，然后将它交给springboot，springboot就会帮我们自动装配
+//扩展springmvc
+@Configuration
+public class MyMvcConfig implements WebMvcConfigurer {
+    //ViewResolver 实现类视图解析器接口的类，我们就可以把它看做视图解析器
+    @Bean
+    public ViewResolver myViewResolver(){
+        return new MyViewResolver();
+    }
+    //我们写一个静态内部类，视图解析器就需要实现ViewResolver接口
+    public static class MyViewResolver implements ViewResolver {
+        @Override
+        public View resolveViewName(String s, Locale locale) throws Exception {
+            return null;
+        }
+    }
+```
+
+2、怎么看我们自己写的视图解析器有没有起作用呢？
+
+我们给 DispatcherServlet 中的 doDispatch方法 加个断点进行调试一下，因为所有的请求都会走到这个方法中
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219210862-52729e25-1d18-42e7-9eb7-ef64e81b91e7.png)
+
+3、我们启动我们的项目，然后随便访问一个页面，看一下Debug信息；
+
+找到this
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219233769-72887c88-86c2-4ba7-af40-95bd46603db3.png)
+
+找到视图解析器，我们看到我们自己定义的就在这里了；
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219237941-f51cf178-d37a-42dc-8a68-43b55dab0d96.png)
+
+## 转换器和格式化器
+
+在WebMvcAutoConfiguration中找到格式化转换器：
+
+```java
+@Bean
+@Override
+public FormattingConversionService mvcConversionService() {
+    // 拿到配置文件中的格式化规则
+    WebConversionService conversionService = 
+        new WebConversionService(this.mvcProperties.getDateFormat());
+    addFormatters(conversionService);
+    return conversionService;
+}
+```
+
+点进去：
+
+```java
+public String getDateFormat() {
+    return this.dateFormat;
+}
+/**
+* Date format to use. For instance, `dd/MM/yyyy`. 默认的
+ */
+private String dateFormat;
+```
+
+可以看到在我们的Properties文件中，我们可以进行自动配置它！
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219305643-479e7603-d3dc-4cc6-bcac-dad4869d4db6.png)
+
+如果配置了自己的格式化方式，就会注册到Bean中生效，我们可以在配置文件中配置日期格式化的规则：
+
+## 修改SpringBoot的默认配置
+
+SpringBoot在自动配置很多组件的时候，先看容器中有没有用户自己配置的（如果用户自己配置@bean），如果有就用用户配置的，如果没有就用自动配置的；
+
+如果有些组件可以存在多个，比如我们的视图解析器，就将用户配置的和自己默认的组合起来！
+
+编写一个@Configuration注解类，并且**类型要为WebMvcConfigurer，还不能标注@EnableWebMvc注解；**我们去自己写一个；我们新建一个包叫config，写一个类MyMvcConfig；
+
+```java
+//应为类型要求为WebMvcConfigurer，所以我们实现其接口
+//可以使用自定义类扩展MVC的功能
+@Configuration
+public class MyMvcConfig implements WebMvcConfigurer {
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        // 浏览器发送/test ， 就会跳转到test页面；
+        registry.addViewController("/test").setViewName("test");
+    }
+}
+```
+
+我们去浏览器访问一下：
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219411733-64d3e859-70d1-451b-b6d5-a1a4c8aaf706.png)
+
+我们可以去分析一下原理：
+
+1、WebMvcAutoConfiguration 是 SpringMVC的自动配置类，里面有一个类WebMvcAutoConfigurationAdapter
+
+2、这个类上有一个注解，在做其他自动配置时会导入：@Import(EnableWebMvcConfiguration.class)
+
+3、我们点进EnableWebMvcConfiguration这个类看一下，它继承了一个父类：DelegatingWebMvcConfiguration
+
+这个父类中有这样一段代码：
+
+```java
+public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
+    private final WebMvcConfigurerComposite configurers = new WebMvcConfigurerComposite();
+   
+  // 从容器中获取所有的webmvcConfigurer
+    @Autowired(required = false)
+    public void setConfigurers(List<WebMvcConfigurer> configurers) {
+        if (!CollectionUtils.isEmpty(configurers)) {
+            this.configurers.addWebMvcConfigurers(configurers);
+        }
+    }
+}
+```
+
+4、我们可以在这个类中去寻找一个我们刚才设置的viewController当做参考，发现它调用了一个
+
+```java
+protected void addViewControllers(ViewControllerRegistry registry) {
+    this.configurers.addViewControllers(registry);
+}
+```
+
+5、我们点进去看一下
+
+```java
+public void addViewControllers(ViewControllerRegistry registry) {
+    Iterator var2 = this.delegates.iterator();
+    while(var2.hasNext()) {
+        // 将所有的WebMvcConfigurer相关配置来一起调用！包括我们自己配置的和Spring给我们配置的
+        WebMvcConfigurer delegate = (WebMvcConfigurer)var2.next();
+        delegate.addViewControllers(registry);
+    }
+}
+```
+
+容器中所有的WebMvcConfigurer都会一起起作用；
+
+我们的配置类也会被调用；
+
+效果：SpringMVC的自动配置和我们的扩展配置都会起作用；
+
+
+
+## 全面接管SpringMVC
+
+全面接管即：SpringBoot对SpringMVC的自动配置不需要了，所有都是我们自己去配置！
+
+只需在我们的配置类中要加一个@EnableWebMvc。
+
+我们看下如果我们全面接管了SpringMVC了，我们之前SpringBoot给我们配置的静态资源映射一定会无效，我们可以去测试一下；
+
+不加注解之前，访问首页：
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219654848-89a05ccb-6d66-48f9-8084-c95591fada06.png)
+
+**给配置类加上注解：@EnableWebMvc**
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219674044-fbde63ec-7e6d-4c2e-aae4-df9c30256bbb.png)
+
+发现所有的SpringMVC自动配置都失效了，开发中，不推荐使用全面接管SpringMVC
+
+思考问题？为什么加了一个注解，自动配置就失效了！我们看下源码：
+
+1、这里发现它是导入了一个类，我们可以继续进去看
+
+```java
+@Import({DelegatingWebMvcConfiguration.class})
+public @interface EnableWebMvc {
+}
+```
+
+2、它继承了一个父类 WebMvcConfigurationSupport
+
+```java
+public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
+  // ......
+}
+```
+
+3、我们来回顾一下Webmvc自动配置类
+
+```java
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnWebApplication(type = Type.SERVLET)
+@ConditionalOnClass({ Servlet.class, DispatcherServlet.class, WebMvcConfigurer.class })
+// 这个注解的意思就是：容器中没有这个组件的时候，这个自动配置类才生效
+@ConditionalOnMissingBean(WebMvcConfigurationSupport.class)
+@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 10)
+@AutoConfigureAfter({ DispatcherServletAutoConfiguration.class, TaskExecutionAutoConfiguration.class,
+    ValidationAutoConfiguration.class })
+public class WebMvcAutoConfiguration {
+   
+}
+```
+
+总结：
+
+1. @EnableWebMvc将WebMvcConfigurationSupport组件导入进来；
+2. 导入的WebMvcConfigurationSupport只是SpringMVC最基本的功能；
+
+# 自定义starter
+
+## 说明
 
 启动器模块是一个 空 jar 文件，仅提供辅助性依赖管理，这些依赖可能用于自动装配或者其他类库；
 
@@ -1145,7 +1477,7 @@ xxx-spring-boot-starter
 
 比如：mybatis-spring-boot-starter
 
-## 9.2、编写启动器
+## 编写启动器
 
 1、在IDEA中新建一个空项目 spring-boot-starter-diy
 
@@ -1249,7 +1581,7 @@ com.kuang.HelloServiceAutoConfiguration
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615217560837-0b43a51c-3c3b-4540-84e3-ffab3ff51c0b.png)
 
-## 9.3、新建项目测试我们自己写的启动器
+## 新建项目测试我们自己写的启动器
 
 1、新建一个SpringBoot 项目
 
@@ -1288,202 +1620,17 @@ kuang.hello.suffix="sss"
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615217591727-0bc83527-146c-47ad-95eb-8ce15711af72.png)
 
-# 10、Web开发静态资源处理
-
-**使用SpringBoot的步骤：**
-
-1、创建一个SpringBoot应用，选择我们需要的模块，SpringBoot就会默认将我们的需要的模块自动配置好
-
-2、手动在配置文件中配置部分配置项目就可以运行起来了
-
-3、专注编写业务代码，不需要考虑以前那样一大堆的配置了。
-
-## 10.1、静态资源映射规则
-
-SpringBoot中，SpringMVC的web配置都在 WebMvcAutoConfiguration 这个配置类里面；
-
-我们可以去看看 WebMvcAutoConfigurationAdapter 中有很多配置方法；
-
-有一个方法：addResourceHandlers 添加资源处理
-
-```java
-@Override
-public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    if (!this.resourceProperties.isAddMappings()) {
-        // 已禁用默认资源处理
-        logger.debug("Default resource handling disabled");
-        return;
-    }
-    // 缓存控制
-    Duration cachePeriod = this.resourceProperties.getCache().getPeriod();
-    CacheControl cacheControl = this.resourceProperties.getCache().getCachecontrol().toHttpCacheControl();
-    // webjars 配置
-    if (!registry.hasMappingForPattern("/webjars/**")) {
-        customizeResourceHandlerRegistration(registry.addResourceHandler("/webjars/**")
-                                             .addResourceLocations("classpath:/META-INF/resources/webjars/")
-                                             .setCachePeriod(getSeconds(cachePeriod)).setCacheControl(cacheControl));
-    }
-    // 静态资源配置
-    String staticPathPattern = this.mvcProperties.getStaticPathPattern();
-    if (!registry.hasMappingForPattern(staticPathPattern)) {
-        customizeResourceHandlerRegistration(registry.addResourceHandler(staticPathPattern)
-                                             .addResourceLocations(getResourceLocations(this.resourceProperties.getStaticLocations()))
-                                             .setCachePeriod(getSeconds(cachePeriod)).setCacheControl(cacheControl));
-    }
-}
-```
-
-读一下源代码：比如所有的 /webjars/** ， 都需要去 classpath:/META-INF/resources/webjars/ 找对应的资源；
-
-Webjars本质就是以jar包的方式引入我们的静态资源 ， 我们以前要导入一个静态资源文件，直接导入即可。
-
-使用SpringBoot需要使用Webjars，我们可以去搜索一下：
-
-网站：https://www.webjars.org
-
-要使用jQuery，我们只要要引入jQuery对应版本的pom依赖即可！
-
-```xml
-<dependency>
-    <groupId>org.webjars</groupId>
-    <artifactId>jquery</artifactId>
-    <version>3.4.1</version>
-</dependency>
-```
-
-导入完毕，查看webjars目录结构，并访问Jquery.js文件！
-
-访问：只要是静态资源，SpringBoot就会去对应的路径寻找资源，我们这里访问：http://localhost:8080/webjars/jquery/3.4.1/jquery.js
-
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615217858036-419f758e-5b5d-42ad-946f-e1689a5a0ea8.png)
-
-
-
-**第二种静态资源映射规则**
-
-那我们项目中要是使用自己的静态资源该怎么导入呢？我们看下一行代码；
-
-我们去找staticPathPattern发现第二种映射规则 ：/** , 访问当前的项目任意资源，它会去找 resourceProperties 这个类，我们可以点进去看一下分析：
-
-```java
-// 进入方法
-public String[] getStaticLocations() {
-    return this.staticLocations;
-}
-// 找到对应的值
-private String[] staticLocations = CLASSPATH_RESOURCE_LOCATIONS;
-// 找到路径
-private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { 
-    "classpath:/META-INF/resources/",
-  "classpath:/resources/", 
-    "classpath:/static/", 
-    "classpath:/public/" 
-};
-```
-
-ResourceProperties 可以设置和我们静态资源有关的参数；这里面指向了它会去寻找资源的文件夹，即上面数组的内容。
-
-所以得出结论，以下四个目录存放的静态资源可以被我们识别：
-
-```java
-"classpath:/META-INF/resources/"
-"classpath:/resources/"
-"classpath:/static/"
-"classpath:/public/"
-```
-
-我们可以在resources根目录下新建对应的文件夹，都可以存放我们的静态文件；
-
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615217972735-f8c8e54b-f4bd-45f5-a4be-0cd7c42ceba6.png)
-
-比如我们访问 http://localhost:8080/1.js , 他就会去这些文件夹中寻找对应的静态资源文件；
-
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615217983665-256fed61-fe3a-426f-a562-a3038384fad0.png)
-
-说明优先级：resources>static>public
-
-**自定义静态资源路径**
-
-我们也可以自己通过配置文件来指定一下，哪些文件夹是需要我们放静态资源文件的，在application.properties中配置；
-
-```java
-spring.resources.static-locations=classpath:/coding/,classpath:/kuang/
-```
-
-一旦自己定义了静态文件夹的路径，原来的自动配置就都会失效了！
-
-## 10.2、首页处理
-
-静态资源文件夹说完后，继续向下看源码！可以看到一个欢迎页的映射，就是我们的首页
-
-```java
-@Bean
-public WelcomePageHandlerMapping welcomePageHandlerMapping(ApplicationContext applicationContext,
-                                                           FormattingConversionService mvcConversionService,
-                                                           ResourceUrlProvider mvcResourceUrlProvider) {
-    WelcomePageHandlerMapping welcomePageHandlerMapping = new WelcomePageHandlerMapping(
-        new TemplateAvailabilityProviders(applicationContext), applicationContext, getWelcomePage(), // getWelcomePage 获得欢迎页
-        this.mvcProperties.getStaticPathPattern());
-    welcomePageHandlerMapping.setInterceptors(getInterceptors(mvcConversionService, mvcResourceUrlProvider));
-    return welcomePageHandlerMapping;
-}
-```
-
-点进去继续看
-
-```java
-private Optional<Resource> getWelcomePage() {
-    String[] locations = getResourceLocations(this.resourceProperties.getStaticLocations());
-    // ::是java8 中新引入的运算符
-    // Class::function的时候function是属于Class的，应该是静态方法。
-    // this::function的funtion是属于这个对象的。
-    // 简而言之，就是一种语法糖而已，是一种简写
-    return Arrays.stream(locations).map(this::getIndexHtml).filter(this::isReadable).findFirst();
-}
-// 欢迎页就是一个location下的的 index.html 而已
-private Resource getIndexHtml(String location) {
-    return this.resourceLoader.getResource(location + "index.html");
-}
-```
-
-欢迎页，静态资源文件夹下的所有 index.html 页面；被 /** 映射。
-
-比如我访问 http://localhost:8080/ ，就会找静态资源文件夹下的 index.html
-
-新建一个 index.html ，在我们上面的3个目录中任意一个；然后访问测试 http://localhost:8080/ 看结果！
-
-关于网站图标说明：
-
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615218077235-053dd2c4-f2ef-4401-8064-817e4425ce5b.jpeg)
-
-与其他静态资源一样，Spring Boot在配置的静态内容位置中查找 favicon.ico。如果存在这样的文件，它将自动用作应用程序的favicon。
-
-1、关闭SpringBoot默认图标
-
-```java
-#关闭默认图标
-spring.mvc.favicon.enabled=false
-```
-
-2、放个图标在静态资源目录下
-
-3、清除浏览器缓存！刷新网页，发现图标已经变化
-
-# 11、模板引擎
+# 模板引擎
 
 jsp支持非常强大的功能，包括能写Java代码，而SpringBoot这个项目首先是以jar的方式，不是war，其次用的还是嵌入式的Tomcat，所以呢，他现在**默认是不支持jsp**的。
 
-那不支持jsp，如果我们直接用纯静态页面的方式，那给我们开发会带来非常大的麻烦，那怎么办呢？
-
-SpringBoot推荐你可以来使用模板引擎：
-
-模板引擎，我们其实大家听到很多，其实jsp就是一个模板引擎，还有用的比较多的freemarker，包括SpringBoot给我们推荐的Thymeleaf，模板引擎有非常多，但再多的模板引擎，他们的思想都是一样的，什么样一个思想呢我们来看一下这张图：
+模板引擎有jsp、freemarker，包括SpringBoot给我们推荐的Thymeleaf，思想都一样：
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615218142610-a69cccea-e4f7-43c9-ad58-0d735042957b.png)
 
 模板引擎的作用就是配置页面模板后，从后台封装一些数据，将模板和数据交给我们模板引擎解析。
 
-## 11.1、引入Thymeleaf
+## 引入Thymeleaf
 
 Thymeleaf 官网：https://www.thymeleaf.org/
 
@@ -1507,13 +1654,9 @@ Maven会自动下载jar包，我们可以去看下载的东西；
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615218194997-61d7cc64-9a44-4d17-8c42-01a7b875891a.png)
 
-## 11.2、Thymeleaf分析
+## Thymeleaf分析
 
-前面呢，我们已经引入了Thymeleaf，那这个要怎么使用呢？
-
-我们首先得按照SpringBoot的自动配置原理看一下我们这个Thymeleaf的自动配置规则，在按照那个规则，我们进行使用。
-
-我们去找一下Thymeleaf的自动配置类：ThymeleafProperties
+找下Thymeleaf的自动配置类：ThymeleafProperties
 
 ```java
 @ConfigurationProperties(
@@ -1532,59 +1675,11 @@ public class ThymeleafProperties {
 }
 ```
 
-我们可以在其中看到默认的前缀和后缀！
-
-我们只需要把我们的html页面放在类路径下的templates下，thymeleaf就可以帮我们自动渲染了。
-
 使用thymeleaf什么都不需要配置，只需要将他放在指定的文件夹下即可！
 
-## 11.3、测试
+**测试**
 
-1、编写一个TestController
-
-```java
-@Controller
-public class TestController {
-    @RequestMapping("/test")
-    public String test(){
-        return "test";
-    }
-}
-```
-
-2、编写一个测试页面 test.html 放在 templates 目录下
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-首页
-</body>
-</html>
-```
-
-3、启动项目请求测试
-
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615218283512-1dd5dac2-5bec-43b1-afe0-9115ec91365b.png)
-
-- 小结：只要需要使用thymeleaf，只需要导入对应的依赖就可以了，我们需要将html页面放在我们的templates目录下即可
-
-## 11.4、Thymeleaf 语法学习
-
-- 要学习语法，还是参考官网文档最为准确，我们找到对应的版本看一下；
-- Thymeleaf 官网：https://www.thymeleaf.org/ ， 简单看一下官网！我们去下载Thymeleaf的官方文档！
-
-要使用thymeleaf，需要在html文件中导入命名空间的约束
-
-```xml
-xmlns:th="http://www.thymeleaf.org"
-```
-
-1、修改测试请求，增加数据传输；
+1、增加数据传输；
 
 ```java
 @Controller
@@ -1618,468 +1713,275 @@ public class TestController {
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615218442897-f422ae4c-cf0a-49f0-a07f-35f26fb9e398.png)
 
+- 小结：只要需要使用thymeleaf，只需要导入对应的依赖就可以了，我们需要将html页面放在我们的templates目录下即可
+
+## Thymeleaf 语法学习
+
+- Thymeleaf 官网：https://www.thymeleaf.org/ ， 简单看一下官网！我们去下载Thymeleaf的官方文档！
+
+要使用thymeleaf，需要在html文件中导入命名空间的约束
+
+```xml
+xmlns:th="http://www.thymeleaf.org"
+```
+
 **Thymeleaf的使用语法**
 
 1、我们可以使用任意的 th:attr 来替换Html中原生属性的值！
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615218453640-c8123423-cde1-47cf-914a-e831f7db174e.png)
 
-2、我们能写哪些表达式呢？
+### 表达式
 
-```yaml
-Simple expressions:（表达式语法）
-Variable Expressions: ${...}：获取变量值；OGNL；
-    1）、获取对象的属性、调用方法
-    2）、使用内置的基本对象：#18
-         #ctx : the context object.
-         #vars: the context variables.
-         #locale : the context locale.
-         #request : (only in Web Contexts) the HttpServletRequest object.
-         #response : (only in Web Contexts) the HttpServletResponse object.
-         #session : (only in Web Contexts) the HttpSession object.
-         #servletContext : (only in Web Contexts) the ServletContext object.
+**变量表达式 `${}`**
 
-    3）、内置的一些工具对象：
-　　　　　　#execInfo : information about the template being processed.
-　　　　　　#uris : methods for escaping parts of URLs/URIs
-　　　　　　#conversions : methods for executing the configured conversion service (if any).
-　　　　　　#dates : methods for java.util.Date objects: formatting, component extraction, etc.
-　　　　　　#calendars : analogous to #dates , but for java.util.Calendar objects.
-　　　　　　#numbers : methods for formatting numeric objects.
-　　　　　　#strings : methods for String objects: contains, startsWith, prepending/appending, etc.
-　　　　　　#objects : methods for objects in general.
-　　　　　　#bools : methods for boolean evaluation.
-　　　　　　#arrays : methods for arrays.
-　　　　　　#lists : methods for lists.
-　　　　　　#sets : methods for sets.
-　　　　　　#maps : methods for maps.
-　　　　　　#aggregates : methods for creating aggregates on arrays or collections.
-==================================================================================
-
-  Selection Variable Expressions: *{...}：选择表达式：和${}在功能上是一样；
-  Message Expressions: #{...}：获取国际化内容
-  Link URL Expressions: @{...}：定义URL；
-  Fragment Expressions: ~{...}：片段引用表达式
-
-Literals（字面量）
-      Text literals: 'one text' , 'Another one!' ,…
-      Number literals: 0 , 34 , 3.0 , 12.3 ,…
-      Boolean literals: true , false
-      Null literal: null
-      Literal tokens: one , sometext , main ,…
-      
-Text operations:（文本操作）
-    String concatenation: +
-    Literal substitutions: |The name is ${name}|
-    
-Arithmetic operations:（数学运算）
-    Binary operators: + , - , * , / , %
-    Minus sign (unary operator): -
-    
-Boolean operations:（布尔运算）
-    Binary operators: and , or
-    Boolean negation (unary operator): ! , not
-    
-Comparisons and equality:（比较运算）
-    Comparators: > , < , >= , <= ( gt , lt , ge , le )
-    Equality operators: == , != ( eq , ne )
-    
-Conditional operators:条件运算（三元运算符）
-    If-then: (if) ? (then)
-    If-then-else: (if) ? (then) : (else)
-    Default: (value) ?: (defaultvalue)
-    
-Special tokens:
-    No-Operation: _
-```
-
-测试：
-
-1、编写一个Controller
-
-```java
-@RequestMapping("/t2")
-public String test2(Map<String,Object> map){
-    //存入数据
-    map.put("msg","<h1>Hello</h1>");
-    map.put("users", Arrays.asList("qinjiang","kuangshen"));
-    //classpath:/templates/test.html
-    return "test";
-}
-```
-
-2、测试页面取出数据
+使用方法：直接使用`th:xx = "${}"` 获取对象属性 。例如：
 
 ```html
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>狂神说</title>
-</head>
-<body>
-<h1>测试页面</h1>
-<div th:text="${msg}"></div>
-<!--不转义-->
-<div th:utext="${msg}"></div>
-<!--遍历数据-->
-<!--th:each每次遍历都会生成当前这个标签：官网#9-->
-<h4 th:each="user :${users}" th:text="${user}"></h4>
-<h4>
-    <!--行内写法：官网#12-->
-    <span th:each="user:${users}">[[${user}]]</span>
-</h4>
-</body>
-</html>
+<form id="userForm">
+    <input id="id" name="id" th:value="${user.id}"/>
+    <input id="username" name="username" th:value="${user.username}"/>
+    <input id="password" name="password" th:value="${user.password}"/>
+</form>
+
+<div th:text="hello"></div>
+
+<div th:text="${articles[0].username}"></div>
 ```
 
+**选择变量表达式 `*{}`**
 
-
-# 12、MVC自动配置原理
-
-## 12.1、官网阅读
-
-地址 ：https://docs.spring.io/spring-boot/docs/2.2.5.RELEASE/reference/htmlsingle/#boot-features-spring-mvc-auto-configuration
+使用方法：首先通过`th:object` 获取对象，然后使用`th:xx = "*{}"`获取对象属性。
 
 ```html
-Spring MVC Auto-configuration
-// Spring Boot为Spring MVC提供了自动配置，它可以很好地与大多数应用程序一起工作。
-Spring Boot provides auto-configuration for Spring MVC that works well with most applications.
-// 自动配置在Spring默认设置的基础上添加了以下功能：
-The auto-configuration adds the following features on top of Spring’s defaults:
-// 包含视图解析器
-Inclusion of ContentNegotiatingViewResolver and BeanNameViewResolver beans.
-// 支持静态资源文件夹的路径，以及webjars
-Support for serving static resources, including support for WebJars 
-// 自动注册了Converter：
-// 转换器，这就是我们网页提交数据到后台自动封装成为对象的东西，比如把"1"字符串自动转换为int类型
-// Formatter：【格式化器，比如页面给我们了一个2019-8-10，它会给我们自动格式化为Date对象】
-Automatic registration of Converter, GenericConverter, and Formatter beans.
-// HttpMessageConverters
-// SpringMVC用来转换Http请求和响应的的，比如我们要把一个User对象转换为JSON字符串，可以去看官网文档解释；
-Support for HttpMessageConverters (covered later in this document).
-// 定义错误代码生成规则的
-Automatic registration of MessageCodesResolver (covered later in this document).
-// 首页定制
-Static index.html support.
-// 图标定制
-Custom Favicon support (covered later in this document).
-// 初始化数据绑定器：帮我们把请求数据绑定到JavaBean中！
-Automatic use of a ConfigurableWebBindingInitializer bean (covered later in this document).
+<form id="userForm" th:object="${user}">
+    <input id="id" name="id" th:value="*{id}"/>
+    <input id="username" name="username" th:value="*{username}"/>
+    <input id="password" name="password" th:value="*{password}"/>
+</form>
+```
+
+**链接表达式 `@{}`**
+
+使用方法：通过链接表达式`@{}`直接拿到应用路径，然后拼接静态资源路径。例如：
+
+```html
+<script th:src="@{/webjars/jquery/jquery.js}"></script>
+<link th:href="@{/webjars/bootstrap/css/bootstrap.css}" rel="stylesheet" type="text/css">
+```
+
+**其它表达式**
+
+在基础语法中，默认支持字符串连接、数学运算、布尔逻辑和三目运算等。例如：
+
+```html
+<input name="name" th:value="${'I am '+(user.name!=null?user.name:'NoBody')}"/>
+```
+
+### **迭代循环**
+
+想要遍历`List`集合很简单，配合`th:each` 即可快速完成迭代。例如遍历用户列表：
+
+```html
+<div th:each="article:${articles}" >
+    作者：<input th:value="${article.author}"/>
+    标题：<input th:value="${article.title}"/>
+    内容：<input th:value="${article.content}"/>
+</div>
+```
+
+在集合的迭代过程还可以获取状态变量，只需在变量后面指定状态变量名即可，状态变量可用于获取集合的下标/序号、总数、是否为单数/偶数行、是否为第一个/最后一个。例如：
+
+```html
+<div th:each="article,stat:${articles}" th:class="${stat.even}?'even':'odd'">
+    下标：<input th:value="${stat.index}"/>
+    序号：<input th:value="${stat.count}"/>
+    作者：<input th:value="${article.author}"/>
+    标题：<input th:value="${article.title}"/>
+    内容：<input th:value="${article.content}"/>
+</div>
+```
+
+**迭代下标变量用法：**
+状态变量定义在一个th:每个属性和包含以下数据:
+
+1. 当前迭代索引,从0开始。这是索引属性。index
+2. 当前迭代索引,从1开始。这是统计属性。count
+3. 元素的总量迭代变量。这是大小属性。　size
+4. iter变量为每个迭代。这是目前的财产。　current
+5. 是否当前迭代是奇数还是偶数。这些even/odd的布尔属性。
+6. 是否第一个当前迭代。这是first布尔属性。
+7. 是否最后一个当前迭代。这是last布尔属性。
+
+### 条件判断
+
+条件判断通常用于动态页面的初始化，例如：
+
+```html
+<div th:if="${articles}">
+    <div>的确存在..</div>
+</div>
+```
+
+如果想取反则使用unless 例如：
+
+```html
+<div th:unless="${articles}">
+    <div>不存在..</div>
+</div>
+```
+
+### 内置对象
+
+> 官方文档： [Thymeleaf 3.0 基础对象](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#appendix-a-expression-basic-objects)
+
+**七大基础对象：**
+
+- `${#ctx}` 上下文对象，可用于获取其它内置对象。
+- `${#param}`: 上下文变量。
+- `${#locale}`：上下文区域设置。
+- `${#request}`: `HttpServletRequest`对象。
+- `${#response}`: `HttpServletResponse`对象。
+- `${#session}`: `HttpSession`对象。
+- `${#servletContext}`: `ServletContext`对象。
+
+***用法示例***
+
+**locale对象操作：**
+
+```html
+<div th:text="${#locale.getLanguage() + '_' + #locale.getCountry()}"></div>
+```
+
+**session对象操作：**
+
+```html
+<div th:text="${session.foo}?:('zoo')"></div>
+<div th:text="${session.size()}"></div>
+<div th:text="${session.isEmpty()}"></div>
+<div th:text="${session.containsKey('foo')}"></div>
+```
+
+### 常用工具类
+
+> 官方文档： [Thymeleaf 3.0 工具类](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#appendix-b-expression-utility-objects)
+
+- `#strings`：字符串工具类
+- `#lists`：List 工具类
+- `#arrays`：数组工具类
+- `#sets`：Set 工具类
+- `#maps`：常用Map方法。
+- `#objects`：一般对象类，通常用来判断非空
+- `#bools`：常用的布尔方法。
+- `#execInfo`：获取页面模板的处理信息。
+- `#messages`：在变量表达式中获取外部消息的方法，与使用＃{...}语法获取的方法相同。
+- `#uris`：转义部分URL / URI的方法。
+- `#conversions`：用于执行已配置的转换服务的方法。
+- `#dates`：时间操作和时间格式化等。
+- `#calendars`：用于更复杂时间的格式化。
+- `#numbers`：格式化数字对象的方法。
+- `#aggregates`：在数组或集合上创建聚合的方法。
+- `#ids`：处理可能重复的id属性的方法。
+
+**用法举例：**
+
+**date工具类之日期格式化**
+使用默认的日期格式(`toString`方法) 并不是我们预期的格式：`Mon Dec 03 23:16:50 CST 2018`
+此时可以通过时间工具类`#dates`来对日期进行格式化：`2018-12-03 23:16:50`
+
+```html
+<input type="text" th:value="${#dates.format(user.createTime,'yyyy-MM-dd HH:mm:ss')}"/>
+```
+
+**首字母大写**
+
+```html
+/*
+ * Convert the first character of every word to upper-case
+ */
+${#strings.capitalizeWords(str)}                    // also array*, list* and set*
+```
+
+**list方法**
+
+```html
+/*
+ * Compute size
+ */
+${#lists.size(list)}
 
 /*
-如果您希望保留Spring Boot MVC功能，并且希望添加其他MVC配置（拦截器、格式化程序、视图控制器和其他功能），则可以添加自己
-的@configuration类，类型为webmvcconfiguer，但不添加@EnableWebMvc。如果希望提供
-RequestMappingHandlerMapping、RequestMappingHandlerAdapter或ExceptionHandlerExceptionResolver的自定义
-实例，则可以声明WebMVCregistrationAdapter实例来提供此类组件。
-*/
-If you want to keep Spring Boot MVC features and you want to add additional MVC configuration 
-(interceptors, formatters, view controllers, and other features), you can add your own 
-@Configuration class of type WebMvcConfigurer but without @EnableWebMvc. If you wish to provide 
-custom instances of RequestMappingHandlerMapping, RequestMappingHandlerAdapter, or 
-ExceptionHandlerExceptionResolver, you can declare a WebMvcRegistrationsAdapter instance to provide such components.
-
-// 如果您想完全控制Spring MVC，可以添加自己的@Configuration，并用@EnableWebMvc进行注释。
-If you want to take complete control of Spring MVC, you can add your own @Configuration annotated with @EnableWebMvc.
-```
-
-## 12.2、ContentNegotiatingViewResolver 内容协商视图解析器
-
-自动配置了ViewResolver，就是我们之前学习的SpringMVC的视图解析器；
-
-即根据方法的返回值取得视图对象（View），然后由视图对象决定如何渲染（转发，重定向）。
-
- WebMvcAutoConfiguration ， 然后搜索ContentNegotiatingViewResolver。找到如下方法！
-
-```java
-@Bean
-@ConditionalOnBean({ViewResolver.class})
-@ConditionalOnMissingBean(
-    name = {"viewResolver"},
-    value = {ContentNegotiatingViewResolver.class}
-)
-public ContentNegotiatingViewResolver viewResolver(BeanFactory beanFactory) {
-    ContentNegotiatingViewResolver resolver = new ContentNegotiatingViewResolver();
-    resolver.setContentNegotiationManager((ContentNegotiationManager)beanFactory.getBean(ContentNegotiationManager.class));
-    // ContentNegotiatingViewResolver使用所有其他视图解析器来定位视图，因此它应该具有较高的优先级
-    resolver.setOrder(Ordered.HIGHEST_PRECEDENCE);
-    return resolver;
-}
-```
-
-找到对应的解析视图的代码；
-
-```java
-@Nullable // 注解说明：@Nullable 即参数可为null
-public View resolveViewName(String viewName, Locale locale) throws Exception {
-    RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
-    Assert.state(attrs instanceof ServletRequestAttributes, "No current ServletRequestAttributes");
-    List<MediaType> requestedMediaTypes = this.getMediaTypes(((ServletRequestAttributes)attrs).getRequest());
-    if (requestedMediaTypes != null) {
-        // 获取候选的视图对象
-        List<View> candidateViews = this.getCandidateViews(viewName, locale, requestedMediaTypes);
-        // 选择一个最适合的视图对象，然后把这个对象返回
-        View bestView = this.getBestView(candidateViews, requestedMediaTypes, attrs);
-        if (bestView != null) {
-            return bestView;
-        }
-    }
-    // .....
-}
-```
-
-getCandidateViews中看到他是把所有的视图解析器拿来，进行while循环，挨个解析！
-
-```java
-Iterator var5 = this.viewResolvers.iterator();
-```
-
-所以得出结论：ContentNegotiatingViewResolver 这个视图解析器就是用来组合所有的视图解析器的
-
-再研究下他的组合逻辑，看到有个属性viewResolvers，看看它是在哪里进行赋值的！
-
-```java
-protected void initServletContext(ServletContext servletContext) {
-    // 这里它是从beanFactory工具中获取容器中的所有视图解析器
-    // ViewRescolver.class 把所有的视图解析器来组合的
-    Collection<ViewResolver> matchingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(this.obtainApplicationContext(), ViewResolver.class).values();
-    ViewResolver viewResolver;
-    if (this.viewResolvers == null) {
-        this.viewResolvers = new ArrayList(matchingBeans.size());
-        Iterator var3 = matchingBeans.iterator();
-    }
-    // ...............
-}
-```
-
-既然它是在容器中去找视图解析器，我们是否可以猜想，我们就可以去实现一个视图解析器了呢？
-
-我们可以自己给容器中去添加一个视图解析器；这个类就会帮我们自动的将它组合进来；我们去实现一下
-
-1、我们在我们的主程序中去写一个视图解析器来试试；
-
-```java
-// 如果 想DIY一些定制化的功能，只要写这个组件，然后将它交给springboot，springboot就会帮我们自动装配
-//扩展springmvc
-@Configuration
-public class MyMvcConfig implements WebMvcConfigurer {
-    //ViewResolver 实现类视图解析器接口的类，我们就可以把它看做视图解析器
-    @Bean
-    public ViewResolver myViewResolver(){
-        return new MyViewResolver();
-    }
-    //我们写一个静态内部类，视图解析器就需要实现ViewResolver接口
-    public static class MyViewResolver implements ViewResolver {
-        @Override
-        public View resolveViewName(String s, Locale locale) throws Exception {
-            return null;
-        }
-    }
-```
-
-2、怎么看我们自己写的视图解析器有没有起作用呢？
-
-我们给 DispatcherServlet 中的 doDispatch方法 加个断点进行调试一下，因为所有的请求都会走到这个方法中
-
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219210862-52729e25-1d18-42e7-9eb7-ef64e81b91e7.png)
-
-3、我们启动我们的项目，然后随便访问一个页面，看一下Debug信息；
-
-找到this
-
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219233769-72887c88-86c2-4ba7-af40-95bd46603db3.png)
-
-找到视图解析器，我们看到我们自己定义的就在这里了；
-
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219237941-f51cf178-d37a-42dc-8a68-43b55dab0d96.png)
-
-所以说，我们如果想要使用自己定制化的东西，我们只需要给容器中添加这个组件就好了！剩下的事情SpringBoot就会帮我们做了！
-
-## 12.3、转换器和格式化器
-
-在WebMvcAutoConfiguration中找到格式化转换器：
-
-```java
-@Bean
-@Override
-public FormattingConversionService mvcConversionService() {
-    // 拿到配置文件中的格式化规则
-    WebConversionService conversionService = 
-        new WebConversionService(this.mvcProperties.getDateFormat());
-    addFormatters(conversionService);
-    return conversionService;
-}
-```
-
-点进去：
-
-```java
-public String getDateFormat() {
-    return this.dateFormat;
-}
-/**
-* Date format to use. For instance, `dd/MM/yyyy`. 默认的
+ * Check whether list is empty
  */
-private String dateFormat;
+${#lists.isEmpty(list)}
 ```
 
-可以看到在我们的Properties文件中，我们可以进行自动配置它！
+### 公共片段
 
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219305643-479e7603-d3dc-4cc6-bcac-dad4869d4db6.png)
+使用方法：首先通过`th:fragment`定制片段 ，然后通过`th:replace` 填写片段路径和片段名。例如：
+我们通常将项目里面经常重用的代码抽取为代码片段(标签)
 
-
-
-如果配置了自己的格式化方式，就会注册到Bean中生效，我们可以在配置文件中配置日期格式化的规则：
-
-## 12.4、修改SpringBoot的默认配置
-
-SpringBoot在自动配置很多组件的时候，先看容器中有没有用户自己配置的（如果用户自己配置@bean），如果有就用用户配置的，如果没有就用自动配置的；
-
-如果有些组件可以存在多个，比如我们的视图解析器，就将用户配置的和自己默认的组合起来！
-
-扩展使用SpringMVC 官方文档如下：
-
-```java
-If you want to keep Spring Boot MVC features and you want to add additional MVC configuration (interceptors, formatters, view controllers, and other features), you can add your own @Configuration class of type WebMvcConfigurer but without @EnableWebMvc. If you wish to provide custom instances of RequestMappingHandlerMapping, RequestMappingHandlerAdapter, or ExceptionHandlerExceptionResolver, you can declare a WebMvcRegistrationsAdapter instance to provide such components.
+```html
+<!-- /views/common/head.html-->
+<head th:fragment="static(version)">
+        <script th:src="@{/webjars/jquery/${version}/jquery.js}"></script>
+</head>
 ```
 
-编写一个@Configuration注解类，并且**类型要为WebMvcConfigurer，还不能标注@EnableWebMvc注解；**我们去自己写一个；我们新建一个包叫config，写一个类MyMvcConfig；
+然后在不同的页面引用该片段，达到代码重用的目的
 
-```java
-//应为类型要求为WebMvcConfigurer，所以我们实现其接口
-//可以使用自定义类扩展MVC的功能
-@Configuration
-public class MyMvcConfig implements WebMvcConfigurer {
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        // 浏览器发送/test ， 就会跳转到test页面；
-        registry.addViewController("/test").setViewName("test");
-    }
-}
+```html
+<!-- /views/your.html -->
+<div th:replace="~{common/head::static(1.12.4)}"></div>
 ```
 
-我们去浏览器访问一下：
+在实际使用中，我们往往使用更简洁的表达，去掉表达式外壳直接填写片段名。例如：
 
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219411733-64d3e859-70d1-451b-b6d5-a1a4c8aaf706.png)
-
-确实也跳转过来了！所以说，我们要扩展SpringMVC，官方就推荐我们这么去使用，既保SpringBoot留所有的自动配置，也能用我们扩展的配置！
-
-我们可以去分析一下原理：
-
-1、WebMvcAutoConfiguration 是 SpringMVC的自动配置类，里面有一个类WebMvcAutoConfigurationAdapter
-
-2、这个类上有一个注解，在做其他自动配置时会导入：@Import(EnableWebMvcConfiguration.class)
-
-3、我们点进EnableWebMvcConfiguration这个类看一下，它继承了一个父类：DelegatingWebMvcConfiguration
-
-这个父类中有这样一段代码：
-
-```java
-public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
-    private final WebMvcConfigurerComposite configurers = new WebMvcConfigurerComposite();
-   
-  // 从容器中获取所有的webmvcConfigurer
-    @Autowired(required = false)
-    public void setConfigurers(List<WebMvcConfigurer> configurers) {
-        if (!CollectionUtils.isEmpty(configurers)) {
-            this.configurers.addWebMvcConfigurers(configurers);
-        }
-    }
-}
+```html
+<!-- your.html -->
+<div th:replace="common/head::static"></div>
+<div th:insert="common/head::static"></div>
+<div th:include="common/head::static"></div>
 ```
 
-4、我们可以在这个类中去寻找一个我们刚才设置的viewController当做参考，发现它调用了一个
+关于thymeleaf th:replace th:include th:insert 的区别
 
-```java
-protected void addViewControllers(ViewControllerRegistry registry) {
-    this.configurers.addViewControllers(registry);
-}
+- th:insert ：保留自己的主标签，保留th:fragment的主标签。
+- th:replace ：不要自己的主标签，保留th:fragment的主标签。
+- th:include ：保留自己的主标签，不要th:fragment的主标签。（官方3.0后不推荐）
+
+> 值得注意的是，使用替换路径`th:replace` 开头请勿添加斜杠`/`，避免部署运行的时候出现路径报错。（因为默认拼接的路径为`spring.thymeleaf.prefix = classpath:/templates/`）
+
+片段表达式是Thymeleaf的特色之一，细粒度可以达到标签级别，这是JSP无法做到的。
+片段表达式拥有三种语法：
+
+- `~{ viewName } 表示引入完整页面`
+- `~{ viewName ::selector} 表示在指定页面寻找片段 其中selector可为片段名、jquery选择器等`,即可以在一个html页面内定义多个片段.
+- `~{ ::selector} 表示在当前页寻找`
+
+### 内联语法
+
+thymeleaf内联js中使用的标准格式为：`[[${xx}]]` ，可以读取服务端变量，也可以调用内置对象的方法。例如获取用户变量和应用路径：
+
+```html
+    <script th:inline="javascript">
+        var user = [[${user}]];
+        var APP_PATH = [[${#request.getContextPath()}]];
+        var LANG_COUNTRY = [[${#locale.getLanguage()+'_'+#locale.getCountry()}]];
+    </script>
 ```
 
-5、我们点进去看一下
+标签（代码片段）内引入的JS里面能使用内联表达式吗？
 
-```java
-public void addViewControllers(ViewControllerRegistry registry) {
-    Iterator var2 = this.delegates.iterator();
-    while(var2.hasNext()) {
-        // 将所有的WebMvcConfigurer相关配置来一起调用！包括我们自己配置的和Spring给我们配置的
-        WebMvcConfigurer delegate = (WebMvcConfigurer)var2.next();
-        delegate.addViewControllers(registry);
-    }
-}
-```
-
-所以得出结论：所有的WebMvcConfiguration都会被作用，不止Spring自己的配置类，我们自己的配置类当然也会被调用；
+答：不能！内联表达式仅在页面生效，因为`Thymeleaf`只负责解析一级视图，不能识别外部标签JS里面的表达式。
 
 
 
-## 12.5、全面接管SpringMVC
-
-官方文档：
-
-If you want to take complete control of Spring MVCyou can add your own @Configuration annotated with @EnableWebMvc.
-
-全面接管即：SpringBoot对SpringMVC的自动配置不需要了，所有都是我们自己去配置！
-
-只需在我们的配置类中要加一个@EnableWebMvc。
-
-我们看下如果我们全面接管了SpringMVC了，我们之前SpringBoot给我们配置的静态资源映射一定会无效，我们可以去测试一下；
-
-不加注解之前，访问首页：
-
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219654848-89a05ccb-6d66-48f9-8084-c95591fada06.png)
-
-**给配置类加上注解：@EnableWebMvc**
-
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219674044-fbde63ec-7e6d-4c2e-aae4-df9c30256bbb.png)
-
-发现所有的SpringMVC自动配置都失效了，开发中，不推荐使用全面接管SpringMVC
-
-思考问题？为什么加了一个注解，自动配置就失效了！我们看下源码：
-
-1、这里发现它是导入了一个类，我们可以继续进去看
-
-```java
-@Import({DelegatingWebMvcConfiguration.class})
-public @interface EnableWebMvc {
-}
-```
-
-2、它继承了一个父类 WebMvcConfigurationSupport
-
-```java
-public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport {
-  // ......
-}
-```
-
-3、我们来回顾一下Webmvc自动配置类
-
-```java
-@Configuration(proxyBeanMethods = false)
-@ConditionalOnWebApplication(type = Type.SERVLET)
-@ConditionalOnClass({ Servlet.class, DispatcherServlet.class, WebMvcConfigurer.class })
-// 这个注解的意思就是：容器中没有这个组件的时候，这个自动配置类才生效
-@ConditionalOnMissingBean(WebMvcConfigurationSupport.class)
-@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 10)
-@AutoConfigureAfter({ DispatcherServletAutoConfiguration.class, TaskExecutionAutoConfiguration.class,
-    ValidationAutoConfiguration.class })
-public class WebMvcAutoConfiguration {
-   
-}
-```
-
-总结一句话：@EnableWebMvc将WebMvcConfigurationSupport组件导入进来了；
-
-而导入的WebMvcConfigurationSupport只是SpringMVC最基本的功能！
-
-在SpringBoot中会有非常多的扩展配置，只要看见了这个，我们就应该多留心注意~
-
-# 13、页面国际化（i18n）
+# 页面国际化（i18n）
 
 有的时候，我们的网站会去涉及中英文甚至多语言的切换，这时候就需要学习国际化.
 
-## 13.1、准备工作
+## 准备工作
 
 先在IDEA中统一设置properties的编码问题！
 
@@ -2089,7 +1991,7 @@ public class WebMvcAutoConfiguration {
 
 编写国际化配置文件，抽取页面需要显示的国际化页面消息。我们可以去登录页面查看一下，哪些内容我们需要编写国际化的配置！
 
-## 13.2、配置文件编写
+## 配置文件编写
 
 1、我们在resources资源文件下新建一个i18n目录，存放国际化配置文件
 
@@ -2145,7 +2047,7 @@ login.properties ：默认
 
 OK，配置文件步骤搞定！
 
-## 13.3、配置文件生效探究
+## 配置文件生效探究
 
 我们去看一下SpringBoot对国际化的自动配置！这里又涉及到一个类：MessageSourceAutoConfiguration
 
@@ -2182,7 +2084,7 @@ public MessageSource messageSource(MessageSourceProperties properties) {
 spring.messages.basename=i18n.login
 ```
 
-## 13.4、配置页面国际化值
+## 配置页面国际化值
 
 去页面获取国际化的值，查看Thymeleaf的文档，找到message取值操作为：#{…}。我们去页面测试下：
 
@@ -2196,7 +2098,7 @@ IDEA还有提示，非常智能的！
 
 但是我们想要更好！可以根据按钮自动切换中文英文！
 
-## 13.5、配置国际化解析
+## 配置国际化解析
 
 在Spring中有一个国际化的Locale （区域信息对象）；里面有一个叫做LocaleResolver （获取区域信息对象）的解析器！
 
@@ -2301,9 +2203,2458 @@ public LocaleResolver localeResolver(){
 
 - 将自己写的组件配置到spring容器中----@Bean
 
-# 14、整合JDBC
+# 异步、定时、邮件任务
 
-## 14.1、SpringData简介
+
+
+## 异步任务
+
+相关方法添加@sync注解后，SpringBoot就会自己开一个线程池，进行调用！但是要让这个注解生效，我们还需要在主程序上添加一个注解@EnableAsync ，开启异步注解功能；
+
+> 注意：@Async所修饰的函数不要定义为static类型，这样异步调用不会生效。
+
+```java
+@EnableAsync //开启异步注解功能
+@SpringBootApplication
+public class SpringbootTaskApplication {
+   public static void main(String[] args) {
+       SpringApplication.run(SpringbootTaskApplication.class, args);
+  }
+}
+```
+
+**异步回调**
+
+我们需要使用 `Future` 来返回 **异步调用** 的 **结果**。
+
+- 创建 `AsyncCallBackTask` 类，声明 `doTaskOneCallback()`，`doTaskTwoCallback()`，`doTaskThreeCallback()` 三个方法，对原有的三个方法进行包装。
+
+```java
+@Component
+public class AsyncCallBackTask extends AbstractTask {
+    @Async
+    public Future<String> doTaskOneCallback() throws Exception {
+        super.doTaskOne();
+        return new AsyncResult<>("任务一完成");
+    }
+
+    @Async
+    public Future<String> doTaskTwoCallback() throws Exception {
+        super.doTaskTwo();
+        return new AsyncResult<>("任务二完成");
+    }
+
+    @Async
+    public Future<String> doTaskThreeCallback() throws Exception {
+        super.doTaskThree();
+        return new AsyncResult<>("任务三完成");
+    }
+}
+```
+
+循环调用 `Future` 的 `isDone()` 方法等待三个 **并发任务** 执行完成，记录最终执行时间。
+
+**异步线程池**
+
+创建一个 **线程池配置类**`TaskConfiguration` ，并配置一个 **任务线程池对象**`taskExecutor`。
+
+```java
+@Configuration
+public class TaskConfiguration {
+    @Bean("taskExecutor")
+    public Executor taskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(20);
+        executor.setQueueCapacity(200);
+        executor.setKeepAliveSeconds(60);
+        executor.setThreadNamePrefix("taskExecutor-");
+        executor.setRejectedExecutionHandler(new CallerRunsPolicy());
+        //优雅的遇到错误关闭线程池
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(60);
+        return executor;
+    }
+}
+```
+
+上面我们通过使用 `ThreadPoolTaskExecutor` 创建了一个 **线程池**，同时设置了以下这些参数：
+
+| 线程池属性                 | 属性的作用                                                   | 设置初始值       |
+| :------------------------- | :----------------------------------------------------------- | :--------------- |
+| 核心线程数                 | 线程池创建时候初始化的线程数                                 | 10               |
+| 最大线程数                 | 线程池最大的线程数，只有在缓冲队列满了之后，才会申请超过核心线程数的线程 | 20               |
+| 缓冲队列                   | 用来缓冲执行任务的队列                                       | 200              |
+| 允许线程的空闲时间         | 当超过了核心线程之外的线程，在空闲时间到达之后会被销毁       | 60秒             |
+| 线程池名的前缀             | 可以用于定位处理任务所在的线程池                             | taskExecutor-    |
+| 线程池对拒绝任务的处理策略 | 这里采用CallerRunsPolicy策略，当线程池没有处理能力的时候，该策略会直接在execute方法的调用线程中运行被拒绝的任务；如果执行程序已关闭，则会丢弃该任务 | CallerRunsPolicy |
+
+- 创建 `AsyncExecutorTask`类，三个任务的配置和 `AsyncTask` 一样，不同的是 `@Async` 注解需要指定前面配置的 **线程池的名称**`taskExecutor`。
+
+```java
+@Component
+public class AsyncExecutorTask extends AbstractTask {
+    @Async("taskExecutor")
+    public Future<String> doTaskOneCallback() throws Exception {
+        super.doTaskOne();
+        System.out.println("任务一，当前线程：" + Thread.currentThread().getName());
+        return new AsyncResult<>("任务一完成");
+    }
+
+    @Async("taskExecutor")
+    public Future<String> doTaskTwoCallback() throws Exception {
+        super.doTaskTwo();
+        System.out.println("任务二，当前线程：" + Thread.currentThread().getName());
+        return new AsyncResult<>("任务二完成");
+    }
+
+    @Async("taskExecutor")
+    public Future<String> doTaskThreeCallback() throws Exception {
+        super.doTaskThree();
+        System.out.println("任务三，当前线程：" + Thread.currentThread().getName());
+        return new AsyncResult<>("任务三完成");
+    }
+}
+```
+
+
+
+## 定时任务
+
+项目开发中经常需要执行一些定时任务，比如需要在每天凌晨的时候，分析一次前一天的日志信息，Spring为我们提供了异步执行任务调度的方式，提供了两个接口。
+
+- TaskExecutor接口
+- TaskScheduler接口
+
+两个注解：
+
+- @EnableScheduling
+- @Scheduled
+
+**cron表达式：**
+
+corn从左到右（用空格隔开）：秒 分 小时 月份中的日期 月份 星期中的日期 年份
+
+| 字段                     | 允许值                                 | 允许的特殊字符           |
+| ------------------------ | -------------------------------------- | ------------------------ |
+| 秒（Seconds）            | 0~59的整数                             | , - * / 四个字符         |
+| 分（*Minutes*）          | 0~59的整数                             | , - * / 四个字符         |
+| 小时（*Hours*）          | 0~23的整数                             | , - * / 四个字符         |
+| 日期（*DayofMonth*）     | 1~31的整数（但是你需要考虑你月的天数） | ,- * ? / L W C 八个字符  |
+| 月份（*Month*）          | 1~12的整数或者 JAN-DEC                 | , - * / 四个字符         |
+| 星期（*DayofWeek*）      | 1~7的整数或者 SUN-SAT （1=SUN）        | , - * ? / L C # 八个字符 |
+| 年(可选，留空)（*Year*） | 1970~2099                              | , - * / 四个字符         |
+
+| 特殊字符 | 代表含义                                                     |
+| -------- | ------------------------------------------------------------ |
+| ,        | 枚举 在Minutes域使用5,20，则意味着在5和20分每分钟触发一次。  |
+| -        | 表示范围 例如在Minutes域使用5-20，表示从5分到20分钟每分钟触发一次 |
+| *        | 任意                                                         |
+| /        | 表示起始时间开始触发，然后每隔固定时间触发一次，             |
+| ?        | 日/星期冲突匹配 只能用在DayofMonth和DayofWeek两个域          |
+| L        | 最后 如果在DayofWeek域使用5L,意味着在最后的一个星期四触发。  |
+| W        | 工作日                                                       |
+| C        | 和calendar联系后计算过的值                                   |
+| #        | 用于确定每个月第几个星期几，4#2 某月的第二个星期三           |
+
+**测试步骤：-**
+
+1、创建一个ScheduledService
+
+我们里面存在一个hello方法，他需要定时执行，怎么处理呢？
+
+```java
+@Service
+public class ScheduledService {
+ 
+   //秒   分   时     日   月   周几
+   //0 * * * * MON-FRI
+   //注意cron表达式的用法；
+   @Scheduled(cron = "0 * * * * 0-7")
+   public void hello(){
+       System.out.println("hello.....");
+  }
+}
+```
+
+2、这里写完定时任务之后，我们需要在主程序上增加@EnableScheduling 开启定时任务功能
+
+```java
+@EnableAsync //开启异步注解功能
+@EnableScheduling //开启基于注解的定时任务
+@SpringBootApplication
+public class SpringbootTaskApplication {
+   public static void main(String[] args) {
+       SpringApplication.run(SpringbootTaskApplication.class, args);
+  }
+}
+```
+
+3、我们来详细了解下cron表达式；
+
+http://www.bejson.com/othertools/cron/
+
+4、常用的表达式
+
+```java
+（1）0/2 * * * * ?   表示每2秒 执行任务
+（1）0 0/2 * * * ?   表示每2分钟 执行任务
+（1）0 0 2 1 * ?   表示在每月的1日的凌晨2点调整任务
+（2）0 15 10 ? * MON-FRI   表示周一到周五每天上午10:15执行作业
+（3）0 15 10 ? 6L 2002-2006   表示2002-2006年的每个月的最后一个星期五上午10:15执行作
+（4）0 0 10,14,16 * * ?   每天上午10点，下午2点，4点
+（5）0 0/30 9-17 * * ?   朝九晚五工作时间内每半小时
+（6）0 0 12 ? * WED   表示每个星期三中午12点
+（7）0 0 12 * * ?   每天中午12点触发
+（8）0 15 10 ? * *   每天上午10:15触发
+（9）0 15 10 * * ?     每天上午10:15触发
+（10）0 15 10 * * ?   每天上午10:15触发
+（11）0 15 10 * * ? 2005   2005年的每天上午10:15触发
+（12）0 * 14 * * ?     在每天下午2点到下午2:59期间的每1分钟触发
+（13）0 0/5 14 * * ?   在每天下午2点到下午2:55期间的每5分钟触发
+（14）0 0/5 14,18 * * ?     在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发
+（15）0 0-5 14 * * ?   在每天下午2点到下午2:05期间的每1分钟触发
+（16）0 10,44 14 ? 3 WED   每年三月的星期三的下午2:10和2:44触发
+（17）0 15 10 ? * MON-FRI   周一至周五的上午10:15触发
+（18）0 15 10 15 * ?   每月15日上午10:15触发
+（19）0 15 10 L * ?   每月最后一日的上午10:15触发
+（20）0 15 10 ? * 6L   每月的最后一个星期五上午10:15触发
+（21）0 15 10 ? * 6L 2002-2005   2002年至2005年的每月的最后一个星期五上午10:15触发
+（22）0 15 10 ? * 6#3   每月的第三个星期五上午10:15触发
+```
+
+**quartz**
+
+在 springboot2.0 后官方添加了 Quartz 框架的依赖，所以只需要在 pom 文件当中引入
+
+```xml
+      <!--引入quartz定时框架-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+```
+
+**创建任务类**
+
+由于 springboot2.0 自动进行了依赖所以创建的定时任务类直接继承 QuzrtzJobBean 就可以了，新建一个定时任务类：QuartzSimpleTask
+
+```java
+public class QuartzSimpleTask extends QuartzJobBean {
+    @Override
+    protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        System.out.println("quartz简单的定时任务执行时间："+new Date().toLocaleString());
+    }
+}
+```
+
+**创建 Quartz 定时配置类**
+
+将之前创建的定时任务添加到定时调度里面
+
+```java
+@Configuration
+public class QuartzSimpleConfig {
+    //指定具体的定时任务类
+    @Bean
+    public JobDetail uploadTaskDetail() {
+        return JobBuilder.newJob(QuartzSimpleTask.class).withIdentity("QuartzSimpleTask").storeDurably().build();
+    }
+
+    @Bean
+    public Trigger uploadTaskTrigger() {
+        //这里设定触发执行的方式
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("*/5 * * * * ?");
+        // 返回任务触发器
+        return TriggerBuilder.newTrigger().forJob(uploadTaskDetail())
+                .withIdentity("QuartzSimpleTask")
+                .withSchedule(scheduleBuilder)
+                .build();
+    }
+}
+```
+
+**动态定时任务**
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/testdb?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  quartz:
+    job-store-type: JDBC #数据库存储quartz任务配置
+    jdbc:
+      initialize-schema: NEVER #自动初始化表结构，第一次启动的时候这里写always
+```
+
+**定时任务类**
+
+```java
+@Data
+public class QuartzBean {
+    /** 任务id */
+    private String id;
+
+    /** 任务名称 */
+    private String jobName;
+
+    /** 任务执行类 */
+    private String jobClass;
+
+    /** 任务状态 启动还是暂停*/
+    private Integer status;
+
+    /** 任务运行时间表达式 */
+    private String cronExpression;
+}
+```
+
+**创建定时任务工具类，具有暂停，修改，启动，单次启动功能**
+
+```java
+public class QuartzUtils {
+
+    /**
+     * 创建定时任务 定时任务创建之后默认启动状态
+     * @param scheduler 调度器
+     * @param quartzBean 定时任务信息类
+     */
+    @SuppressWarnings("unchecked")
+    public static void createScheduleJob(Scheduler scheduler, QuartzBean quartzBean) throws ClassNotFoundException, SchedulerException {
+            //获取到定时任务的执行类 必须是类的绝对路径名称
+            //定时任务类需要是job类的具体实现 QuartzJobBean是job的抽象类。
+            Class<? extends Job> jobClass = (Class<? extends Job>) Class.forName(quartzBean.getJobClass());
+            // 构建定时任务信息
+            JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(quartzBean.getJobName()).build();
+            // 设置定时任务执行方式
+            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(quartzBean.getCronExpression());
+            // 构建触发器trigger
+            CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(quartzBean.getJobName()).withSchedule(scheduleBuilder).build();
+            scheduler.scheduleJob(jobDetail, trigger);
+    }
+
+    /**
+     * 根据任务名称暂停定时任务
+     * @param scheduler 调度器
+     * @param jobName 定时任务名称
+     */
+    public static void pauseScheduleJob(Scheduler scheduler, String jobName) throws SchedulerException {
+        JobKey jobKey = JobKey.jobKey(jobName);
+        scheduler.pauseJob(jobKey);
+    }
+
+    /**
+     * 根据任务名称恢复定时任务
+     * @param scheduler 调度器
+     * @param jobName 定时任务名称
+     */
+    public static void resumeScheduleJob(Scheduler scheduler, String jobName) throws SchedulerException {
+        JobKey jobKey = JobKey.jobKey(jobName);
+        scheduler.resumeJob(jobKey);
+    }
+
+    /**
+     * 根据任务名称立即运行一次定时任务
+     * @param scheduler 调度器
+     * @param jobName 定时任务名称
+     */
+    public static void runOnce(Scheduler scheduler, String jobName) throws SchedulerException {
+        JobKey jobKey = JobKey.jobKey(jobName);
+        scheduler.triggerJob(jobKey);
+    }
+
+    /**
+     * 更新定时任务
+     * @param scheduler 调度器
+     * @param quartzBean 定时任务信息类
+     */
+    public static void updateScheduleJob(Scheduler scheduler, QuartzBean quartzBean) throws SchedulerException {
+
+            //获取到对应任务的触发器
+            TriggerKey triggerKey = TriggerKey.triggerKey(quartzBean.getJobName());
+            //设置定时任务执行方式
+            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(quartzBean.getCronExpression());
+            //重新构建任务的触发器trigger
+            CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+            trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
+            //重置对应的job
+            scheduler.rescheduleJob(triggerKey, trigger);
+    }
+
+    /**
+     * 根据定时任务名称从调度器当中删除定时任务
+     * @param scheduler 调度器
+     * @param jobName 定时任务名称
+     */
+    public static void deleteScheduleJob(Scheduler scheduler, String jobName) throws SchedulerException {
+        JobKey jobKey = JobKey.jobKey(jobName);
+        scheduler.deleteJob(jobKey);
+    }
+}
+@Controller
+@RequestMapping("/quartz/job/")
+public class QuartzController {
+    //注入任务调度
+    @Resource
+    private Scheduler scheduler;
+
+    @PostMapping("/create")
+    @ResponseBody
+    public String createJob(@RequestBody QuartzBean quartzBean) throws SchedulerException, ClassNotFoundException {
+        QuartzUtils.createScheduleJob(scheduler,quartzBean);
+        return "已创建任务";//这里return不是生产级别代码，测试简单写一下
+    }
+
+    @PostMapping("/pause")
+    @ResponseBody
+    public String pauseJob(String jobName) throws SchedulerException {
+        QuartzUtils.pauseScheduleJob (scheduler,jobName);
+        return "已暂停成功";//这里return不是生产级别代码，测试简单写一下
+    }
+
+    @PostMapping("/run")
+    @ResponseBody
+    public String runOnce(String jobName) throws SchedulerException {
+        QuartzUtils.runOnce (scheduler,jobName);
+        return "运行任务" + jobName + "成功";//这里return不是生产级别代码，测试简单写一下
+    }
+
+    @PostMapping("/resume")
+    @ResponseBody
+    public String resume(String jobName) throws SchedulerException {
+        QuartzUtils.resumeScheduleJob(scheduler,jobName);
+        return "恢复定时任务成功：" + jobName;
+    }
+
+    @PostMapping("/update")
+    @ResponseBody
+    public String update(@RequestBody QuartzBean quartzBean) throws SchedulerException {
+        QuartzUtils.updateScheduleJob(scheduler,quartzBean);
+        return "更新定时任务调度信息成功";
+    }
+}
+```
+
+
+
+## 邮件任务
+
+邮件发送，在我们的日常开发中，也非常的多，Springboot也帮我们做了支持
+
+- 邮件发送需要引入spring-boot-start-mail
+- SpringBoot 自动配置MailSenderAutoConfiguration
+
+- 定义MailProperties内容，配置在application.yml中
+- 自动装配JavaMailSender
+
+- 测试邮件发送
+
+**测试：**
+
+1、引入pom依赖
+
+```xml
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-mail</artifactId>
+</dependency>
+```
+
+看它引入的依赖，可以看到 jakarta.mail
+
+```xml
+<dependency>
+   <groupId>com.sun.mail</groupId>
+   <artifactId>jakarta.mail</artifactId>
+   <version>1.6.4</version>
+   <scope>compile</scope>
+</dependency>
+```
+
+2、查看自动配置类：MailSenderAutoConfiguration
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615375803662-63532564-5ff8-4af5-9572-ed0fe890da3a.png)
+
+这个类中存在bean，JavaMailSenderImpl
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615375822928-e17de5a3-567a-4ac8-bf24-ec1dfa8469bc.png)
+
+然后我们去看下配置文件
+
+```java
+@ConfigurationProperties(
+   prefix = "spring.mail"
+)
+public class MailProperties {
+   private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+   private String host;
+   private Integer port;
+   private String username;
+   private String password;
+   private String protocol = "smtp";
+   private Charset defaultEncoding;
+   private Map<String, String> properties;
+   private String jndiName;
+}
+```
+
+3、配置文件：
+
+```properties
+spring.mail.username=24736743@qq.com
+spring.mail.password=你的qq授权码
+spring.mail.host=smtp.qq.com
+# qq需要配置ssl
+spring.mail.properties.mail.smtp.ssl.enable=true
+```
+
+获取授权码：在QQ邮箱中的设置->账户->开启pop3和smtp服务
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615375906529-88757cde-4ef5-46c5-b800-e597553b1794.png)
+
+4、Spring单元测试
+
+```java
+@Autowired
+JavaMailSenderImpl mailSender;
+
+@Test
+public void contextLoads() {
+   //邮件设置1：一个简单的邮件
+   SimpleMailMessage message = new SimpleMailMessage();
+   message.setSubject("通知-明天来狂神这听课");
+   message.setText("今晚7:30开会");
+
+   message.setTo("24736743@qq.com");
+   message.setFrom("24736743@qq.com");
+   mailSender.send(message);
+}
+
+@Test
+public void contextLoads2() throws MessagingException {
+   //邮件设置2：一个复杂的邮件
+   MimeMessage mimeMessage = mailSender.createMimeMessage();
+   MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+
+   helper.setSubject("通知-明天来狂神这听课");
+   helper.setText("<b style='color:red'>今天 7:30来开会</b>",true);
+
+   //发送附件
+   helper.addAttachment("1.jpg",new File(""));
+   helper.addAttachment("2.jpg",new File(""));
+
+   helper.setTo("24736743@qq.com");
+   helper.setFrom("24736743@qq.com");
+
+   mailSender.send(mimeMessage);
+}
+```
+
+查看邮箱，邮件接收成功！
+
+我们只需要使用Thymeleaf进行前后端结合即可开发自己网站邮件收发功能了！
+
+封装工具类：
+
+```java
+/**
+     * 
+     * @param html:   是否开启html
+     * @param subject 邮件标题
+     * @param text   邮件内容
+     * @throws Exception
+     */
+@Test
+public void sendMail(Boolean html, String subject, String text) throws Exception {
+    //邮件设置2：一个复杂的邮件
+    MimeMessage mimeMessage = mailSender.createMimeMessage();
+    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, html);
+
+    helper.setSubject(subject);
+    helper.setText(text,true);
+
+    helper.setTo("24736743@qq.com");
+    helper.setFrom("24736743@qq.com");
+
+    mailSender.send(mimeMessage);
+}
+```
+
+# 服务器推送
+
+1、WebSocket：全双工双向通信，本质上是一个额外的tcp连接，建立和关闭时握手使用http协议，其他数据传输不使用http协议 ，更加复杂一些。
+
+2、SSE：用来从服务端实时推送数据到浏览器端， 直接建立在当前http连接上，本质上是保持一个http长连接，轻量协议 。
+
+
+
+|           | 是否基于新协议 | 是否双向通信     | 是否支持跨域           | 编码难度 |
+| :-------- | :------------- | :--------------- | :--------------------- | :------- |
+| SSE       | 否（`Http`）   | 否（服务器单向） | 否（Firefox 支持跨域） | 低       |
+| WebSocket | 是（`ws`）     | 是               | 是                     | 略高     |
+
+## **SSE**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SSE</title>
+</head>
+<body>
+    <div id = "message"></div>
+    <script>
+        if (window.EventSource) {
+            var source = new EventSource('orderpay');
+            innerHTML = '';
+            source.addEventListener('message', function(e) {
+                innerHTML += e.data + "<br/>";
+                document.getElementById("message").innerHTML = innerHTML;
+            });
+
+            source.addEventListener('open', function(e) {
+                console.log("连接打开.");
+            }, false);
+
+            // 响应finish事件，主动关闭EventSource
+            source.addEventListener('finish', function(e) {
+                console.log("数据接收完毕，关闭EventSource");
+                source.close();
+                console.log(e);
+            }, false);
+
+            source.addEventListener('error', function(e) {
+                if (e.readyState == EventSource.CLOSED) {
+                    console.log("连接关闭");
+                } else {
+                    console.log(e);
+                }
+            }, false);
+        } else {
+            console.log("你的浏览器不支持SSE");
+        }
+    </script>
+
+</body>
+</html>
+```
+
+```java
+@Controller
+@RequestMapping("sse")
+public class SSEControler {
+
+    public static final ConcurrentHashMap<Long,SseEmitter> sseEmitters = new ConcurrentHashMap<>();
+
+
+    @GetMapping("/test")
+    public String ssetest(){
+        return "ssetest";
+    }
+
+    @GetMapping("/orderpay")
+    public SseEmitter orderpay(){
+        Long payRecordId = 1L;
+        //设置默认的超时时间60秒
+        final SseEmitter emitter = new SseEmitter(60 * 1000L);
+        try {
+            System.out.println("连接建立成功");
+            //TODO 这里可以做一些订单保存的操作
+            sseEmitters.put(payRecordId,emitter);
+        }catch (Exception e){
+            emitter.completeWithError(e);
+        }
+
+        return emitter;
+    }
+
+
+    @GetMapping("/payback")
+    public @ResponseBody String payback (){
+
+        SseEmitter emitter = sseEmitters.get(1L);
+        try {
+            emitter.send("支付成功");
+
+            System.out.println("发送finish事件");
+            emitter.send(SseEmitter.event().name("finish").id("6666").data("哈哈"));
+            System.out.println("调用complete");
+            emitter.complete();
+        } catch (IOException e) {
+            emitter.completeWithError(e);
+        }
+        return "ok";
+    }
+}
+```
+
+## **websocket**
+
+```xml
+<!-- 引入websocket依赖 -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-websocket</artifactId>
+</dependency>
+```
+
+```java
+@Configuration
+public class WebSocketConfig {
+ 
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
+    }
+}
+```
+
+
+WebSocketServer本节内容的核心代码，websocket服务端代码
+
+1. @ServerEndpoint(value = "/ws/asset")表示websocket的接口服务地址
+2. @OnOpen注解的方法，为连接建立成功时调用的方法
+3. @OnClose注解的方法，为连接关闭调用的方法
+4. @OnMessage注解的方法，为收到客户端消息后调用的方法
+5. @OnError注解的方法，为出现异常时调用的方法
+
+```java
+/**
+ * WebSocket服务端示例
+ */
+@Component
+@Slf4j
+@ServerEndpoint(value = "/ws/asset")
+public class WebSocketServer {  
+  
+    private static final AtomicInteger OnlineCount = new AtomicInteger(0);
+    // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。  
+    private static CopyOnWriteArraySet<Session> SessionSet = new CopyOnWriteArraySet<>();
+  
+  
+    /** 
+     * 连接建立成功调用的方法 
+     */  
+    @OnOpen
+    public void onOpen(Session session) throws IOException {
+        SessionSet.add(session);   
+        int cnt = OnlineCount.incrementAndGet(); // 在线数加1  
+        log.info("有连接加入，当前连接数为：{}", cnt);  
+        SendMessage(session, "连接成功");  
+    }  
+  
+    /** 
+     * 连接关闭调用的方法 
+     */  
+    @OnClose
+    public void onClose(Session session) {  
+        SessionSet.remove(session);  
+        int cnt = OnlineCount.decrementAndGet();  
+        log.info("有连接关闭，当前连接数为：{}", cnt);  
+    }  
+  
+    /** 
+     * 收到客户端消息后调用的方法
+     * @param message 客户端发送过来的消息
+     */  
+    @OnMessage
+    public void onMessage(String message, Session session) throws IOException {
+        log.info("来自客户端的消息：{}",message);  
+        SendMessage(session, "收到消息，消息内容："+message);
+    }  
+  
+    /** 
+     * 出现错误
+     */  
+    public void onError(Session session, Throwable error) {  
+        log.error("发生错误：{}，Session ID： {}",error.getMessage(),session.getId());
+    }  
+  
+    /** 
+     * 发送消息，实践表明，每次浏览器刷新，session会发生变化。 
+     * @param session  session
+     * @param message  消息
+     */  
+    private static void SendMessage(Session session, String message) throws IOException {
+
+        session.getBasicRemote().sendText(String.format("%s (From Server，Session ID=%s)",message,session.getId()));
+
+    }  
+  
+    /** 
+     * 群发消息 
+     * @param message  消息
+     */  
+    public static void BroadCastInfo(String message) throws IOException {
+        for (Session session : SessionSet) {  
+            if(session.isOpen()){  
+                SendMessage(session, message);  
+            }  
+        }  
+    }  
+  
+    /** 
+     * 指定Session发送消息
+     * @param sessionId sessionId
+     * @param message  消息
+     */  
+    public static void SendMessage(String sessionId,String message) throws IOException {  
+        Session session = null;  
+        for (Session s : SessionSet) {  
+            if(s.getId().equals(sessionId)){  
+                session = s;  
+                break;  
+            }  
+        }  
+        if(session!=null){  
+            SendMessage(session, message);  
+        } else{
+            log.warn("没有找到你指定ID的会话：{}",sessionId);  
+        }  
+    }  
+      
+} 
+```
+
+客户端代码，做几次实验，自然明了代码的意思，先不要看代码，先看效果。
+public/wstest/html
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>websocket测试</title>
+    <style type="text/css">
+        h3,h4{
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+
+<h3>WebSocket测试，在<span style="color:red">控制台</span>查看测试信息输出！</h3>
+<h4>
+    <br>
+    http://localhost:8888/api/ws/sendOne?message=单发消息内容&id=none
+    <br>
+    http://localhost:8888/api/ws/sendAll?message=群发消息内容
+</h4>
+
+<h3>请输入要发送给服务器端的消息：</h3><br/>
+
+<input id="text" type="text" />
+<button onclick="sendToServer()">发送服务器消息</button>
+<button onclick="closeWebSocket()">关闭连接</button>
+<br>信息:<span id="message"></span>
+
+
+<script type="text/javascript">
+    var socket;
+    if (typeof (WebSocket) == "undefined") {
+        console.log("遗憾：您的浏览器不支持WebSocket");
+    } else {
+        socket = new WebSocket("ws://localhost:8888/ws/asset");
+        //连接打开事件
+        socket.onopen = function() {
+            console.log("Socket 已打开");
+            socket.send("消息发送测试(From Client)");
+        };
+        //收到消息事件
+        socket.onmessage = function(msg) {
+            document.getElementById('message').innerHTML += msg.data + '<br/>';
+        };
+        //连接关闭事件
+        socket.onclose = function() {
+            console.log("Socket已关闭");
+        };
+        //发生了错误事件
+        socket.onerror = function() {
+            alert("Socket发生了错误");
+        }
+
+        //窗口关闭时，关闭连接
+        window.unload=function() {
+            socket.close();
+        };
+    }
+
+    //关闭连接
+    function closeWebSocket(){
+        socket.close();
+    }
+
+    //发送消息给服务器
+    function sendToServer(){
+        var message = document.getElementById('text').value;
+        socket.send(message);
+    }
+</script>
+
+</body>
+</html>
+```
+
+测试页面
+
+http://localhost:8888/wstest.html
+
+**服务端广播与指定session消息发送**
+
+```java
+@RestController
+@RequestMapping("/api/ws")
+public class WebSocketController {  
+  
+
+    /** 
+     * 群发消息内容 
+     * @param message 消息内容
+     */
+    @RequestMapping(value="/sendAll", method=RequestMethod.GET)
+    AjaxResponse sendAllMessage(@RequestParam String message){
+        try {  
+            WebSocketServer.BroadCastInfo(message);
+        } catch (IOException e) {
+            throw new CustomException(CustomExceptionType.SYSTEM_ERROR,"群发消息失败");
+        }  
+        return AjaxResponse.success();
+    }  
+
+    /** 
+     * 指定会话ID发消息 
+     * @param message 消息内容 
+     * @param id 连接会话ID
+     */
+    @RequestMapping(value="/sendOne", method=RequestMethod.GET)
+    AjaxResponse sendOneMessage(@RequestParam String message,@RequestParam String id){
+        try {  
+            WebSocketServer.SendMessage(id,message);  
+        } catch (IOException e) {
+            throw new CustomException(CustomExceptionType.SYSTEM_ERROR,"指定会话ID发消息失败");
+        }  
+        return AjaxResponse.success();
+    }  
+}  
+```
+
+# Spring事务
+
+**事务的具体定义**
+
+事务提供一种机制将一个活动涉及的所有操作纳入到一个不可分割的执行单元，组成事务的所有操作只有在所有操作均能正常执行的情况下方能提交，只要其中任一操作执行失败，都将导致整个事务的回滚。
+简单地说，事务提供一种“要么什么都不做，要么做全套（All or Nothing）”机制。ACID就是对这句话的一个解释。
+
+**并发环境下的数据库事务**
+
+**事务并发执行会出现的问题**
+
+我们先来看一下事务并发，数据库可能会出现更新丢失、脏读、不可重复读、幻读等。
+
+数据库一共有如下四种隔离级别：
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200425125418.png)
+
+- 隔离级别越高，越能保证数据的完整性和一致性，但是对并发性能的影响也越大。
+
+**事务传播行为**
+
+事务传播行为用来描述由某一个事务传播行为修饰的方法被嵌套进另一个方法的时事务如何传播。
+
+用伪代码说明：
+
+```
+ServiceA {
+           
+         void methodA() {
+             ServiceB.methodB();
+         }
+
+}
+      
+ServiceB {
+           
+         void methodB() {
+         }
+           
+}
+```
+
+代码中`methodA()`方法嵌套调用了`methodB()`方法，`methodB()`的事务传播行为由`@Transaction(Propagation=XXX)`设置决定。
+
+**Spring中七种事务传播行为**
+
+| 事务传播行为类型          | 说明                                                         |
+| :------------------------ | :----------------------------------------------------------- |
+| PROPAGATION_REQUIRED      | 如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中。这是最常见的选择。 |
+| PROPAGATION_SUPPORTS      | 支持当前事务，如果当前没有事务，就以非事务方式执行。         |
+| PROPAGATION_MANDATORY     | 使用当前的事务，如果当前没有事务，就抛出异常。               |
+| PROPAGATION_REQUIRES_NEW  | 新建事务，如果当前存在事务，把当前事务挂起。                 |
+| PROPAGATION_NOT_SUPPORTED | 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。   |
+| PROPAGATION_NEVER         | 以非事务方式执行，如果当前存在事务，则抛出异常。             |
+| PROPAGATION_NESTED        | 如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则执行与PROPAGATION_REQUIRED类似的操作。 |
+
+**@Transactional 注解**
+
+| 属性名           | 说明                                                         |
+| :--------------- | :----------------------------------------------------------- |
+| value            | 当在配置文件中有多个 TransactionManager , 可以用该属性指定选择哪个事务管理器。 |
+| propagation      | 事务的传播行为，默认值为 REQUIRED。                          |
+| isolation        | 事务的隔离度，默认值采用 DEFAULT。                           |
+| timeout          | 事务的超时时间，默认值为-1。如果超过该时间限制但事务还没有完成，则自动回滚事务。 |
+| read-only        | 指定事务是否为只读事务，默认值为 false；为了忽略那些不需要事务的方法，比如读取数据，可以设置 read-only 为 true。 |
+| rollback-for     | 用于指定能够触发事务回滚的异常类型，如果有多个异常类型需要指定，各类型之间可以通过逗号分隔。 |
+| no-rollback- for | 抛出 no-rollback-for 指定的异常类型，不回滚事务。            |
+
+**spring事务的实现**
+
+spring事务本质上是依赖于数据库事务
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/83b7902520146de4b8468a6c12210d56_955x538.png)
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/312679a3bf90c280b9f4fed1f77a8e37_640x369.png)
+
+# Spring Data
+
+## JPA
+
+**Spring Data JPA** 是 Spring 基于 ORM 框架、JPA 规范的基础上封装的一套 JPA 应用框架，底层使用了 Hibernate 的 JPA 技术实现，可使开发者用极简的代码即可实现对数据的访问和操作。
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+ <dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+</dependency>
+```
+
+修改application.yml，配置好数据库连接和jpa的相关配置
+
+```java
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/testdb?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: mysql
+    show-sql: true
+```
+
+`spring.jpa.properties.hibernate.hbm2ddl.auto`是hibernate的配置属性，其主要作用是：自动根据实体类的定义创建、更新、验证数据库表结构。该参数的几种配置如下：
+
+- `create`：每次加载hibernate时都会删除上一次的生成的表，然后根据你的model类再重新来生成新表，哪怕两次没有任何改变也要这样执行，这就是导致数据库表数据丢失的一个重要原因。
+- `create-drop`：每次加载hibernate时根据model类生成表，但是sessionFactory一关闭,表就自动删除。
+- `update`：最常用的属性，第一次加载hibernate时根据model类会自动建立起表的结构（前提是先建立好数据库），以后加载hibernate时根据model类自动更新表结构，即使表结构改变了但表中的行仍然存在不会删除以前的行。要注意的是当部署到服务器后，表结构是不会被马上建立起来的，是要等应用第一次运行起来后才会。
+- `validate`：每次加载hibernate时，验证创建数据库表结构，只会和数据库中的表进行比较，不会创建新表，但是会插入新值。
+
+### 基本使用
+
+**实体类**
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
+@Table(name="article")
+public class Article {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(nullable = false,length = 32)
+    private String author;
+
+    @Column(nullable = false, unique = true,length = 32)
+    private String title;
+
+    @Column(length = 512)
+    private String content;
+
+    private Date createTime;
+}
+```
+
+- `@Entity` 表示这个类是一个实体类，接受JPA控制管理，对应数据库中的一个表
+- `@Table` 指定这个类对应数据库中的表名。如果这个类名和数据库表名符合驼峰及下划线规则，可以省略这个注解。如`FlowType`类名对应表名`flow_type`。
+- `@Id` 指定这个字段为表的主键
+- `@GeneratedValue(strategy=GenerationType.IDENTITY)` 指定主键的生成方式，一般主键为自增的话，就采用`GenerationType.IDENTITY`的生成方式
+- `@Column` 注解针对一个字段，对应表中的一列。`nullable = false`表示数据库字段不能为空, `unique = true`表示数据库字段不能有重复值,`length = 32`表示数据库字段最大程度为32.
+- `@Data`、`@AllArgsConstructor`、`@NoArgsConstructor`、`@Builder`都是插件`lombok`的注解，用来帮助我们生成set、get方法、构造函数等实体类的模板代码。
+
+关于更多注解的详细用法，请参考：[# Hibernate Annotations 参考文档](https://docs.jboss.org/hibernate/annotations/3.4/reference/zh_cn/html_single/#entity)
+
+**数据操作接口**
+
+```java
+public interface ArticleRepository extends JpaRepository<Article,Long> {
+}
+```
+
+XxxRepository继承 JpaRepository<T,ID>为我们提供了各种针对单表的数据操作方法：增删改查。
+
+**Service接口**
+
+```java
+public interface ArticleRestService {
+
+     ArticleVO saveArticle(ArticleVO article);
+
+     void deleteArticle(Long id);
+
+     void updateArticle(ArticleVO article);
+
+     ArticleVO getArticle(Long id);
+
+     List<ArticleVO> getAll();
+}
+```
+
+接口实现
+
+```java
+@Service
+public class ArticleJPARestService implements  ArticleRestService  {
+
+    //将JPA仓库对象注入
+    @Resource
+    private ArticleRepository articleRepository;
+
+    @Resource
+    private Mapper dozerMapper;
+
+    public ArticleVO saveArticle( ArticleVO article) {
+
+        Article articlePO = dozerMapper.map(article,Article.class);
+        articleRepository.save(articlePO);    //保存一个对象到数据库，insert
+
+        return  article;
+    }
+
+    @Override
+    public void deleteArticle(Long id) {
+        articleRepository.deleteById(id);   //根据id删除1条数据库记录
+    }
+
+    @Override
+    public void updateArticle(ArticleVO article) {
+        Article articlePO = dozerMapper.map(article,Article.class);
+        articleRepository.save(articlePO);   //更新一个对象到数据库，仍然使用save方法
+    }
+
+    @Override
+    public ArticleVO getArticle(Long id) {
+        Optional<Article> article = articleRepository.findById(id);  //根据id查找一条数据
+        return dozerMapper.map(article.get(),ArticleVO.class);
+    }
+
+    @Override
+    public List<ArticleVO> getAll() {
+        List<Article> articleLis = articleRepository.findAll();  //查询article表的所有数据
+        return DozerUtils.mapList(articleLis,ArticleVO.class);
+    }
+}
+```
+
+注意：虽然新增和修改都是使用的save方法，但是完成的功能是不一样的。当保存的对象有主键id的时候，save方法会根据id更新记录；当保存的对象没有主键id的时候，save方法会向数据库里面insert一条记录。
+
+**关键字查询接口**
+
+除了上文中JpaRepository为我们提供的增删改查的方法。我们还可以自定义方法，非常简单。
+
+```java
+    //注意这个方法的名称，jPA会根据方法名自动生成SQL执行
+    Article findByAuthor(String author);
+```
+
+Web开发其他具体的关键字，使用方法和生产成 SQL 如下表所示
+
+| Keyword           | Sample                                  | JPQL snippet                                                 |
+| :---------------- | :-------------------------------------- | :----------------------------------------------------------- |
+| And               | findByLastnameAndFirstname              | … where x.lastname = ?1 and x.firstname = ?2                 |
+| Or                | findByLastnameOrFirstname               | … where x.lastname = ?1 or x.firstname = ?2                  |
+| Is,Equals         | findByFirstnameIs,findByFirstnameEquals | … where x.firstname = ?1                                     |
+| Between           | findByStartDateBetween                  | … where x.startDate between ?1 and ?2                        |
+| LessThan          | findByAgeLessThan                       | … where x.age < ?1                                           |
+| LessThanEqual     | findByAgeLessThanEqual                  | … where x.age ⇐ ?1                                           |
+| GreaterThan       | findByAgeGreaterThan                    | … where x.age > ?1                                           |
+| GreaterThanEqual  | findByAgeGreaterThanEqual               | … where x.age >= ?1                                          |
+| After             | findByStartDateAfter                    | … where x.startDate > ?1                                     |
+| Before            | findByStartDateBefore                   | … where x.startDate < ?1                                     |
+| IsNull            | findByAgeIsNull                         | … where x.age is null                                        |
+| IsNotNull,NotNull | findByAge(Is)NotNull                    | … where x.age not null                                       |
+| Like              | findByFirstnameLike                     | … where x.firstname like ?1                                  |
+| NotLike           | findByFirstnameNotLike                  | … where x.firstname not like ?1                              |
+| StartingWith      | findByFirstnameStartingWith             | … where x.firstname like ?1 (parameter bound with appended %) |
+| EndingWith        | findByFirstnameEndingWith               | … where x.firstname like ?1 (parameter bound with prepended %) |
+| Containing        | findByFirstnameContaining               | … where x.firstname like ?1 (parameter bound wrapped in %)   |
+| OrderBy           | findByAgeOrderByLastnameDesc            | … where x.age = ?1 order by x.lastname desc                  |
+| Not               | findByLastnameNot                       | … where x.lastname <> ?1                                     |
+| In                | findByAgeIn(Collection ages)            | … where x.age in ?1                                          |
+| NotIn             | findByAgeNotIn(Collection age)          | … where x.age not in ?1                                      |
+| TRUE              | findByActiveTrue()                      | … where x.active = true                                      |
+| FALSE             | findByActiveFalse()                     | … where x.active = false                                     |
+| IgnoreCase        | findByFirstnameIgnoreCase               | … where UPPER(x.firstame) = UPPER(?1)                        |
+
+可以看到我们这里没有任何类SQL语句就完成了两个条件查询方法。这就是Spring-data-jpa的一大特性：**通过解析方法名创建查询**。
+
+### 分页、排序
+
+定义一个接口`ArticleRepository`继承`PagingAndSortingRepository`。`PagingAndSortingRepository`接口不仅包含基础的CURD函数，还支持排序、分页的接口函数定义。
+
+```java
+public interface ArticleRepository extends PagingAndSortingRepository<Article,Long> {
+     //查询article表的所有数据，传入Pageable分页参数，不需要自己写SQL
+    Page<Article> findAll(Pageable pageable);
+    //根据author字段查询article表数据，传入Pageable分页参数，不需要自己写SQL
+    Page<Article> findByAuthor(String author, Pageable pageable);
+    //根据author字段和title字段，查询article表数据，传入Pageable分页参数，不需要自己写SQL
+    Slice<Article> findByAuthorAndTitle(String author, String title, Pageable pageable);
+}
+```
+
+**分页**
+
+```java
+Pageable pageable = PageRequest.of(0, 10);   //第一页
+//Pageable pageable = PageRequest.of(0, 10);  //第二页
+//Pageable pageable = PageRequest.of(0, 10);  // 第三页
+//数据库操作获取查询结果
+Page<Article> articlePage = articleRepository.findAll(pageable);
+//将查询结果转换为List
+List<Article> articleList = articlePage.getContent();
+```
+
+**排序**
+
+Spring Data JPA提供了一个 `Sort`对象，用以提供一种排序机制。让我们看一下排序的方式。
+
+```java
+articleRepository.findAll(Sort.by("createTime"));
+
+articleRepository.findAll(Sort.by("author").ascending()
+                        .and(Sort.by("createTime").descending()));
+```
+
+- 第一个`findAll`方法是按照`createTime`的升序进行排序
+- 第一个`findAll`方法是按照author的升序排序，再按照`createTime`的降序进行排序
+
+**分页并排序**
+
+```java
+Pageable pageable = PageRequest.of(0, 10,Sort.by("createTime"));
+```
+
+### Slice与Page
+
+在`ArticleRepository`我们看到了一个方法返回Slice和另一个方法返回了Page。它们都是Spring Data JPA的数据响应接口，其中 Page 是 Slice的子接口。它们都用于保存和返回数据。
+
+**Slice**
+
+让我们看一下 Slice的一些重要方法。
+
+```java
+List <T>  getContent（）; //获取切片的内容
+
+Pageable  getPageable（）; //当前切片的分页信息
+
+boolean  hasContent（）; //是否有查询结果？
+
+boolean  isFirst（）;  //是否是第一个切片
+
+boolean  isLast（）;  //是否是最后一个切片
+
+Pageable nextPageable(); // 下一个切片的分页信息
+
+Pageable previousPageable(); // 上一个切片的分页信息
+```
+
+**Page**
+
+Page是Slice的子接口，以下是的一些重要方法。
+
+```java
+//总页数
+int getTotalPages();
+
+//总数据条数
+long getTotalElements();
+```
+
+Slice关心是不是存在下一个分片(分页)，不关心总共有多少页，只关心有没有下一页，适合大数据量。
+
+Page比较适合传统应用中的table开发，需要知道总页数和总条数。
+
+### 多数据源
+
+**方式**
+
+1. 将数据源对象作为参数，传递到调用方法内部，这种方式增加额外的编码。
+2. 将Repository操作接口分包存放，Spring扫描不同的包，自动注入不同的数据源。这种方式实现简单，也是一种“约定大于配置”思想的典型应用。
+3. 使用Spring AOP面向切面编程，然后在持久层接口方法上面加注解，不同的注解使用表示使用不同的数据源。
+
+此处介绍的是第二种。
+
+**修改yaml文件**
+
+```yaml
+spring:
+  datasource:
+    primary:
+        jdbc-url: jdbc:mysql://localhost:3306/testdb?useUnicode=true&characterEncoding=utf-8
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.jdbc.Driver
+    secondary:
+        jdbc-url: jdbc:mysql://localhost:3306/testdb?useUnicode=true&characterEncoding=utf-8
+        username: root
+        password: 123456
+        driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: mysql
+    show-sql: true
+```
+
+**两组数据持久化接口及实体类,放到不同的package里面**
+
+**创建配置**
+
+```java
+@Configuration
+public class JPADataSourceConfig {
+
+    @Primary
+    @Bean(name = "primaryDataSource")
+    @Qualifier("primaryDataSource")
+    @ConfigurationProperties(prefix="spring.datasource.primary")    //结合application.yml的配置
+    public DataSource primaryDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+  
+
+    @Bean(name = "secondaryDataSource")
+    @Qualifier("secondaryDataSource")
+    @ConfigurationProperties(prefix="spring.datasource.secondary")   //结合application.yml的配置
+    public DataSource secondaryDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+}
+```
+
+配置实体扫描以及事务管理,注意看@Primary和带注释的地方
+
+```java
+@Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories(
+        entityManagerFactoryRef="entityManagerFactoryPrimary",
+        transactionManagerRef="transactionManagerPrimary",
+        basePackages= { "club.krislin.bootlaunch.jpa.testdb" }) //设置Repository所在位置
+public class JPAPrimaryConfig {
+
+ 
+    @Resource
+    @Qualifier("primaryDataSource")
+    private DataSource primaryDataSource;        //primary数据源注入
+
+    @Primary
+    @Bean(name = "entityManagerPrimary")        //primary实体管理器
+    public EntityManager entityManager(EntityManagerFactoryBuilder builder) {
+        return entityManagerFactoryPrimary(builder).getObject().createEntityManager();
+    }
+
+  
+
+    @Primary
+    @Bean(name = "entityManagerFactoryPrimary")    //primary实体工厂
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryPrimary (EntityManagerFactoryBuilder builder) {
+
+        return builder
+                .dataSource(primaryDataSource)
+                .properties(getVendorProperties())
+                .packages("club.krislin.bootlaunch.jpa.testdb")     //设置实体类所在位置
+                .persistenceUnit("primaryPersistenceUnit")
+                .build();
+    }
+
+  
+
+    @Resource
+    private JpaProperties jpaProperties;
+
+    private Map getVendorProperties() {
+        return jpaProperties.getHibernateProperties(new HibernateSettings());
+    }
+
+  
+
+    @Primary
+    @Bean(name = "transactionManagerPrimary")         //primary事务管理器
+    public PlatformTransactionManager transactionManagerPrimary(EntityManagerFactoryBuilder builder) {
+        return new JpaTransactionManager(entityManagerFactoryPrimary(builder).getObject());
+    }
+}
+```
+
+上面的代码将扫描`club.krislin.bootlaunch.jpa.testdb`下面的实体对象和Repository，并使用primary数据源。同理仿照即可配置另一个。
+
+测试：
+
+```java
+//先构造一个Article对象article，这个操作针对testdb
+articleRepository.save(article);
+//在构造一个Message对象message，这个操作针对testdb2
+messageRepository.save(message);
+```
+
+
+
+# Web开发
+
+## 原理
+
+**使用SpringBoot的步骤：**
+
+1、创建一个SpringBoot应用，选择我们需要的模块，SpringBoot就会默认将我们的需要的模块自动配置好
+
+2、手动在配置文件中配置部分配置项目就可以运行起来了
+
+3、专注编写业务代码，不需要考虑以前那样一大堆的配置了。
+
+**自动配置**
+
+1. `WebMvcAutoConfiguration`
+2. `WebMvcProperties`
+3. `ViewResolver`自动配置
+4. 静态资源自动映射
+5. Formatter与Converter自动配置
+6. `HttpMessageConverter`自动配置
+7. 静态首页
+8. favicon
+9. 错误处理
+
+## 静态资源映射规则
+
+SpringBoot中，SpringMVC的web配置都在 WebMvcAutoConfiguration 这个配置类里面；
+
+我们可以去看看 WebMvcAutoConfigurationAdapter 中有很多配置方法；
+
+有一个方法：addResourceHandlers 添加资源处理
+
+```java
+@Override
+public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    if (!this.resourceProperties.isAddMappings()) {
+        // 已禁用默认资源处理
+        logger.debug("Default resource handling disabled");
+        return;
+    }
+    // 缓存控制
+    Duration cachePeriod = this.resourceProperties.getCache().getPeriod();
+    CacheControl cacheControl = this.resourceProperties.getCache().getCachecontrol().toHttpCacheControl();
+    // webjars 配置
+    if (!registry.hasMappingForPattern("/webjars/**")) {
+        customizeResourceHandlerRegistration(registry.addResourceHandler("/webjars/**")
+                                             .addResourceLocations("classpath:/META-INF/resources/webjars/")
+                                             .setCachePeriod(getSeconds(cachePeriod)).setCacheControl(cacheControl));
+    }
+    // 静态资源配置
+    String staticPathPattern = this.mvcProperties.getStaticPathPattern();
+    if (!registry.hasMappingForPattern(staticPathPattern)) {
+        customizeResourceHandlerRegistration(registry.addResourceHandler(staticPathPattern)
+                                             .addResourceLocations(getResourceLocations(this.resourceProperties.getStaticLocations()))
+                                             .setCachePeriod(getSeconds(cachePeriod)).setCacheControl(cacheControl));
+    }
+}
+```
+
+所有 `/webjars/**` ，都去 `classpath:/META-INF/resources/webjars/` 找资源
+
+`webjars`：以jar包的方式引入静态资源；
+
+网站：https://www.webjars.org
+
+要使用jQuery，我们只要要引入jQuery对应版本的pom依赖即可！
+
+```xml
+<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>jquery</artifactId>
+    <version>3.4.1</version>
+</dependency>
+```
+
+导入完毕，查看webjars目录结构，并访问Jquery.js文件！
+
+访问：只要是静态资源，SpringBoot就会去对应的路径寻找资源，我们这里访问：http://localhost:8080/webjars/jquery/3.4.1/jquery.js
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615217858036-419f758e-5b5d-42ad-946f-e1689a5a0ea8.png)
+
+
+
+**第二种静态资源映射规则**
+
+那我们项目中要是使用自己的静态资源该怎么导入呢？我们看下一行代码；
+
+我们去找staticPathPattern发现第二种映射规则 ：/** , 访问当前的项目任意资源，它会去找 resourceProperties 这个类，我们可以点进去看一下分析：
+
+```java
+// 进入方法
+public String[] getStaticLocations() {
+    return this.staticLocations;
+}
+// 找到对应的值
+private String[] staticLocations = CLASSPATH_RESOURCE_LOCATIONS;
+// 找到路径
+private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { 
+    "classpath:/META-INF/resources/",
+  "classpath:/resources/", 
+    "classpath:/static/", 
+    "classpath:/public/" 
+};
+```
+
+ResourceProperties 可以设置和我们静态资源有关的参数；这里面指向了它会去寻找资源的文件夹，即上面数组的内容。
+
+所以得出结论，以下四个目录存放的静态资源可以被我们识别：
+
+```java
+"classpath:/META-INF/resources/"
+"classpath:/resources/"
+"classpath:/static/"
+"classpath:/public/"
+```
+
+我们可以在resources根目录下新建对应的文件夹，都可以存放我们的静态文件；
+
+| 数组中的值                     | 在项目中的位置                         |
+| ------------------------------ | -------------------------------------- |
+| classpath:/META-INF/resources/ | src/main/resources/META-INF/resources/ |
+| classpath:/resources/          | src/main/resources/resources/          |
+| classpath:/static/             | src/main/resources/static/             |
+| classpath:/public/             | src/main/resources/public/             |
+
+优先级：resources>static>public
+
+**自定义静态资源路径**
+
+我们也可以自己通过配置文件来指定一下，哪些文件夹是需要我们放静态资源文件的，在application.properties中配置；
+
+```java
+spring.resources.static-locations=classpath:/coding/,classpath:/kuang/
+```
+
+一旦自己定义了静态文件夹的路径，原来的自动配置就都会失效了！
+
+## 欢迎页映射
+
+静态资源文件夹说完后，继续向下看源码！可以看到一个欢迎页的映射，就是我们的首页
+
+```java
+@Bean
+public WelcomePageHandlerMapping welcomePageHandlerMapping(ApplicationContext applicationContext,
+                                                           FormattingConversionService mvcConversionService,
+                                                           ResourceUrlProvider mvcResourceUrlProvider) {
+    WelcomePageHandlerMapping welcomePageHandlerMapping = new WelcomePageHandlerMapping(
+        new TemplateAvailabilityProviders(applicationContext), applicationContext, getWelcomePage(), // getWelcomePage 获得欢迎页
+        this.mvcProperties.getStaticPathPattern());
+    welcomePageHandlerMapping.setInterceptors(getInterceptors(mvcConversionService, mvcResourceUrlProvider));
+    return welcomePageHandlerMapping;
+}
+```
+
+点进去继续看
+
+```java
+private Optional<Resource> getWelcomePage() {
+    String[] locations = getResourceLocations(this.resourceProperties.getStaticLocations());
+    // ::是java8 中新引入的运算符
+    // Class::function的时候function是属于Class的，应该是静态方法。
+    // this::function的funtion是属于这个对象的。
+    // 简而言之，就是一种语法糖而已，是一种简写
+    return Arrays.stream(locations).map(this::getIndexHtml).filter(this::isReadable).findFirst();
+}
+// 欢迎页就是一个location下的的 index.html 而已
+private Resource getIndexHtml(String location) {
+    return this.resourceLoader.getResource(location + "index.html");
+}
+```
+
+欢迎页，静态资源文件夹下的所有 index.html 页面；被 /** 映射。
+
+关于网站图标说明：
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615218077235-053dd2c4-f2ef-4401-8064-817e4425ce5b.jpeg)
+
+与其他静态资源一样，Spring Boot在配置的静态内容位置中查找 favicon.ico。如果存在这样的文件，它将自动用作应用程序的favicon。
+
+1、关闭SpringBoot默认图标
+
+```java
+#关闭默认图标
+spring.mvc.favicon.enabled=false
+```
+
+2、放个图标在静态资源目录下
+
+3、清除浏览器缓存！刷新网页，发现图标已经变化
+
+## 整合jsp
+
+spring-boot-starter-web 包依赖了 spring-boot-starter-tomcat 不需要再单独配置。
+引入 jstl 和内嵌的 tomcat，jstl 是一个 JSP 标签集合，它封装了 JSP 应用的通用核心功能。
+tomcat-embed-jasper 主要用来支持 JSP 的解析和运行。
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<!-- spring boot 内置tomcat jsp支持 -->
+<dependency>
+  <groupId>org.apache.tomcat.embed</groupId>
+  <artifactId>tomcat-embed-jasper</artifactId>
+</dependency>
+<!--jsp页面使用jstl标签-->
+<dependency>
+  <groupId>javax.servlet</groupId>
+  <artifactId>jstl</artifactId>
+</dependency>
+```
+
+spring.mvc.view.prefix 指明 jsp 文件在 webapp 下的哪个目录
+spring.mvc.view.suffix 指明 jsp 以什么样的后缀结尾
+
+```yaml
+spring:
+  mvc:
+    view:
+      suffix: .jsp
+      prefix: /WEB-INF/jsp/
+
+debug: true
+```
+
+**测试**
+
+```java
+@Controller
+@RequestMapping("/template")
+public class TemplateController {
+
+    @Resource(name="articleMybatisRestServiceImpl")
+    ArticleRestService articleRestService;
+
+    @GetMapping("/jsp")
+    public String index(String name, Model model) {
+
+        List<ArticleVO> articles = articleRestService.getAll();
+
+        model.addAttribute("articles", articles);
+
+        //模版名称，实际的目录为：src/main/webapp/WEB-INF/jsp/jsptemp.jsp
+        return "jsptemp";
+    }
+}
+```
+
+```jsp
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table class="">
+    <tr>
+        <td>作者</td>
+        <td>教程名称</td>
+        <td>内容</td>
+    </tr>
+    <c:forEach var="article" items="${articles}">
+        <tr class="text-info">
+            <td>${article.author}</td>
+            <td>${article.title}</td>
+            <td>${article.content}</td>
+        </tr>
+    </c:forEach>
+
+
+</table>
+<img src="/image/jsp.png">
+</body>
+</html>
+```
+
+因为jsp对jar运行的方式支持不好，所以要一一进行测试:
+
+1. 使用IDEA启动类启动测试，没有问题
+2. 使用`spring-boot:run -f pom.xml`测试，没有问题
+3. 打成jar包通过`java -jar`方式运行，页面报错
+4. 打成war包，运行于外置的tomcat，没有问题
+
+所以，无法用jar包的形式运行jsp应用。
+
+## 整合freemarker
+
+FreeMarker是一个模板引擎，一个基于模板生成文本输出的通用工具，使用纯Java编写。
+
+```xml
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-freemarker</artifactId>
+</dependency> 
+```
+
+```yaml
+spring:
+  freemarker:
+    cache: false # 缓存配置 开发阶段应该配置为false 因为经常会改
+    suffix: .html # 模版后缀名 默认为ftl
+    charset: UTF-8 # 文件编码
+    template-loader-path: classpath:/templates/ 
+```
+
+**测试**
+
+```java
+@Controller
+@RequestMapping("template")
+public class TemplateController {
+    @GetMapping("/freemarker")
+    public String index(Model model){
+        Article article = new Article();
+        article.setAuthor("krislin");
+        article.setTitle("spring boot");
+        article.setContent("spring boot学习");
+
+        model.addAttribute("article",article);
+
+        //模版名称，实际的目录为：resources/templates/freemarkerTemplate.html
+        return "freemarkerTemplate";
+    }
+}
+```
+
+```html
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8" />
+    <title>freemarker简单示例</title>
+</head>
+<body>
+<h1>Hello Freemarker</h1>
+
+<table class="">
+    <tr>
+        <td>作者</td>
+        <td>教程名称</td>
+        <td>内容</td>
+    </tr>
+
+    <tr>
+        <td>${article.author}</td>
+        <td>${article.title}</td>
+        <td>${article.content}</td>
+    </tr>
+
+</table>
+
+
+<img src="/img/template.jpg">
+</body>
+</html>
+```
+
+
+
+## 整合thymeleaf
+
+Thymeleaf 是一个服务器端 Java 模板引擎，能够处理 HTML、XML、CSS、JAVASCRIPT 等模板文件。Thymeleaf 模板可以直接当作静态原型来使用，它主要目标是为开发者的开发工作流程带来优雅的自然模板，也是 Java 服务器端 HTML5 开发的理想选择。
+
+```xml
+<dependency>
+ <groupId>org.springframework.boot</groupId>
+ <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+```
+
+```yaml
+spring:
+  thymeleaf:
+    cache: false # 启用缓存:建议生产开启
+    check-template-location: true # 检查模版是否存在
+    enabled: true # 是否启用
+    encoding: UTF-8 # 模版编码
+    excluded-view-names: # 应该从解析中排除的视图名称列表（用逗号分隔）
+    mode: HTML5 # 模版模式
+    prefix: classpath:/templates/ # 模版存放路径
+    suffix: .html # 模版后缀
+```
+
+```java
+@Controller
+@RequestMapping("template")
+public class TemplateController {
+    @GetMapping("/thymeleaf")
+    public String index(Model model){
+        List<Article> articles = new ArrayList<>();
+        Article article = new Article();
+        article.setAuthor("krislin");
+        article.setTitle("spring boot");
+        article.setContent("spring boot学习");
+
+        Article article1 = new Article();
+        article1.setAuthor("krislin1");
+        article1.setTitle("spring boot1");
+        article1.setContent("spring boot学习1");
+
+        articles.add(article);
+        articles.add(article1);
+
+        model.addAttribute("articles",articles);
+
+        return "thymeleafTemplate";
+    }
+}
+```
+
+```html
+<!DOCTYPE html>
+<--!导入thymeleaf的名称空间-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="UTF-8" />
+    <title>thymeleaf简单示例</title>
+</head>
+<body>
+<h1>Hello Thymeleaf</h1>
+
+<table class="">
+    <tr>
+        <td>作者</td>
+        <td>教程名称</td>
+        <td>内容</td>
+    </tr>
+    <tr th:each="item : ${articles}">
+        <td th:text="${item.author}"></td>
+        <td th:text="${item.title}"></td>
+        <td th:text="${item.content}"></td>
+    </tr>
+</table>
+
+<img src="/img/template.jpg">
+</body>
+</html>
+```
+
+## PO、BO、VO
+
+**PO:** persistent object 持久对象，对应数据库中的entity。
+
+**BO:** business object 业务对象，业务对象主要作用是把业务逻辑封装为一个对象。通常一个BO是多个PO的组合体。
+
+**VO:** view object，主要与web页面的展示结构相对应，所以VO也是前端与后端的数据交换定义。
+
+<img src="https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200422161747.png"  />
+
+**如果业务可用一个实体类对象，就可以贯穿持久层到展现层，就没有必要做映射赋值转换，也没有必要去分VO、BO、PO。**
+
+**Dozer**
+
+```xml
+<dependency>
+    <groupId>com.github.dozermapper</groupId>
+    <artifactId>dozer-spring-boot-starter</artifactId>
+    <version>6.2.0</version>
+</dependency>
+```
+
+dozer是一个能把实体和实体之间进行转换的工具，只要建立好映射关系，就像是ORM的数据库和实体映射一样。
+
+使用方法：
+
+```java
+    Mapper mapper = DozerBeanMapperBuilder.buildDefault();
+    // article(PO) -> articleVO
+    ArticleVO articleVO = mapper.map(article, ArticleVO.class);
+```
+
+转换过程将**所有同名同类型**的数据自动赋值给articleVO的成员变量，相当于以下代码
+
+```java
+articleVO.setId(article.getId());
+articleVO.setAuthor(article.getAuthor());
+articleVO.setTitle(article.getTitle());
+articleVO.setContent(article.getContent());
+articleVO.setCreateTime(article.getCreateTime());
+```
+
+**自定义类型转换**
+
+配置文件：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozermapper.github.io/schema/bean-mapping"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozermapper.github.io/schema/bean-mapping
+          http://dozermapper.github.io/schema/bean-mapping.xsd">
+    <configuration>
+        <date-format>yyyy-MM-dd HH:mm:ss</date-format>
+    </configuration>
+    <mapping>
+        <class-a>club.krislin.bootlaunch.dozer.TestA</class-a>
+        <class-b>club.krislin.bootlaunch.dozer.TestB</class-b>
+        <field>
+            <a>createDate</a>
+            <b>cDate</b>
+        </field>
+    </mapping>
+
+</mappings>
+```
+
+然后把dozer转换配置文件通知application.yml，进行加载生效
+
+```yaml
+dozer:
+  mapping-files: classpath:/dozer/dozer-mapping.xml
+```
+
+这样一个对象里面有String属性到Date属性转换的时候，就会自动应用这个转换规则， 不再报错。
+
+# RESTful接口开发及测试
+
+API（Application Programming Interface），顾名思义：是一组编程接口规范，客户端与服务端通过请求响应进行数据通信。REST（Representational State Transfer）决定了接口的形式与规则。**RESTful是基于http方法的API设计风格，而不是一种新的技术.**
+
+1. 看Url就知道要什么资源
+2. 看http method就知道针对资源干什么
+3. 看http status code就知道结果如何
+
+对接口开发提供了一种可以广泛适用的规范，为前端后端交互减少了接口交流的口舌成本，是**约定大于配置**的体现。通过下面的设计，大家来理解一下这三句话。
+
+>并不是所有的接口，都能用REST的形式来表述。在实际工作中，灵活运用，我们用RESTful风格的目的是为大家提供统一标准，避免不必要的沟通成本的浪费，形成一种通用的风格。
+
+### 特性
+
+**REST 是面向资源的（名词）**
+
+REST 通过 URI 暴露资源时，会强调不要在 URI 中出现动词。比如：
+
+| 不符合REST的接口URI      | 符合REST接口URI       | 功能           |
+| :----------------------- | :-------------------- | :------------- |
+| GET /api/getDogs         | GET /api/dogs/{id}    | 获取一个小狗狗 |
+| GET /api/getDogs         | GET /api/dogs         | 获取所有小狗狗 |
+| GET /api/addDogs         | POST /api/dogs        | 添加一个小狗狗 |
+| GET /api/editDogs/{id}   | PUT /api/dogs/{id}    | 修改一个小狗狗 |
+| GET /api/deleteDogs/{id} | DELETE /api/dogs/{id} | 删除一个小狗狗 |
+
+**用HTTP方法体现对资源的操作（动词）**
+
+- GET ： 获取、读取资源
+- POST ： 添加资源
+- PUT ： 修改资源
+- DELETE ： 删除资源
+
+实际上，这四个动词实际上就对应着增删改查四个操作，这就利用了HTTP动词来表示对资源的操作。
+
+**HTTP状态码**
+
+通过HTTP状态码体现动作的结果,不要自定义
+
+```
+200 OK 
+400 Bad Request 
+500 Internal Server Error
+```
+
+在 APP 与 API 的交互当中，其结果逃不出这三种状态：
+
+- 所有事情都按预期正确执行完毕 - 成功
+- APP 发生了一些错误 – 客户端错误
+- API 发生了一些错误 – 服务器端错误
+
+**Get方法和查询参数不应该改变数据**
+
+改变数据的事交给POST、PUT、DELETE
+
+**使用复数名词**
+
+/dogs 而不是 /dog
+
+**复杂资源关系的表达**
+
+GET /cars/711/drivers/ 返回 使用过编号711汽车的所有司机
+
+GET /cars/711/drivers/4 返回 使用过编号711汽车的4号司机
+
+**高级用法:HATEOAS**
+
+**HATEOAS**:Hypermedia as the Engine of Application State 超媒体作为应用状态的引擎。
+RESTful API最好做到HATEOAS，**即返回结果中提供链接，连向其他API方法，使得用户不查文档，也知道下一步应该做什么**。
+
+```json
+{"link": {
+  "rel":   "collection https://www.example.com/zoos",
+  "href":  "https://api.example.com/zoos",
+  "title": "List of zoos",
+  "type":  "application/vnd.yourformat+json"
+}}
+```
+
+上面代码表示，文档中有一个link属性，用户读取这个属性就知道下一步该调用什么API或者可以调用什么API了。
+
+**资源过滤、排序、选择和分页的表述**
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200416131439.png)
+
+**版本化你的API**
+
+强制性增加API版本声明，不要发布无版本的API。如：/api/v1/blog
+
+**面向扩展开放，面向修改关闭**：一个版本的接口开发完成测试上线之后，一般不会对接口进行修改，如果有新的需求就开发新的接口进行功能扩展。
+
+### 相关注解
+
+**`@RequestBody`与`@ResponseBody`**
+
+```java
+//注意并不要求@RequestBody与@ResponseBody成对使用。
+public @ResponseBody  AjaxResponse saveArticle(@RequestBody ArticleVO article)
+```
+
+如上代码所示：
+
+- `@RequestBody`修饰请求参数，注解用于接收HTTP的body，默认是使用JSON的格式，**真正意义在于能够使用对象或者嵌套对象接收前端数据。
+  **
+- `@ResponseBody`修饰返回值，注解用于在HTTP的body中携带响应数据，默认是使用JSON的格式。如果不加该注解，spring响应字符串类型，是跳转到模板页面或JSP页面的开发模式。
+
+**`@RequestMapping`**
+
+`@RequestMapping`注解是所有常用注解中，最有看点的一个注解，用于标注HTTP服务端点。它的很多属性对于丰富我们的应用开发方式方法，都有很重要的作用。如：
+
+- `value`： 应用请求端点，最核心的属性，用于标志请求处理方法的唯一性；
+- `method`： HTTP协议的method类型， 如：GET、POST、PUT、DELETE等；
+- `consumes`： HTTP协议请求内容的数据类型（Content-Type），例如`application/json`, `text/html`;
+- `produces`: HTTP协议响应内容的数据类型。下文会详细讲解。
+- `params`： HTTP请求中必须包含某些参数值的时候，才允许被注解标注的方法处理请求。
+- `headers`： HTTP请求中必须包含某些指定的header值，才允许被注解标注的方法处理请求。
+
+```java
+@RequestMapping(value = "/article", method = POST)
+@PostMapping(value = "/article")
+```
+
+上面代码中两种写法起到的是一样的效果，也就是`PostMapping`等同于`@RequestMapping`的method等于POST。同理：`@GetMapping`、`@PutMapping`、`@DeleteMapping`也都是简写的方式。
+
+**`@RestController`与`@Controller`**
+
+`@Controller`注解是开发中最常使用的注解，它的作用有两层含义：
+
+- 一是告诉Spring，被该注解标注的类是一个Spring的Bean，需要被注入到Spring的上下文环境中。
+- 二是该类里面所有被`RequestMapping`标注的注解都是HTTP服务端点。
+
+`@RestController`相当于 `@Controller`和`@ResponseBody`结合。它有两层含义：
+
+- 一是作为Controller的作用，将控制器类注入到Spring上下文环境，该类`RequestMapping`标注方法为HTTP服务端点。
+- 二是作为`ResponseBody`的作用，请求响应默认使用的序列化方式是JSON，而不是跳转到`jsp`或模板页面。
+
+**`@PathVariable` 与`@RequestParam`**
+
+`PathVariable`用于URI上的{参数}，而`RequestParam`用于接收普通表单方式或者ajax模拟表单提交的参数数据。
+
+```java
+@DeleteMapping("/article/{id}")
+public @ResponseBody AjaxResponse deleteArticle(@PathVariable Long id) {
+
+@PostMapping("/article")
+public @ResponseBody AjaxResponse deleteArticle(@RequestParam Long id) {
+```
+
+### 规范接口
+
+1. **定义资源**
+
+```java
+@Data
+@Builder
+public class Article {
+    private Long  id;
+    private String author;
+    private String title;
+    private String content;
+    private Date createTime;
+}
+```
+
+`Data`、`Builder`都是`lombok`提供给我们的注解，有利于我们简化代码。
+
+- `@Builder`为我们提供了通过对象属性的链式赋值构建对象的方法，下文中代码会有详细介绍。
+- `@Data`注解帮我们定义了一系列常用方法，如：`getters`、`setters`、`hashcode`、`equals`等
+
+2. **定义HTTP方法与Controller**
+
+我们实现一个简单的RESTful接口
+
+- 增加一篇Article ，使用POST方法
+- 删除一篇Article，使用DELETE方法，参数是id
+- 更新一篇Article，使用PUT方法，以id为主键进行更新
+- 获取一篇Article，使用GET方法
+
+下面代码中并未真正的进行数据库操作
+
+```java
+@Slf4j
+@RestController
+@RequestMapping("/rest")
+public class ArticleRestController {
+ 
+    //增加一篇Article ，使用POST方法
+    @RequestMapping(value = "/article", method = POST, produces = "application/json")
+    public AjaxResponse saveArticle(@RequestBody Article article) {
+        //因为使用了lombok的Slf4j注解，这里可以直接使用log变量打印日志
+        log.info("saveArticle：{}",article);
+        return  AjaxResponse.success(article);
+    }
+ 
+    
+    //删除一篇Article，使用DELETE方法，参数是id
+    @RequestMapping(value = "/article/{id}", method = DELETE, produces = "application/json")
+    public AjaxResponse deleteArticle(@PathVariable Long id) {
+        log.info("deleteArticle：{}",id);
+        return AjaxResponse.success(id);
+    }
+ 
+     //更新一篇Article，使用PUT方法，以id为主键进行更新
+    @RequestMapping(value = "/article/{id}", method = PUT, produces = "application/json")
+    public AjaxResponse updateArticle(@PathVariable Long id, @RequestBody Article article) {
+        article.setId(id);
+        log.info("updateArticle：{}",article);
+        return AjaxResponse.success(article);
+    }
+ 
+    //获取一篇Article，使用GET方法
+    @RequestMapping(value = "/article/{id}", method = GET, produces = "application/json")
+    public AjaxResponse getArticle(@PathVariable Long id) {
+
+        //使用lombok提供的builder构建对象
+        Article article = Article.builder()
+                .id(1L)
+                .author("krislin")
+                .title("t1")
+                .content("spring boot学习")
+                .createTime(new Date()).build();
+        return AjaxResponse.success(article);
+    }
+}
+```
+
+因为使用了`lombok`的`@Slf4j`注解（类的定义处），就可以直接使用log变量打印日志。不需要写下面的这行代码。
+
+```java
+private static final Logger log = LoggerFactory.getLogger(HelloController.class);
+```
+
+3. **规范返回格式**
+
+   ```java
+   @Data
+   public class AjaxResponse {
+       private boolean isOk; //请求是否处理成功
+       private int code;   //请求响应状态码（200、400、500）
+       private String message; //请求结果描述信息
+       private Object data; //请求结果数据
+   
+       public AjaxResponse() {
+       }
+   
+       //请求出现异常时的响应数据封装
+       public static AjaxResponse error(CustomException e){
+           AjaxResponse resultBean = new AjaxResponse();
+           resultBean.setOk(false);
+           resultBean.setCode(e.getCode());
+           if (e.getCode() == CustomExceptionType.USER_INPUT_ERROR.getCode()){
+               resultBean.setMessage(e.getMessage());
+           }else if (e.getCode() == CustomExceptionType.SYSTEM_ERROR.getCode()){
+               resultBean.setMessage(e.getMessage()+",系统出现异常，请联系管理员");
+           }else {
+               resultBean.setMessage("系统出现未知异常，请联系管理员");
+           }
+           return resultBean;
+       }
+   
+       //请求成功的响应，不带查询数据（用于删除、修改、新增接口）
+       public static AjaxResponse success(){
+           AjaxResponse resultBean = new AjaxResponse();
+           resultBean.setOk(true);
+           resultBean.setCode(200);
+           resultBean.setMessage("success");
+           return resultBean;
+       }
+       
+       //请求成功的响应，带有查询数据（用于数据查询接口）
+       public static AjaxResponse success(Object data){
+           AjaxResponse resultBean = new AjaxResponse();
+           resultBean.setOk(true);
+           resultBean.setCode(200);
+           resultBean.setMessage("success");
+           resultBean.setData(data);
+           return resultBean;
+       }
+   }
+   ```
+
+### json处理相关依赖
+
+**开源的Jackson**：SpringBoot默认是使用Jackson作为JSON数据格式处理的类库，Jackson在各方面都比较优秀，所以不建议将Jackson替换为Gson或fastjson。
+
+**Google的Gson**：Gson是Google为满足内部需求开发的JSON数据处理类库，其核心结构非常简单，toJson与fromJson两个转换函数实现对象与JSON数据的转换，
+
+**阿里巴巴的FastJson**：Fastjson是阿里巴巴开源的JSON数据处理类库，其主要特点是序列化速度快。当并发数据量越大的时候，越能体现出fastjson的优势。
+
+**Jackson相关注解**
+
+这些注解通常用于标注java实体类或实体类的属性。
+
+- @JsonPropertyOrder(value={"pname1","pname2"}) 改变子属性在JSON序列化中的默认定义的顺序。如：param1在先，param2在后。
+- @JsonIgnore 排除某个属性不做序列化与反序列化
+- @JsonProperty(anotherName) 为某个属性换一个名称，体现在JSON数据里面
+- @JsonInclude(JsonInclude.Include.NON_NULL) 排除为空的元素不做序列化反序列化
+- @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") 指定日期类型的属性格式
+
+### Mock测试接口
+
+#### 简介
+
+**什么是Mock?**
+
+在面向对象程序设计中，模拟对象（英语：mock object，也译作模仿对象）是以可控的方式模拟真实对象行为的**假的对象**。比如:对象B依赖于对象A，但是A代码还没写是一个空类空方法不能用，我们来mock一个假的A来完成测试。
+
+**为什么要使用Mock?**
+
+> 在单元测试中，模拟对象可以模拟复杂的、真实的对象的行为， 如果真实的对象无法放入单元测试中，使用模拟对象就很有帮助。
+
+在下面的情形，可能需要使用模拟对象来代替真实对象：
+
+- 真实对象的行为是不确定的（例如，当前的时间或当前的温度）；
+- 真实对象很难搭建起来；
+- 真实对象的行为很难触发（例如，网络错误）；
+- 真实对象速度很慢（例如，一个完整的数据库，在测试之前可能需要初始化）；
+- 真实的对象是用户界面，或包括用户界面在内；
+- 真实的对象使用了回调机制；
+- 真实对象可能还不存在（例如，其他程序员还为完成工作）；
+- 真实对象可能包含不能用作测试的信息（高度保密信息等）和方法。
+
+**Mockito**
+
+Mockito是GitHub上使用最广泛的Mock框架,并与JUnit结合使用.Mockito框架可以创建和配置mock对象.使用Mockito简化了具有外部依赖的类的测试开发!
+
+#### 模拟网络请求进行测试
+
+在开始书写测试代码之前，我们先回顾一下JUnit常用的测试注解。在junit4和junit5中，注解的写法有些许变化。
+
+| junit4         | junit5        | 特点                                                   |
+| :------------- | :------------ | :----------------------------------------------------- |
+| `@Test`        | `@Test`       | 声明一个测试方法                                       |
+| `@BeforeClass` | `@BeforeAll`  | 在当前类的所有测试方法之前执行。注解在【静态方法】上   |
+| `@AfterClass`  | `@AfterAll`   | 在当前类中的所有测试方法之后执行。注解在【静态方法】上 |
+| `@Before`      | `@BeforeEach` | 在每个测试方法之前执行。注解在【非静态方法】上         |
+| `@After`       | `@AfterEach`  | 在每个测试方法之后执行。注解在【非静态方法】           |
+
+
+
+```java
+//@Transactional
+@Slf4j
+@SpringBootTest
+public class ArticleRestControllerTest {
+
+    //mock对象
+    private MockMvc mockMvc;
+
+    //mock对象初始化
+    @Before
+    public void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(new ArticleRestController()).build();
+    }
+
+    //测试方法
+    @Test
+    public void saveArticle() throws Exception {
+
+        String article = "{\n" +
+                "    \"id\": 1,\n" +
+                "    \"author\": \"krislin\",\n" +
+                "    \"title\": \"spring boot学习\",\n" +
+                "    \"content\": \"c\",\n" +
+                "    \"createTime\": \"2017-07-16 05:23:34\",\n" +
+                "    \"reader\":[{\"name\":\"krislin\",\"age\":18},{\"name\":\"kobe\",\"age\":37}]\n" +
+                "}";
+        MvcResult result = mockMvc.perform(
+                MockMvcRequestBuilders.request(HttpMethod.POST, "/rest/article")
+                .contentType("application/json").content(article))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.author").value("zimug"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.reader[0].age").value(18))
+                .andDo(print())
+                .andReturn();
+
+        log.info(result.getResponse().getContentAsString());
+
+    }
+}
+```
+
+**`@SpringBootTest` 注解说明:**
+
+是用来创建Spring的上下文`ApplicationContext`，保证测试在上下文环境里运行。单独使用`@SpringBootTest`不会启动servlet容器。所以**只是使用`SpringBootTest` 注解时不可以使用`@Resource`和`@Autowired`等注解进行bean的依赖注入**。
+
+**@Transactional**
+
+可以使单元测试进行事务回滚，以保证数据库表中没有因测试造成的垃圾数据，因此保证单元测试可以反复执行；
+但是不建议这么做，使用该注解会破坏测试真实性。
+
+**`MockMvc`对象有以下几个基本的方法:**
+
+- `perform `: 执行一个`RequestBuilder`请求，会自动执行`SpringMVC`的流程并映射到相应的控制器Controller执行处理。
+- `contentType`：发送请求内容的序列化的格式，`"application/json"`表示JSON数据格式
+- `andExpect`: 添加`RequsetMatcher`验证规则，验证控制器执行完成后结果是否正确，或者说是结果是否与我们期望（Expect）的一致。
+- `andDo`: 添加`ResultHandler`结果处理器，比如调试时打印结果到控制台
+- `andReturn`: 最后返回相应的`MvcResult`,然后进行自定义验证/进行下一步的异步处理
+
+***真实servlet容器环境下的测试***
+
+换一种写法：看看有没有什么区别。在测试类上面额外加上这样两个注解，并且`mockMvc`对象使用@Resource自动注入，删掉`Before`注解及`setUp`函数。
+
+```java
+@RunWith(SpringRunner.class)
+@AutoConfigureMockMvc
+```
+
+没加上这两个注解之前，日志中是不会打印这个`SpringBoot`的flag的。
+
+**`@RunWith`注解**
+
+- `RunWith`方法为我们构造了一个的Servlet容器运行运行环境，并在此环境下测试。然而为什么要构建servlet容器？因为使用了依赖注入，注入了`MockMvc`对象，而在上一个例子里面是我们自己new的。
+- 而`@AutoConfigureMockMvc`注解，该注解表示 `MockMvc`由spring容器构建，你只负责注入之后用就可以了。这种写法是为了让测试在Spring容器环境下执行。
+- Spring的容器环境是什么呢？比如常见的 Service、Dao 都是Spring容器里的bean，装载到容器里面都可以使用`@Resource`和`@Autowired`来注入引用。
+
+简单的说：**如果你单元测试代码使用了依赖注入就加上`@RunWith`，如果你不是手动`new MockMvc`对象就加上`@AutoConfigureMockMvc`**
+
+#### **轻量级测试**
+
+在`RunWith`的`AutoConfigureMockMvc`注解的共同作用下，启动了`SpringMVC`的运行容器，并且把项目中所有的@Bean全部都注入进来。
+
+```java
+@RunWith(SpringRunner.class)
+@WebMvcTest(ArticleRestController.class)
+public class WebMockTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private ArticleRestService service;
+
+    @Test
+    public void saveArticle() throws Exception {
+        String article = "{\n" +
+                "    \"id\": 1,\n" +
+                "    \"author\": \"zimug\",\n" +
+                "    \"title\": \"手摸手教你开发spring boot\",\n" +
+                "    \"content\": \"c\",\n" +
+                "    \"createTime\": \"2017-07-16 05:23:34\",\n" +
+                "    \"reader\":[{\"name\":\"zimug\",\"age\":18},{\"name\":\"kobe\",\"age\":37}]\n" +
+                "}";
+    
+    
+        ObjectMapper objectMapper = new ObjectMapper();
+        Article articleObj = objectMapper.readValue(article,Article.class);
+    
+        //打桩
+        when(articleRestService.saveArticle(articleObj)).thenReturn("ok");
+    
+    
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.request(HttpMethod.POST, "/rest/article")
+                .contentType("application/json").content(article))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.author").value("zimug"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.reader[0].age").value(18))
+                .andDo(print())
+                .andReturn();
+    
+        log.info(result.getResponse().getContentAsString());
+    
+    }
+}
+```
+
+**`@SpringBootTest`与`@WebMvcTest`区别**
+
+- `@SpringBootTest`注解告诉`SpringBoot`去寻找一个主配置类(例如带有`@SpringBootApplication`的配置类)，并使用它来启动Spring应用程序上下文。`SpringBootTest`加载完整的应用程序并注入所有可能的bean，因此速度会很慢。
+- `@WebMvcTest`注解主要用于controller层测试，只覆盖应用程序的controller层，HTTP请求和响应是Mock出来的，因此不会创建真正的网络连接。`WebMvcTest`要快得多，因为我们只加载了应用程序的一小部分。
+
+**`@MockBean`**
+
+如果我们使用了`WebMvcTest`，只加载了Controller层的bean，那么Controller所依赖的Service没有被加载进来，我们可以用`MockBean`伪造模拟一个Service 。
+
+```java
+when(articleRestService.saveArticle(articleObj)).thenReturn("ok");
+```
+
+也就是告诉测试用例程序，当你调用`articleRestService.saveArticle(articleObj)`方法的时候，不要去真的调用这个方法，直接返回一个结果（“ok”）就好了。`articleRestService`就是那个不能被测试或者不能测试的类，需要我们来模拟Mock一下。
+
+**`MockMvc`更多的用法总结**
+
+```java
+//模拟GET请求：
+mockMvc.perform(MockMvcRequestBuilders.get("/user/{id}", userId));
+
+//模拟Post请求：
+mockMvc.perform(MockMvcRequestBuilders.post("uri", parameters));
+
+//模拟文件上传：
+mockMvc.perform(MockMvcRequestBuilders.multipart("uri").file("fileName", "file".getBytes("UTF-8")));
+
+
+//模拟session和cookie：
+mockMvc.perform(MockMvcRequestBuilders.get("uri").sessionAttr("name", "value"));
+mockMvc.perform(MockMvcRequestBuilders.get("uri").cookie(new Cookie("name", "value")));
+
+//设置HTTP Header：
+mockMvc.perform(MockMvcRequestBuilders
+                        .get("uri", parameters)
+                        .contentType("application/x-www-form-urlencoded")
+                        .accept("application/json")
+                        .header("", ""));
+```
+
+**为什么要写代码做测试？使用接口测试工具Postman很方便啊**
+
+- 因为在做系统的自动化持续集成的时候，会要求自动的做单元测试，只有所有的单元测试都跑通了，才能打包构建。比如：使用maven。这里重点是**自动化**，所以postman这种工具很难插入到持续集成的自动化流程中去。所以需要我们自己写代码完成单元测试。
+- 另外写代码测试能模拟出更多复杂的测试场景，类似Postman工具只能完成简单的接口测试。
+
+# 整合JDBC
+
+## SpringData简介
 
 对于数据访问层，无论是 SQL(关系型数据库) 还是 NOSQL(非关系型数据库)，Spring Boot 底层都是采用 Spring Data 的方式进行统一处理。
 
@@ -2317,7 +4668,7 @@ https://docs.spring.io/spring-boot/docs/2.2.5.RELEASE/reference/htmlsingle/#usin
 
 
 
-## 14.2、整合JDBC
+## 整合JDBC
 
 创建测试项目测试数据源
 
@@ -2497,9 +4848,222 @@ public class JdbcController {
 
 到此，CURD的基本操作，使用 JDBC 就搞定了。
 
-# 15、整合Druid
+## 配置多数据源
 
-## 15.1、Druid简介
+**配置多个数据源**
+
+application.yml配置2个数据源，第一个叫做primary，第二个叫做secondary。注意两个数据源连接的是不同的库，testdb和testdb2.
+
+```java
+spring:
+  datasource:
+    primary:
+      jdbc-url: jdbc:mysql://localhost:3306/testdb?useUnicode=true&characterEncoding=utf-8
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.jdbc.Driver
+    secondary:
+      jdbc-url: jdbc:mysql://localhost:3306/testdb2?useUnicode=true&characterEncoding=utf-8
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.jdbc.Driver
+```
+
+**二、通过Java Config将数据源注入到Spring上下文。**
+
+- primaryJdbcTemplate使用primaryDataSource数据源操作数据库testdb。
+- secondaryJdbcTemplate使用secondaryDataSource数据源操作数据库testdb2。
+
+```java
+@Configuration
+public class DataSourceConfig {
+    @Primary
+    @Bean(name = "primaryDataSource")
+    @Qualifier("primaryDataSource")
+    @ConfigurationProperties(prefix="spring.datasource.primary")
+    public DataSource primaryDataSource() {
+            return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name = "secondaryDataSource")
+    @Qualifier("secondaryDataSource")
+    @ConfigurationProperties(prefix="spring.datasource.secondary")
+    public DataSource secondaryDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name="primaryJdbcTemplate")
+    public JdbcTemplate primaryJdbcTemplate (
+        @Qualifier("primaryDataSource") DataSource dataSource ) {
+        return new JdbcTemplate(dataSource);
+    }
+
+    @Bean(name="secondaryJdbcTemplate")
+    public JdbcTemplate secondaryJdbcTemplate(
+            @Qualifier("secondaryDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+}
+```
+
+**操作**
+
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class SpringJdbcTest {
+
+    @Resource
+    private ArticleJDBCDAO articleJDBCDAO;
+    @Resource
+    private JdbcTemplate primaryJdbcTemplate;
+    @Resource
+    private JdbcTemplate secondaryJdbcTemplate;
+
+
+    @Test
+    public void testJdbc() {
+        articleJDBCDAO.save(
+                Article.builder()
+                .author("zimug").title("primaryJdbcTemplate").content("ceshi").createTime(new Date())
+                .build(),
+                primaryJdbcTemplate);
+        articleJDBCDAO.save(
+                Article.builder()
+               .author("zimug").title("secondaryJdbcTemplate").content("ceshi").createTime(new Date())
+               .build(),
+                secondaryJdbcTemplate);
+    }
+
+
+}
+```
+
+## JTA实现分布式事务
+
+> 分布式事务就是跨数据库连接的事务。一个事务的数据库操作，要么都成功，要么都失败回滚。后面我们专门做一个章节讲解事务与分布式事务。
+
+JTA优点： 能够支持分布式事务
+缺点： 性能开销大，不适合用于高并发场景
+
+**引入maven依赖包**
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jta-atomikos</artifactId>
+</dependency>
+```
+
+**修改application配置文件**
+
+双数据源配置。删掉原有数据库连接配置.
+
+```yaml
+primarydb:
+  uniqueResourceName: primary
+  xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+  xaProperties:
+    url: jdbc:mysql://localhost:3306/testdb?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    user: test
+    password: 4rfv$RFV
+  exclusiveConnectionMode: true
+  minPoolSize: 3
+  maxPoolSize: 10
+  testQuery: SELECT 1 from dual #由于采用HikiriCP，用于检测数据库连接是否存活。
+
+secondarydb:
+  uniqueResourceName: secondary
+  xaDataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource
+  xaProperties:
+    url: jdbc:mysql://localhost:3306/testdb2?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    user: test
+    password: 4rfv$RFV
+  exclusiveConnectionMode: true
+  minPoolSize: 3
+  maxPoolSize: 10
+  testQuery: SELECT 1 from dual #由于采用HikiriCP，用于检测数据库连接是否存活。
+```
+
+MysqlXADataSource的解释：XA数据源生成能够在全局/分布式事务中使用的XA连接。如果需要跨多个数据库或JMS调用的事务，则可能需要此类连接。
+
+如果不使用分布式事务，则在声明驱动程序时无需指定xa-datasource-class。这个xa-datasource-class是专门为分布式事务准备的。
+
+**数据源配置**
+
+```java
+@Configuration
+public class DataSourceConfig {
+     //jta数据源primarydb
+    @Bean(initMethod="init", destroyMethod="close", name="primaryDataSource")
+    @Primary
+    @ConfigurationProperties(prefix = "primarydb")
+    public DataSource primaryDataSource() {
+         //这里是关键，返回的是AtomikosDataSourceBean，所有的配置属性也都是注入到这个类里面
+        return new AtomikosDataSourceBean();
+    }
+
+    //jta数据源secondarydb
+    @Bean(initMethod="init", destroyMethod="close", name="secondaryDataSource")
+    @ConfigurationProperties(prefix = "secondarydb")
+    public DataSource secondaryDataSource()  {
+        return new AtomikosDataSourceBean();
+    }
+
+    //primaryJdbcTemplate使用primaryDataSource数据源
+    @Bean
+    public JdbcTemplate primaryJdbcTemplate(
+                    @Qualifier("primaryDataSource") DataSource primaryDataSource) {
+        return new JdbcTemplate(primaryDataSource);
+    }
+
+    //secondaryJdbcTemplate使用secondaryDataSource数据源
+    @Bean
+    public JdbcTemplate secondaryJdbcTemplate(
+                    @Qualifier("secondaryDataSource") DataSource secondaryDataSource) {
+        return new JdbcTemplate(secondaryDataSource);
+    }
+}
+```
+
+**事务管理器**
+
+负责协调多个JTA数据源实现事务机制。UserTransaction 、TransactionManager 、JtaTransactionManager 都是帮我们实现JTA分布式事务的事务管理器。
+
+```java
+@Configuration
+public class TransactionManagerConfig {
+
+    @Bean
+    public UserTransaction userTransaction() throws SystemException {
+        UserTransactionImp userTransactionImp = new UserTransactionImp();
+        userTransactionImp.setTransactionTimeout(10000);
+        return userTransactionImp;
+    }
+
+    @Bean(name = "atomikosTransactionManager", initMethod = "init", destroyMethod = "close")
+    public TransactionManager atomikosTransactionManager() throws Throwable {
+        UserTransactionManager userTransactionManager = new UserTransactionManager();
+        userTransactionManager.setForceShutdown(false);
+        return userTransactionManager;
+    }
+
+    @Bean(name = "transactionManager")
+    @DependsOn({ "userTransaction", "atomikosTransactionManager" })
+    public PlatformTransactionManager transactionManager() throws Throwable {
+        UserTransaction userTransaction = userTransaction();
+
+        JtaTransactionManager manager = new JtaTransactionManager(userTransaction, atomikosTransactionManager());
+        return manager;
+    }
+}
+```
+
+
+
+# 整合Druid
+
+## Druid简介
 
 Java程序很大一部分要操作数据库，为了提高性能操作数据库的时候，又不得不使用数据库连接池。
 
@@ -2541,7 +5105,7 @@ Github地址：https://github.com/alibaba/druid/
 
 
 
-## 15.2、配置数据源
+## 配置数据源
 
 1、添加上 Druid 数据源依赖。
 
@@ -2663,7 +5227,7 @@ class SpringbootDataJdbcApplicationTests {
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615249747225-f97cd7ad-ec4b-4b81-a635-ae2cca67cf01.png)
 
-## 15.3、配置Druid数据源监控
+## 配置Druid数据源监控
 
 Druid 数据源具有监控的功能，并提供了一个 web 界面方便用户查看，类似安装 路由器 时，人家也提供了一个默认的 web 页面。
 
@@ -2721,7 +5285,7 @@ public FilterRegistrationBean webStatFilter() {
 
 平时在工作中，按需求进行配置即可，主要用作监控！
 
-# 16、整合MyBatis
+# 整合MyBatis
 
 官方文档：http://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/
 
@@ -2729,9 +5293,16 @@ Maven仓库地址：https://mvnrepository.com/artifact/org.mybatis.spring.boot/m
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615249918815-1192bee0-5186-40cd-8275-f21f3747266c.png)
 
+**对比JPA**
 
+| 对比项       | Spring Data JPA                                              | Mybatis                                                      |
+| :----------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| 单表操作方式 | 只需继承，代码量极少，非常方便。而且支持方法名用关键字生成SQL | 可以使用代码生成工具或Mybatis-Plus等工具，也很方便，但相对JPA要弱一些。 |
+| 多表关联查询 | 不太友好，动态SQL使用不够方便，而且SQL和代码耦合到一起       | 友好，可以有非常直观的动态SQL                                |
+| 自定义SQL    | SQL写在注解里面，写动态SQL有些费劲                           | SQL可以写在XML里面，是书写动态SQL语法利器。也支持注解SQL。   |
+| 学习成本     | 略高                                                         | 较低 ,基本会写SQL就会用                                      |
 
-## 16.1、整合测试
+## 整合测试
 
 1、导入 MyBatis 所需要的依赖
 
@@ -2891,15 +5462,123 @@ public class UserController {
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615250439789-76b5d8c2-8123-4d97-9ae7-e53d76889159.png)
 
-# 17、集成SpringSecurity
+## 多数据源
 
-## 17.1、安全简介
+在application.yml配置双数据源，第一个数据源访问testdb库，第二个数据源访问testdb2库
+
+```java
+spring:
+  datasource:
+    primary:
+      url: jdbc:mysql://localhost:3306/testdb?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    secondary:
+      url: jdbc:mysql://localhost:3306/testdb2?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+```
+
+**主数据源配置**
+
+去掉SpringBoot程序主入口上的@MapperScan注解，将注解移到下面的MyBatis专用配置类上方。 
+
+DataSource数据源、SqlSessionFactory、TransactionManager事务管理器、SqlSessionTemplate依据不同的数据源分别配置。
+
+第一组是primary，第二组是secondary。
+
+```java
+@Configuration
+@MapperScan(basePackages = "club.krislin.testdb",    //数据源primary-testdb库接口存放目录
+        sqlSessionTemplateRef = "primarySqlSessionTemplate")
+public class PrimaryDataSourceConfig {
+
+    @Bean(name = "primaryDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.primary")   //数据源primary配置
+    @Primary
+    public DataSource testDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name = "primarySqlSessionFactory")
+    @Primary
+    public SqlSessionFactory testSqlSessionFactory(
+                        @Qualifier("primaryDataSource") DataSource dataSource) throws Exception {
+        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
+        bean.setDataSource(dataSource);
+         //设置XML文件存放位置，如果参考上一篇Mybatis最佳实践，将xml和java放在同一目录下，这里不用配置
+        //bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/mapper/test1/*.xml"));
+        return bean.getObject();
+    }
+
+    @Bean(name = "primaryTransactionManager")
+    @Primary
+    public DataSourceTransactionManager testTransactionManager(
+                        @Qualifier("primaryDataSource") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean(name = "primarySqlSessionTemplate")
+    @Primary
+    public SqlSessionTemplate testSqlSessionTemplate(
+                        @Qualifier("primarySqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+}
+```
+
+**第二个数据源配置**
+
+参照primary配置，书写第二份secondary数据源配置的代码。
+
+```java
+@Configuration
+@MapperScan(basePackages = "club.krislin.testdb2",     //注意这里testdb2目录
+        sqlSessionTemplateRef = "secondarySqlSessionTemplate")
+public class SecondaryDataSourceConfig {
+
+    @Bean(name = "secondaryDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.secondary")    //注意这里secondary配置
+    public DataSource testDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name = "secondarySqlSessionFactory")
+    public SqlSessionFactory testSqlSessionFactory(
+                        @Qualifier("secondaryDataSource") DataSource dataSource) throws Exception {
+        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
+        bean.setDataSource(dataSource);
+        //bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/mapper/test1/*.xml"));
+        return bean.getObject();
+    }
+
+    @Bean(name = "secondaryTransactionManager")
+    public DataSourceTransactionManager testTransactionManager(
+                        @Qualifier("secondaryDataSource") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean(name = "secondarySqlSessionTemplate")
+    public SqlSessionTemplate testSqlSessionTemplate(
+                        @Qualifier("secondarySqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+}
+```
+
+# 集成SpringSecurity
+
+## 安全简介
 
 Spring 是一个非常流行和成功的 Java 应用开发框架。Spring Security 基于 Spring 框架，提供了一套 Web 应用安全性的完整解决方案。一般来说，Web 应用的安全性包括用户认证（Authentication）和用户授权（Authorization）两个部分。
 
 对于上面提到的两种应用情景，Spring Security 框架都有很好的支持。在用户认证方面，Spring Security 框架支持主流的认证方式，包括 HTTP 基本认证、HTTP 表单验证、HTTP 摘要认证、OpenID 和 LDAP 等。在用户授权方面，Spring Security 提供了基于角色的访问控制和访问控制列表（Access Control List，ACL），可以对应用中的领域对象进行细粒度的控制。
 
-## 17.2、实战测试
+## 实战测试
 
 **实验环境搭建**
 
@@ -3333,7 +6012,7 @@ http.rememberMe().rememberMeParameter("remember");
 
 7、测试，OK
 
-## 17.3、完整配置代码
+## 完整配置代码
 
 ```java
 @EnableWebSecurity
@@ -3378,9 +6057,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 }
 ```
 
-# 18、集成Shiro
+# 集成Shiro
 
-## 18.1、简介
+## 简介
 
 Apache Shiro是一个Java 的安全（权限）框架。
 
@@ -3467,7 +6146,7 @@ Shiro可以完成，认证，授权，加密，会话管理，Web集成，缓存
 
 
 
-## 18.2、快速开始
+## 快速开始
 
 查看官网文档：http://shiro.apache.org/tutorial.html
 
@@ -3680,7 +6359,7 @@ public class Quickstart {
 }
 ```
 
-## 18.3、SpringBoot整合Shiro环境搭建
+## SpringBoot整合Shiro环境搭建
 
 新建SpringBoot项目,勾选web和thymeleaf
 
@@ -3756,7 +6435,7 @@ public class MyController {
 
 
 
-## 18.4、shiro整合mybatis
+## shiro整合mybatis
 
 ```xml
 <dependency>
@@ -3912,7 +6591,7 @@ class ShiroSpringbootApplicationTests {
 
 **测试成功**
 
-## 18.5、Shiro整合Thymeleaf
+## Shiro整合Thymeleaf
 
 ```xml
 <!--shiro-->
@@ -4328,20 +7007,11 @@ mybatis:
 </dependencies>
 ```
 
-
-
-# 19、集成Swagger终极版
-
-
+# 集成Swagger终极版
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615302133870-a008108b-e651-4bdf-9461-b893e989bc19.png)
 
-学习目标：
-
-- 了解Swagger的概念及作用
-- 掌握在项目中集成Swagger自动生成API文档
-
-## 19.1、Swagger简介
+## Swagger简介
 
 **前后端分离**
 
@@ -4378,7 +7048,7 @@ Restful Api 文档在线自动生成器 => API 文档 与API 定义同步更新
 
 官网：https://swagger.io/
 
-## 19.2、SpringBoot集成Swagger
+## SpringBoot集成Swagger
 
 SpringBoot集成Swagger => springfox，两个jar包
 
@@ -4390,8 +7060,6 @@ SpringBoot集成Swagger => springfox，两个jar包
 要求：jdk 1.8 + 否则swagger2无法运行
 
 步骤：
-
-
 
 1、新建一个SpringBoot-web项目
 
@@ -4439,7 +7107,7 @@ public class SwaggerConfig {
 
 
 
-## 19.3、配置Swagger
+## 配置Swagger
 
 1、Swagger实例Bean是Docket，所以通过配置Docket实例来配置Swaggger。
 
@@ -4484,7 +7152,7 @@ public Docket docket() {
 
 
 
-## 19.4、配置扫描接口
+## 配置扫描接口
 
 1、构建Docket时通过select()方法配置怎么扫描接口。
 
@@ -4544,7 +7212,7 @@ ant(final String antPattern) // 通过ant()控制
 - 判断是不是生产环境
 - 注入enable（false）
 
-## 19.5、配置Swagger开关
+## 配置Swagger开关
 
 1、通过enable()方法配置是否启用swagger，如果是false，swagger将不能在浏览器中访问了
 
@@ -4590,7 +7258,7 @@ public Docket docket(Environment environment) {
 
 
 
-## 19.6、配置API分组
+## 配置API分组
 
 
 
@@ -4634,7 +7302,7 @@ public Docket docket3(){
 
 
 
-## 19.7、实体配置
+## 实体配置
 
 1、新建一个实体类
 
@@ -4661,8 +7329,6 @@ public User getUser(){
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615303495206-557a8048-8520-4f15-91f0-9b81e329fcbb.png)
 
-
-
 注：并不是因为@ApiModel这个注解让实体显示在这里了，而是只要出现在接口方法的返回值上的实体都会显示在这里，而@ApiModel和@ApiModelProperty这两个注解只是为实体添加注释的。
 
 @ApiModel为类添加注释
@@ -4671,7 +7337,7 @@ public User getUser(){
 
 
 
-## 19.8、常用注解
+## 常用注解
 
 Swagger的所有注解定义在io.swagger.annotations包下
 
@@ -4694,346 +7360,118 @@ public String kuang(@ApiParam("这个名字会被返回")String username){
 }
 ```
 
-这样的话，可以给一些比较难理解的属性或者接口，增加一些配置信息，让人更容易阅读！
+给一些难理解的属性或者接口增加一些配置信息，更容易阅读。
 
-相较于传统的Postman或Curl方式测试接口，使用swagger简直就是傻瓜式操作，不需要额外说明文档(写得好本身就是文档)而且更不容易出错，只需要录入数据然后点击Execute，如果再配合自动化框架，可以说基本就不需要人为操作了。
+##  接口文档导出
 
-Swagger是个优秀的工具，现在国内已经有很多的中小型互联网公司都在使用它，相较于传统的要先出Word接口文档再测试的方式，显然这样也更符合现在的快速迭代开发行情。当然了，提醒下大家在正式环境要记得关闭Swagger，一来出于安全考虑二来也可以节省运行时内存。
+使用了swagger2markup的插件。
 
-
-
-# 20、异步、定时、邮件任务
-
-在我们的工作中，常常会用到异步处理任务，比如我们在网站上发送邮件，后台会去发送邮件，此时前台会造成响应不动，直到邮件发送完毕，响应才会成功，所以我们一般会采用多线程的方式去处理这些任务。还有一些定时任务，比如需要在每天凌晨的时候，分析一次前一天的日志信息。还有就是邮件的发送，微信的前身也是邮件服务呢？这些东西都是怎么实现的呢？其实SpringBoot都给我们提供了对应的支持，我们上手使用十分的简单，只需要开启一些注解支持，配置一些配置文件即可！那我们来看看吧~
-
-
-
-## 20.1、异步任务
-
-1、创建一个service包
-
-2、创建一个类AsyncService
-
-异步处理还是非常常用的，比如我们在网站上发送邮件，后台会去发送邮件，此时前台会造成响应不动，直到邮件发送完毕，响应才会成功，所以我们一般会采用多线程的方式去处理这些任务。
-
-编写方法，假装正在处理数据，使用线程设置一些延时，模拟同步等待的情况；
-
-```java
-@Service
-public class AsyncService {
-   public void hello(){
-       try {
-           Thread.sleep(3000);
-      } catch (InterruptedException e) {
-           e.printStackTrace();
-      }
-       System.out.println("业务进行中....");
-  }
-}
-```
-
-3、编写controller包
-
-4、编写AsyncController类
-
-我们去写一个Controller测试一下
-
-```java
-@RestController
-public class AsyncController {
-   @Autowired
-   AsyncService asyncService;
-   @GetMapping("/hello")
-   public String hello(){
-       asyncService.hello();
-       return "success";
-  }
-}
-```
-
-5、访问http://localhost:8080/hello进行测试，3秒后出现success，这是同步等待的情况。
-
-问题：我们如果想让用户直接得到消息，就在后台使用多线程的方式进行处理即可，但是每次都需要自己手动去编写多线程的实现的话，太麻烦了，我们只需要用一个简单的办法，在我们的方法上加一个简单的注解即可，如下：
-
-6、给hello方法添加@Async注解；
-
-```java
-//告诉Spring这是一个异步方法
-@Async
-public void hello(){
-   try {
-       Thread.sleep(3000);
-  } catch (InterruptedException e) {
-       e.printStackTrace();
-  }
-   System.out.println("业务进行中....");
-}
-```
-
-SpringBoot就会自己开一个线程池，进行调用！但是要让这个注解生效，我们还需要在主程序上添加一个注解@EnableAsync ，开启异步注解功能；
-
-```java
-@EnableAsync //开启异步注解功能
-@SpringBootApplication
-public class SpringbootTaskApplication {
-   public static void main(String[] args) {
-       SpringApplication.run(SpringbootTaskApplication.class, args);
-  }
-}
-```
-
-7、重启测试，网页瞬间响应，后台代码依旧执行！
-
-## 20.3、定时任务
-
-项目开发中经常需要执行一些定时任务，比如需要在每天凌晨的时候，分析一次前一天的日志信息，Spring为我们提供了异步执行任务调度的方式，提供了两个接口。
-
-- TaskExecutor接口
-- TaskScheduler接口
-
-两个注解：
-
-- @EnableScheduling
-- @Scheduled
-
-**cron表达式：**
-
-corn从左到右（用空格隔开）：秒 分 小时 月份中的日期 月份 星期中的日期 年份
-
-| 字段                     | 允许值                                 | 允许的特殊字符           |
-| ------------------------ | -------------------------------------- | ------------------------ |
-| 秒（Seconds）            | 0~59的整数                             | , - * / 四个字符         |
-| 分（*Minutes*）          | 0~59的整数                             | , - * / 四个字符         |
-| 小时（*Hours*）          | 0~23的整数                             | , - * / 四个字符         |
-| 日期（*DayofMonth*）     | 1~31的整数（但是你需要考虑你月的天数） | ,- * ? / L W C 八个字符  |
-| 月份（*Month*）          | 1~12的整数或者 JAN-DEC                 | , - * / 四个字符         |
-| 星期（*DayofWeek*）      | 1~7的整数或者 SUN-SAT （1=SUN）        | , - * ? / L C # 八个字符 |
-| 年(可选，留空)（*Year*） | 1970~2099                              | , - * / 四个字符         |
-
-| 特殊字符 | 代表含义                                                     |
-| -------- | ------------------------------------------------------------ |
-| ,        | 枚举 在Minutes域使用5,20，则意味着在5和20分每分钟触发一次。  |
-| -        | 表示范围 例如在Minutes域使用5-20，表示从5分到20分钟每分钟触发一次 |
-| *        | 任意                                                         |
-| /        | 表示起始时间开始触发，然后每隔固定时间触发一次，             |
-| ?        | 日/星期冲突匹配 只能用在DayofMonth和DayofWeek两个域          |
-| L        | 最后 如果在DayofWeek域使用5L,意味着在最后的一个星期四触发。  |
-| W        | 工作日                                                       |
-| C        | 和calendar联系后计算过的值                                   |
-| #        | 用于确定每个月第几个星期几，4#2 某月的第二个星期三           |
-
-**测试步骤：-**
-
-1、创建一个ScheduledService
-
-我们里面存在一个hello方法，他需要定时执行，怎么处理呢？
-
-```java
-@Service
-public class ScheduledService {
- 
-   //秒   分   时     日   月   周几
-   //0 * * * * MON-FRI
-   //注意cron表达式的用法；
-   @Scheduled(cron = "0 * * * * 0-7")
-   public void hello(){
-       System.out.println("hello.....");
-  }
-}
-```
-
-2、这里写完定时任务之后，我们需要在主程序上增加@EnableScheduling 开启定时任务功能
-
-```java
-@EnableAsync //开启异步注解功能
-@EnableScheduling //开启基于注解的定时任务
-@SpringBootApplication
-public class SpringbootTaskApplication {
-   public static void main(String[] args) {
-       SpringApplication.run(SpringbootTaskApplication.class, args);
-  }
-}
-```
-
-3、我们来详细了解下cron表达式；
-
-http://www.bejson.com/othertools/cron/
-
-4、常用的表达式
-
-```java
-（1）0/2 * * * * ?   表示每2秒 执行任务
-（1）0 0/2 * * * ?   表示每2分钟 执行任务
-（1）0 0 2 1 * ?   表示在每月的1日的凌晨2点调整任务
-（2）0 15 10 ? * MON-FRI   表示周一到周五每天上午10:15执行作业
-（3）0 15 10 ? 6L 2002-2006   表示2002-2006年的每个月的最后一个星期五上午10:15执行作
-（4）0 0 10,14,16 * * ?   每天上午10点，下午2点，4点
-（5）0 0/30 9-17 * * ?   朝九晚五工作时间内每半小时
-（6）0 0 12 ? * WED   表示每个星期三中午12点
-（7）0 0 12 * * ?   每天中午12点触发
-（8）0 15 10 ? * *   每天上午10:15触发
-（9）0 15 10 * * ?     每天上午10:15触发
-（10）0 15 10 * * ?   每天上午10:15触发
-（11）0 15 10 * * ? 2005   2005年的每天上午10:15触发
-（12）0 * 14 * * ?     在每天下午2点到下午2:59期间的每1分钟触发
-（13）0 0/5 14 * * ?   在每天下午2点到下午2:55期间的每5分钟触发
-（14）0 0/5 14,18 * * ?     在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发
-（15）0 0-5 14 * * ?   在每天下午2点到下午2:05期间的每1分钟触发
-（16）0 10,44 14 ? 3 WED   每年三月的星期三的下午2:10和2:44触发
-（17）0 15 10 ? * MON-FRI   周一至周五的上午10:15触发
-（18）0 15 10 15 * ?   每月15日上午10:15触发
-（19）0 15 10 L * ?   每月最后一日的上午10:15触发
-（20）0 15 10 ? * 6L   每月的最后一个星期五上午10:15触发
-（21）0 15 10 ? * 6L 2002-2005   2002年至2005年的每月的最后一个星期五上午10:15触发
-（22）0 15 10 ? * 6#3   每月的第三个星期五上午10:15触发
-```
-
-
-
-## 20.3、邮件任务
-
-邮件发送，在我们的日常开发中，也非常的多，Springboot也帮我们做了支持
-
-- 邮件发送需要引入spring-boot-start-mail
-- SpringBoot 自动配置MailSenderAutoConfiguration
-
-- 定义MailProperties内容，配置在application.yml中
-- 自动装配JavaMailSender
-
-- 测试邮件发送
-
-**测试：**
-
-1、引入pom依赖
+**maven依赖**
 
 ```xml
 <dependency>
-   <groupId>org.springframework.boot</groupId>
-   <artifactId>spring-boot-starter-mail</artifactId>
+    <groupId>io.github.swagger2markup</groupId>
+    <artifactId>swagger2markup</artifactId>
+    <version>1.3.1</version>
+</dependency>
+<dependency>
+    <groupId>io.swagger</groupId>
+    <artifactId>swagger-core</artifactId>
+    <version>1.5.16</version>
+</dependency>
+<dependency>
+    <groupId>io.swagger</groupId>
+    <artifactId>swagger-models</artifactId>
+    <version>1.5.16</version>
 </dependency>
 ```
 
-看它引入的依赖，可以看到 jakarta.mail
+**生成adoc文件**
+
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+public class DemoApplicationTests {
+    @Test
+    public void generateAsciiDocs() throws Exception {
+        //    输出Ascii格式
+        Swagger2MarkupConfig config = new Swagger2MarkupConfigBuilder()
+                .withMarkupLanguage(MarkupLanguage.ASCIIDOC) //设置生成格式
+                .withOutputLanguage(Language.ZH)  //设置语言中文还是其他语言
+                .withPathsGroupedBy(GroupBy.TAGS)
+                .withGeneratedExamples()
+                .withoutInlineSchema()
+                .build();
+
+        Swagger2MarkupConverter.from(new URL("http://localhost:8888/v2/api-docs"))
+                .withConfig(config)
+                .build()
+                .toFile(Paths.get("src/main/resources/docs/asciidoc"));
+    }
+}
+```
+
+- 使用RunWith注解和SpringBootTest注解，启动应用服务容器。 SpringBootTest.WebEnvironment.DEFINED_PORT表示使用application.yml定义的端口，而不是随机使用一个端口进行测试，这很重要。
+- Swagger2MarkupConfig 是输出文件的配置，如文件的格式和文件中的自然语言等
+- Swagger2MarkupConverter的from表示哪一个HTTP服务作为资源导出的源头(JSON格式)，可以自己访问试一下这个链接。8888是我的服务端口，需要根据你自己的应用配置修改。
+- toFile表示将导出文件存放的位置，不用加后缀名。也可以使用toFolder表示文件导出存放的路径。二者区别在于使用toFolder导出为文件目录下按标签TAGS分类的多个文件，使用toFile是导出一个文件（toFolder多个文件的合集）。
+
+**生成markdown文件**
+
+```java
+@Test
+public void generateMarkdownDocsToFile() throws Exception {
+    //    输出Markdown到单文件
+    Swagger2MarkupConfig config = new Swagger2MarkupConfigBuilder()
+            .withMarkupLanguage(MarkupLanguage.MARKDOWN)
+            .withOutputLanguage(Language.ZH)
+            .withPathsGroupedBy(GroupBy.TAGS)
+            .withGeneratedExamples()
+            .withoutInlineSchema()
+            .build();
+
+    Swagger2MarkupConverter.from(new URL("http://localhost:8888/v2/api-docs"))
+            .withConfig(config)
+            .build()
+            .toFile(Paths.get("src/main/resources/docs/markdown"));
+}
+```
+
+**通过maven生成html文档**
 
 ```xml
-<dependency>
-   <groupId>com.sun.mail</groupId>
-   <artifactId>jakarta.mail</artifactId>
-   <version>1.6.4</version>
-   <scope>compile</scope>
-</dependency>
+<plugin>
+    <groupId>org.asciidoctor</groupId>
+    <artifactId>asciidoctor-maven-plugin</artifactId>
+    <version>1.5.6</version>
+    <configuration>
+         <!--asciidoc文件目录-->
+        <sourceDirectory>src/main/resources/docs</sourceDirectory>
+        <!---生成html的路径-->
+        <outputDirectory>src/main/resources/html</outputDirectory>
+        <backend>html</backend>
+        <sourceHighlighter>coderay</sourceHighlighter>
+        <attributes>
+            <!--导航栏在左-->
+            <toc>left</toc>
+            <!--显示层级数-->
+            <!--<toclevels>3</toclevels>-->
+            <!--自动打数字序号-->
+            <sectnums>true</sectnums>
+        </attributes>
+    </configuration>
+</plugin>
 ```
 
-2、查看自动配置类：MailSenderAutoConfiguration
+adoc的sourceDirectory路径必须和之前生成的adoc文件路径一致。然后按照下图方式运行插件。
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200417143758.png)
+        
 
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615375803662-63532564-5ff8-4af5-9572-ed0fe890da3a.png)
+HTML接口文档显示的效果如下
 
-这个类中存在bean，JavaMailSenderImpl
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200417143833.png)
 
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615375822928-e17de5a3-567a-4ac8-bf24-ec1dfa8469bc.png)
-
-然后我们去看下配置文件
-
-```java
-@ConfigurationProperties(
-   prefix = "spring.mail"
-)
-public class MailProperties {
-   private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-   private String host;
-   private Integer port;
-   private String username;
-   private String password;
-   private String protocol = "smtp";
-   private Charset defaultEncoding;
-   private Map<String, String> properties;
-   private String jndiName;
-}
-```
-
-3、配置文件：
-
-```plain
-spring.mail.username=24736743@qq.com
-spring.mail.password=你的qq授权码
-spring.mail.host=smtp.qq.com
-# qq需要配置ssl
-spring.mail.properties.mail.smtp.ssl.enable=true
-```
-
-获取授权码：在QQ邮箱中的设置->账户->开启pop3和smtp服务
-
-![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615375906529-88757cde-4ef5-46c5-b800-e597553b1794.png)
-
-4、Spring单元测试
-
-```java
-@Autowired
-JavaMailSenderImpl mailSender;
-
-@Test
-public void contextLoads() {
-   //邮件设置1：一个简单的邮件
-   SimpleMailMessage message = new SimpleMailMessage();
-   message.setSubject("通知-明天来狂神这听课");
-   message.setText("今晚7:30开会");
-
-   message.setTo("24736743@qq.com");
-   message.setFrom("24736743@qq.com");
-   mailSender.send(message);
-}
-
-@Test
-public void contextLoads2() throws MessagingException {
-   //邮件设置2：一个复杂的邮件
-   MimeMessage mimeMessage = mailSender.createMimeMessage();
-   MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-
-   helper.setSubject("通知-明天来狂神这听课");
-   helper.setText("<b style='color:red'>今天 7:30来开会</b>",true);
-
-   //发送附件
-   helper.addAttachment("1.jpg",new File(""));
-   helper.addAttachment("2.jpg",new File(""));
-
-   helper.setTo("24736743@qq.com");
-   helper.setFrom("24736743@qq.com");
-
-   mailSender.send(mimeMessage);
-}
-```
-
-查看邮箱，邮件接收成功！
-
-我们只需要使用Thymeleaf进行前后端结合即可开发自己网站邮件收发功能了！
-
-封装工具类：
-
-```java
-/**
-     * 
-     * @param html:   是否开启html
-     * @param subject 邮件标题
-     * @param text   邮件内容
-     * @throws Exception
-     */
-@Test
-public void sendMail(Boolean html, String subject, String text) throws Exception {
-    //邮件设置2：一个复杂的邮件
-    MimeMessage mimeMessage = mailSender.createMimeMessage();
-    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, html);
-
-    helper.setSubject(subject);
-    helper.setText(text,true);
-
-    helper.setTo("24736743@qq.com");
-    helper.setFrom("24736743@qq.com");
-
-    mailSender.send(mimeMessage);
-}
-```
-
-# 21、集成Redis
+# 集成Redis
 
 SpringBoot 操作数据: spring-data jpa jdbc mongodb redis !
 
@@ -5109,11 +7547,11 @@ spring.redis.timeout=5000
 
 3、测试！
 
-## 21.2、自定义Redis Template
+## 自定义Redis Template
 
-# 22、Dubbo和Zookeeper集成
+# 集成Dubbo和Zookeeper
 
-## 22.1、什么是分布式系统？
+## 什么是分布式系统？
 
 在《分布式系统原理与范型》一书中有如下定义：“分布式系统是若干独立计算机的集合，这些计算机对于用户来说就像单个相关系统”；
 
@@ -5125,7 +7563,7 @@ spring.redis.timeout=5000
 
 
 
-## 22.2、Dubbo文档
+## Dubbo文档
 
 随着互联网的发展，网站应用的规模不断扩大，常规的垂直应用架构已无法应对，分布式服务架构以及流动计算架构势在必行，急需一个治理系统确保架构有条不紊的演进。
 
@@ -5213,7 +7651,7 @@ RPC【Remote Procedure Call】是指远程过程调用，是一种进程间通�
 
 
 
-## 22.3、Dubbo
+## Dubbo
 
 Apache Dubbo |ˈdʌbəʊ| 是一款高性能、轻量级的开源Java RPC框架，它提供了三大核心能力：面向接口的远程方法调用，智能容错和负载均衡，以及服务自动注册和发现。
 
@@ -5255,7 +7693,7 @@ l 服务消费者和提供者，在内存中累计调用次数和调用时间，
 
 
 
-## 22.4、Dubbo环境搭建
+## Dubbo环境搭建
 
 点进dubbo官方文档，推荐我们使用Zookeeper 注册中心
 
@@ -5384,7 +7822,7 @@ java -jar dubbo-admin-0.0.1-SNAPSHOT.jar
 
 
 
-## 22.5、SpringBoot + Dubbo + zookeeper
+## SpringBoot + Dubbo + zookeeper
 
 **框架搭建**
 
@@ -5441,7 +7879,7 @@ public class UserService {
 
 
 
-## 22.6、服务提供者
+## 服务提供者
 
 1、将服务提供者注册到注册中心，我们需要整合Dubbo和zookeeper，所以需要导包
 
@@ -5525,7 +7963,7 @@ public class TicketServiceImpl implements TicketService {
 
 
 
-## 22.7、服务消费者
+## 服务消费者
 
 1、导入依赖，和之前的依赖一样；
 
@@ -5625,7 +8063,7 @@ public class ConsumerServerApplicationTests {
 }
 ```
 
-## 22.8、启动测试
+## 启动测试
 
 1. 开启zookeeper
 
@@ -5645,9 +8083,9 @@ ok , 这就是SpingBoot + dubbo + zookeeper实现分布式开发的应用，其�
 
 
 
-# 23、富文本编辑器
+# 集成富文本编辑器
 
-## 23.1、简介
+## 简介
 
 思考：我们平时在博客园，或者CSDN等平台进行写作的时候，有同学思考过他们的编辑器是怎么实现的吗？
 
@@ -5686,7 +8124,7 @@ ok , 这就是SpingBoot + dubbo + zookeeper实现分布式开发的应用，其�
 - **froala Editor**——界面非常好看，功能非常强大，非常好用（非免费）    
 - 官网：https://www.froala.com/wysiwyg-editor
 
-## 23.2、Editor.md
+## Editor.md
 
 我这里使用的就是Editor.md，作为一个资深码农，Mardown必然是我们程序猿最喜欢的格式，看下面，就爱上了！
 
@@ -5702,7 +8140,7 @@ ok , 这就是SpingBoot + dubbo + zookeeper实现分布式开发的应用，其�
 
 
 
-## 23.3、基础工程搭建
+## 基础工程搭建
 
 ------
 
@@ -5835,7 +8273,7 @@ type-aliases-package: com.kuang.pojo
 
 
 
-## 23.4、文章编辑整合（重点）
+## 文章编辑整合（重点）
 
 1、导入 editor.md 资源 ，删除多余文件
 
@@ -6046,7 +8484,7 @@ editormd.emoji     = {
 };
 ```
 
-## 23.5、文章展示
+## 文章展示
 
 1、Controller 中增加方法
 
