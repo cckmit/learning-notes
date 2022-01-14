@@ -1620,6 +1620,417 @@ kuang.hello.suffix="sss"
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615217591727-0bc83527-146c-47ad-95eb-8ce15711af72.png)
 
+# 拦截器、过滤器、监听器
+
+## 监听器
+
+Servlet 监听器是 Servlet 规范中定义的一种特殊类，用于监听 ServletContext、HttpSession 和 ServletRequest 等域对象的创建与销毁事件，以及监听这些域对象中属性发生修改的事件。监听器是观察者模式的应用，它关注特定事物，并伺机而动，所以监听器具有**异步**的特性。
+
+Servlet Listener 监听三大域对象的创建和销毁事件，三大对象分别是：
+
+1. ServletContext：application 级别，整个应用只存在一个，可以进行全局应用配置。
+2. HttpSession：session 级别，针对每一个对话，如统计会话总数。
+3. ServletRequest：request 级别，针对每一个客户请求。
+
+**场景**
+
+Servlet 规范设计监听器的作用是在事件发生前、发生后进行一些处理，一般可以用来统计在线人数和在线用户、统计网站访问量、系统启动时初始化信息等。我们可以在容器启动时初始化 Log4j 信息，添加自己对容器状态的监控，初始化 Spring 组件等。
+
+**实现**
+
+创建一个ServletRequest监听器(其他监听器类似创建)
+
+```java
+@WebListener
+@Slf4j
+public class Customlister implements ServletRequestListener{
+
+    @Override
+    public void requestDestroyed(ServletRequestEvent sre) {
+        log.info(" request监听器：销毁");
+    }
+
+    @Override
+    public void requestInitialized(ServletRequestEvent sre) {
+        log.info(" request监听器：可以在这里记录访问次数哦");
+    }
+
+}
+```
+
+在启动类中加入@ServletComponentScan进行自动注册即可。
+
+## 过滤器
+
+过滤器是一种可重用的代码，可以转换 HTTP 请求、响应和头信息，通俗来说就是过滤器可以在请求到达服务器之前，对请求头进行预先处理，在响应内容到达客户端之前，对服务器做出的响应进行后置处理。
+位于 Listener 的下游，Servlet 的上游。在 Listener 执行之后，在请求到达 Servlet 之前进行预处理。
+
+**场景**
+
+Servlet 3.1 中定义了几种常见的过滤器组件：
+
+| 过滤器                                        | 作用                         |
+| :-------------------------------------------- | :--------------------------- |
+| Authentication filters：                      | 授权类，如用户登陆会话校验； |
+| Logging and auditing filters：                | 日志和安全审计类；           |
+| Image conversion filters：                    | 图片转换；                   |
+| Data compression filters：                    | 数据压缩；                   |
+| Encryption filters：                          | 加密、解密类；               |
+| Tokenizing filters：                          | 词法类；                     |
+| Filters that trigger resource access events： | 触发资源访问事件类；         |
+| XSL/T filters that transform XML content：    | XML文件转换类；              |
+| MIME-type chain filters：                     | MIME文件；                   |
+| Caching filters：                             | 缓存类；                     |
+
+或者我们社交应用经常需要的敏感词过滤，都可以使用过滤器。过滤器主要的特点在于，它能够改变请求内容。
+
+**实现**
+
+**利用WebFilter注解配置**
+
+@WebFilter是Servlet3.0新增的注解，原先实现过滤器，需要在web.xml中进行配置，而现在通过此注解，启动启动时会自动扫描自动注册。
+
+编写Filter类：
+
+```java
+//注册器名称为customFilter,拦截的url为所有
+@WebFilter(filterName="customFilter",urlPatterns={"/*"})
+@Slf4j
+public class CustomFilter implements Filter{
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        log.info("filter 初始化");
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        log.info("customFilter 请求处理之前");
+        //对request、response进行一些预处理
+        // 比如设置请求编码
+        // request.setCharacterEncoding("UTF-8");
+        // response.setCharacterEncoding("UTF-8");
+
+        //链路 直接传给下一个过滤器
+        chain.doFilter(request, response);
+
+        log.info("customFilter 请求处理之后");
+    }
+
+    @Override
+    public void destroy() {
+        log.info("filter 销毁");
+    }
+}
+```
+
+在启动类加入@ServletComponentScan注解即可。
+使用这种方法，当注册多个过滤器时，无法指定执行顺序，可通过FilterRegistrationBean进行过滤器的注册。
+
+> –小技巧–
+> 通过过滤器的java类名称，进行顺序的约定，比如LogFilter和AuthFilter，此时AuthFilter就会比LogFilter先执行，因为首字母A比L前面。
+
+**FilterRegistrationBean方式**
+
+FilterRegistrationBean是springboot提供的，此类提供setOrder方法，可以为filter设置排序值。
+
+```java
+@Configuration
+public class FilterRegistration {
+    @Bean
+    public FilterRegistrationBean filterRegistrationBean() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        //当过滤器有注入其他bean类时，可直接通过@bean的方式进行实体类过滤器，这样不可自动注入过滤器使用的其他bean类。
+        //当然，若无其他bean需要获取时，可直接new CustomFilter()，也可使用getBean的方式。
+        registration.setFilter(customFilter());
+        //过滤器名称
+        registration.setName("customFilter");
+        //拦截路径
+        registration.addUrlPatterns("/*");
+        //设置顺序
+        registration.setOrder(10);
+        return registration;
+    }
+
+    @Bean
+    public Filter customFilter() {
+        return new CustomFilter();
+    }
+}
+```
+
+注册多个时，就注册多个FilterRegistrationBean即可,启动后，效果和第一种是一样的。
+
+## 拦截器
+
+在 Servlet 规范中并没有拦截器的概念，它是面向切面编程的一种应用：在需要对方法进行增强的场景下，例如在方法调用前执行一段代码，或者在方法完成后额外执行一段操作，拦截器的一种实现方式就是动态代理。
+
+**场景：AOP**
+
+**实现**
+
+编写自定义拦截器类
+
+```java
+@Slf4j
+public class CustomHandlerInterceptor implements HandlerInterceptor{
+
+ @Override
+ public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+   throws Exception {
+  log.info("preHandle:请求前调用");
+  //返回 false 则请求中断
+  return true;
+ }
+
+ @Override
+ public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+   ModelAndView modelAndView) throws Exception {
+  log.info("postHandle:请求后调用");
+
+ }
+
+ @Override
+ public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+   throws Exception {
+  log.info("afterCompletion:请求调用完成后回调方法，即在视图渲染完成后回调");
+
+ }
+
+}
+```
+
+实现WebMvcConfigurer接口完成拦截器的注册。
+
+```java
+@Configuration
+//废弃：public class MyWebMvcConfigurer extends WebMvcConfigurerAdapter{
+public class MyWebMvcConfigurer implements WebMvcConfigurer 
+ @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+   //注册拦截器 拦截规则
+  //多个拦截器时 以此添加 执行顺序按添加顺序
+  registry.addInterceptor(getHandlerInterceptor()).addPathPatterns("/*");
+  }
+	
+ @Bean
+ public static HandlerInterceptor getHandlerInterceptor() {
+  return new CustomHandlerInterceptor();
+ }
+}
+```
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200426151331.png)
+
+## 自定义事件发布与监听
+
+**自定义事件和自定义监听器类的实现方式**
+
+- 自定义事件：继承自ApplicationEvent抽象类，然后定义自己的构造器
+- 自定义监听：实现ApplicationListener接口，然后实现onApplicationEvent方法
+
+**springboot进行事件监听有四种方式**
+
+- 1.手工向ApplicationContext中添加监听器
+- 2.将监听器装载入spring容器
+- 3.在application.properties中配置监听器
+- 4.通过@EventListener注解实现事件监听
+
+**方式一**
+
+创建MyListener1类
+
+```java
+@Slf4j
+public class MyListener1 implements ApplicationListener<MyEvent> {
+    public void onApplicationEvent(MyEvent event) {
+        log.info(String.format("%s监听到事件源：%s.", MyListener1.class.getName(), event.getSource()));
+    }
+}
+```
+
+在springboot应用启动类中获取ConfigurableApplicationContext上下文，装载监听
+
+```java
+@SpringBootApplication
+public class BootLaunchApplication {
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(BootLaunchApplication.class, args);
+        //装载监听
+        context.addApplicationListener(new MyListener1());
+    }
+}
+```
+
+**方式二**
+
+创建MyListener2类，并使用@Component注解将该类装载入spring容器中
+
+```java
+@Component
+@Slf4j
+public class MyListener2 implements ApplicationListener<MyEvent> {
+
+    public void onApplicationEvent(MyEvent event) {
+        log.info(String.format("%s监听到事件源：%s.", MyListener2.class.getName(), event.getSource()));
+    }
+
+}
+```
+
+**方式三**
+
+创建MyListener3类
+
+```java
+@Slf4j
+public class MyListener3 implements ApplicationListener<MyEvent> {
+    public void onApplicationEvent(MyEvent event) {
+        log.info(String.format("%s监听到事件源：%s.", MyListener3.class.getName(), event.getSource()));
+    }
+}
+```
+
+在application.yml中配置监听
+
+```yaml
+context:
+  listener:
+    classes: club.krislin.customlistener.MyListener3
+```
+
+**方式四**
+
+创建MyListener4类，该类无需实现ApplicationListener接口，使用@EventListener装饰具体方法
+
+```java
+@Slf4j
+@Component
+public class MyListener4 {
+    @EventListener
+    public void listener(MyEvent event) {
+        log.info(String.format("%s监听到事件源：%s.", MyListener4.class.getName(), event.getSource()));
+    }
+}
+```
+
+自定义事件代码如下：
+
+```java
+@SuppressWarnings("serial")
+public class MyEvent extends ApplicationEvent
+{
+ public MyEvent(Object source)
+ {
+  super(source);
+ }
+}
+```
+
+**测试**
+
+有了applicationContext，想在哪发布事件就在哪发布事件
+
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class CustomListenerTest {
+
+    @Resource private
+    ApplicationContext applicationContext;
+
+    @Test
+    public void testEvent(){
+        applicationContext.publishEvent(new MyEvent("测试事件."));
+    }
+}
+```
+
+启动后，日志打印如下。（下面截图是在启动类发布事件后的截图，在单元测试里面监听器1监听不到，执行顺序问题）：
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200426153729.png)
+
+由日志打印可以看出，SpringBoot四种事件的实现方式监听是有序的。无论执行多少次都是这个顺序。
+
+## 应用启动的监听
+
+Spring Boot提供了两个接口：CommandLineRunner、ApplicationRunner，用于启动应用时做特殊处理，这些代码会在SpringApplication的run()方法运行完成之前被执行。
+
+通常用于应用启动前的特殊代码执行、特殊数据加载、垃圾数据清理、微服务的服务发现注册、系统启动成功后的通知等。相当于Spring的ApplicationListener、Servlet的ServletContextListener。**使用二者的好处在于，可以方便的使用应用启动参数**，根据参数不同做不同的初始化操作。
+
+**实现**
+
+**通过@Component定义方式实现**，CommandLineRunner：参数是字符串数组
+
+```java
+@Slf4j
+@Component
+public class CommandLineStartupRunner implements CommandLineRunner {
+    @Override
+    public void run(String... args) throws Exception {
+        log.info("CommandLineRunner传入参数：{}", Arrays.toString(args));
+    }
+}
+```
+
+ApplicationRunner：参数被放入ApplicationArguments，通过getOptionNames()、getOptionValues()、getSourceArgs()获取参数
+
+```java
+@Slf4j
+@Component
+public class AppStartupRunner implements ApplicationRunner {
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        log.info("ApplicationRunner参数: {}", args.getOptionNames());
+    }
+}
+```
+
+**通过@Bean定义方式实现**
+
+```java
+@Configuration
+public class BeanRunner {
+    @Bean
+    @Order(1)
+    public CommandLineRunner runner1(){
+        return new CommandLineRunner() {
+            public void run(String... args){
+                System.out.println("CommandLineRunner run1()" + Arrays.toString(args));
+            }
+        };
+    }
+
+    @Bean
+    @Order(2)
+    public CommandLineRunner runner2(){
+        return new CommandLineRunner() {
+            public void run(String... args){
+                System.out.println("CommandLineRunner run2()" + Arrays.toString(args));
+            }
+        };
+    }
+
+    @Bean
+    @Order(3)
+    public CommandLineRunner runner3(){
+        return new CommandLineRunner() {
+            public void run(String... args){
+                System.out.println("CommandLineRunner run3()" + Arrays.toString(args));
+            }
+        };
+    }
+}
+```
+
+可以通过@Order设置执行顺序
+
+![](https://cdn.jsdelivr.net/gh/krislinzhao/IMGcloud/img/20200426155029.png)
+
+
+
 # 模板引擎
 
 jsp支持非常强大的功能，包括能写Java代码，而SpringBoot这个项目首先是以jar的方式，不是war，其次用的还是嵌入式的Tomcat，所以呢，他现在**默认是不支持jsp**的。
@@ -3613,16 +4024,515 @@ public class JPAPrimaryConfig {
 
 测试：
 
+# Spring Cache
+
+**常用缓存操作流程**
+
+- **失效**：应用程序先从 cache 取数据，没有得到，则从数据库中取数据，成功后，放到缓存中。
+- **命中**：应用程序从 cache 中取数据，取到后返回。
+- **更新**：先把数据存到数据库中，成功后，再让缓存**失效或更新**。缓存操作失败，数据库事务回滚。
+- **删除**: 先从数据库里面删掉，再从缓存里面删掉。缓存操作失败，数据库事务回滚。
+
+```xml
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-cache</artifactId>
+</dependency>
+```
+
+添加入口启动类 `@EnableCaching`注解开启 Caching。
+
+`@Cacheable` 通常应用到读取数据的方法上，如查找方法：先从缓存中读取，如果没有再调用方法获取数据，然后把数据查询结果添加到缓存中。如果缓存中查找到数据，被注解的方法将不会执行。
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200429154434.png)
+
+`@CachePut`通常应用于保存和修改方法配置，能够根据方法的请求参数对其结果进行缓存，和 @Cacheable 不同的是，它每次都会触发被注解方法的调用。
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200429154505.png)
+
+`@CachEvict` 通常应用于删除方法配置，能够根据一定的条件对缓存进行清空。可以清除一条或多条缓存。
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200429154630.png)
+
+Caching为组合注解（非常有用），请看下文。
+
+**常用策略**
+
+**只要发生删改查，就把集合类缓存销毁**
+
+对于查询方法：
+`@Cacheable(value=“obj”)` 或 `@Cacheable(value=“objList”)`
+
+对于修改和新增方法：
+
 ```java
-//先构造一个Article对象article，这个操作针对testdb
-articleRepository.save(article);
-//在构造一个Message对象message，这个操作针对testdb2
-messageRepository.save(message);
+@Caching(evict = {@CacheEvict(cacheNames = "objList",allEntries = true)},
+                  put={@CachePut(cacheNames = "obj",key = "#id")})
+```
+
+对于删除方法：
+
+```java
+@Caching(evict = {@CacheEvict(cacheNames = "objList",allEntries = true),
+                  @CacheEvict(cacheNames = "obj",key = "#id")})
+```
+
+****
+
+**指定redis缓存**
+
+在 application.yml指定 spring.cache.type=redis。
+
+```properties
+spring.cache.type=
+spring.cache.redis.cache-null-values=true      # Allow caching null values.
+spring.cache.redis.key-prefix=                        # Key prefix.
+spring.cache.redis.time-to-live=                      # 缓存到期时间，默认不主动删除永远不到期
+spring.cache.redis.use-key-prefix=true            # Whether to use the key prefix when writing to Redis.
+```
+
+由于redis缓存设置的到期时间是统一的，没有办法根据缓存名称(value属性)分别设置缓存到期的时间，所以我们进行一个简单的改造。
+
+```java
+@Data
+@Configuration
+@Component
+@ConfigurationProperties(prefix = "caching")
+public class RedisConfig {
+
+    @Bean
+    public RedisTemplate redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate redisTemplate = new RedisTemplate();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+
+        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
+
+        //序列化重点在这四行代码
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
+
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
+    }
+
+
+
+    //自定义redisCacheManager
+    @Bean
+    public RedisCacheManager redisCacheManager(RedisTemplate redisTemplate) {
+        RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisTemplate.getConnectionFactory());
+
+        RedisCacheManager redisCacheManager = new RedisCacheManager(redisCacheWriter,
+                this.buildRedisCacheConfigurationWithTTL(redisTemplate,RedisCacheConfiguration.defaultCacheConfig().getTtl().getSeconds()),  //默认的redis缓存配置
+                this.getRedisCacheConfigurationMap(redisTemplate)); //针对每一个cache做个性化缓存配置
+
+        return  redisCacheManager;
+    }
+
+    //配置注入，key是缓存名称，value是缓存有效期
+    private Map<String,Long> ttlmap;
+
+    //根据ttlmap的属性装配结果，个性化RedisCacheConfiguration
+    private Map<String, RedisCacheConfiguration> getRedisCacheConfigurationMap(RedisTemplate redisTemplate) {
+        Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>();
+
+        for(Map.Entry<String, Long> entry : ttlmap.entrySet()){
+            String cacheName = entry.getKey();
+            Long ttl = entry.getValue();
+            redisCacheConfigurationMap.put(cacheName,this.buildRedisCacheConfigurationWithTTL(redisTemplate,ttl));
+        }
+
+        return redisCacheConfigurationMap;
+    }
+
+
+    //让缓存的序列化方式使用redisTemplate.getValueSerializer()，并为每一个缓存分别设置ttl
+    private RedisCacheConfiguration buildRedisCacheConfigurationWithTTL(RedisTemplate redisTemplate,Long ttl){
+        return  RedisCacheConfiguration.defaultCacheConfig()
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate.getValueSerializer()))
+                .entryTtl(Duration.ofSeconds(ttl));
+    }
+
+}
+```
+
+**自定义配置实现缓存失效时间个性化**
+
+```yaml
+caching:
+  ttlmap:
+    article: 10
+    articleAll: 20
 ```
 
 
 
+# 统一全局异常处理
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200427102245.png)
+
+1. 后端开发人员职责单一，只需要将异常捕获并转换为自定义异常一直对外抛出。不需要去想页面跳转404，以及异常响应的数据结构的设计。
+2. 面向前端人员友好，后端返回给前端的数据应该有统一的数据结构，统一的规范。不能一个人一个响应的数据结构。而在此过程中不需要后端开发人员做更多的工作，交给全局异常处理器去处理“异常”到“响应数据结构”的转换。
+3. 面向用户友好，用户能够清楚的知道异常产生的原因。这就要求自定义异常，全局统一处理，ajax接口请求响应统一的异常数据结构，页面模板请求统一跳转到404页面。
+4. 面向运维友好，将异常信息合理规范的持久化，以便查询。
+
+**规范**
+
+1. Controller、Service、DAO层拦截异常转换为自定义异常，不允许将异常私自截留。必须对外抛出。
+2. 统一数据响应代码，使用httpstatusode，不要自定义。自定义不方便记忆。200请求成功，400用户输入错误导致的异常，500系统内部异常，999未知异常。
+3. 自定义异常里面有message属性，一定用友好的语言描述异常，并赋值给message.
+4. 不允许对父类Excetion统一catch，要分小类catch，这样能够清楚地将异常转换为自定义异常传递给前端。
+
+## 数据结构设计
+
+原则：
+
+1. CustomException 自定义异常。核心要素：异常错误编码（200正常,400,500），异常错误信息message。
+2. ExceptionTypeEnum 枚举异常分类，将异常分类固化下来，防止开发人员思维发散。 核心要素 异常分类编码（200正常,400,500），异常分类描述。
+3. AjaxResponse 用于响应Ajax请求。核心要素：是否请求成功 isok；响应code零与非零，零表示成功（200,400,500）；响应成功与否信息描述message；响应成功的数据data。
+4. error.html
+   另外还需要有一个统一处理CustomException的地方，即@ControllerAdvice和@ExceptionHandler。
+
+**枚举异常类**
+
+```java
+public enum CustomExceptionType {
+    USER_INPUT_ERROR(400,"用户输入异常"),
+    SYSTEM_ERROR (500,"系统服务异常"),
+    OTHER_ERROR(999,"其他未知异常");
+
+    CustomExceptionType(int code, String typeDesc) {
+        this.code = code;
+        this.typeDesc = typeDesc;
+    }
+
+    private String typeDesc;//异常类型中文描述
+
+    private int code; //code
+
+    public String getTypeDesc() {
+        return typeDesc;
+    }
+
+    public int getCode() {
+        return code;
+    }
+}
+```
+
+**自定义异常类**
+
+```java
+public class CustomException extends RuntimeException {
+    //异常错误编码
+    private int code ;
+    //异常信息
+    private String message;
+
+    private CustomException(){}
+
+    public CustomException(CustomExceptionType exceptionTypeEnum, 
+                           String message) {
+        this.code = exceptionTypeEnum.getCode();
+        this.message = message;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+}
+```
+
+**统一响应**
+
+```java
+/**
+ * 接口数据请求统一响应数据结构
+ */
+@Data
+public class AjaxResponse {
+    //判断是否处理
+    private  boolean isok;
+    //状态码
+    private  int code;
+    //提示信息
+    private  String message;
+    //数据
+    private  Object data;
+
+    private AjaxResponse() {
+
+    }
+
+    //请求出现异常时的响应数据封装
+    public static AjaxResponse error(CustomException e) {
+        AjaxResponse resultBean = new AjaxResponse();
+        resultBean.setIsok(false);
+        resultBean.setCode(e.getCode());
+        if(e.getCode() == CustomExceptionType.USER_INPUT_ERROR.getCode()){
+            resultBean.setMessage(e.getMessage());
+        }else if(e.getCode() == CustomExceptionType.SYSTEM_ERROR.getCode()){
+            resultBean.setMessage(e.getMessage() + ",请将该异常信息发送给管理员!");
+        }else{
+            resultBean.setMessage("系统出现未知异常，请联系管理员!");
+        }
+        //TODO 这里最好将异常信息持久化
+        return resultBean;
+    }
+
+    //请求出现异常时的响应数据封装
+    public static AjaxResponse error(CustomExceptionType customExceptionType,
+                                     String errorMessage) {
+        AjaxResponse resultBean = new AjaxResponse();
+        resultBean.setIsok(false);
+        resultBean.setCode(customExceptionType.getCode());
+        resultBean.setMessage(errorMessage);
+        return resultBean;
+    }
+
+    //请求处理成功时的数据响应
+    public static AjaxResponse success() {
+        AjaxResponse resultBean = new AjaxResponse();
+        resultBean.setIsok(true);
+        resultBean.setCode(200);
+        resultBean.setMessage("success");
+        return resultBean;
+    }
+
+    //请求处理成功，并响应结果数据
+    public static AjaxResponse success(Object data){
+        AjaxResponse resultBean = new AjaxResponse();
+        resultBean.setOk(true);
+        resultBean.setCode(200);
+        resultBean.setMessage("success");
+        resultBean.setData(data);
+        return resultBean;
+    }
+
+}
+```
+
+测试：
+
+例如：更新操作，Controller无需返回额外的数据
+
+```java
+return AjaxResponse.success();
+```
+
+​												![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200427104313.png)
+
+例如：查询接口，Controller需返回结果数据(data可以是任何类型数据)
+
+```java
+ return AjaxResponse.success(data);
+```
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200427104408.png)
+
+## 全局异常处理器
+
+ControllerAdvice注解的作用就是监听所有的Controller，一旦Controller抛出CustomException，就会在@ExceptionHandler(CustomException.class)对该异常进行处理。
+
+```java
+@ControllerAdvice
+public class WebExceptionHandler {
+
+    @ExceptionHandler(CustomException.class)
+    @ResponseBody
+    public AjaxResponse customerException(CustomException e) {
+        if(e.getCode() == CustomExceptionType.SYSTEM_ERROR.getCode()){
+                 //400异常不需要持久化，将异常信息以友好的方式告知用户就可以
+                //TODO 将500异常信息持久化处理，方便运维人员处理
+        }
+        return AjaxResponse.error(e);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public AjaxResponse exception(Exception e) {
+        //TODO 将异常信息持久化处理，方便运维人员处理
+
+        //没有被程序员发现，并转换为CustomException的异常，都是其他异常或者未知异常.
+        return AjaxResponse.error(new CustomException(CustomExceptionType.OTHER_ERROR,"未知异常"));
+    }
+
+
+}
+```
+
+**测试**
+
+```java
+@Service
+public class ExceptionService {
+
+    //服务层，模拟系统异常
+    public void systemBizError() throws CustomException {
+        try {
+            Class.forName("com.mysql.jdbc.xxxx.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new CustomException(CustomExceptionType.SYSTEM_ERROR,"在XXX业务，myBiz()方法内，出现ClassNotFoundException");
+        }
+    }
+
+     //服务层，模拟用户输入数据导致的校验异常
+    public List<String> userBizError(int input) throws CustomException {
+        if(input < 0){ //模拟业务校验失败逻辑
+            throw new CustomException(CustomExceptionType.USER_INPUT_ERROR,"您输入的数据不符合业务逻辑，请确认后重新输入！");
+        }else{ //
+            List<String> list = new ArrayList<>();
+            list.add("科比");
+            list.add("詹姆斯");
+            list.add("库里");
+            return list;
+        }
+    }
+
+}
+```
+
+**友好的数据校验异常处理**
+
+```java
+@ExceptionHandler(MethodArgumentNotValidException.class)
+@ResponseBody
+public AjaxResponse handleBindException(MethodArgumentNotValidException ex) {
+    FieldError fieldError = ex.getBindingResult().getFieldError();
+    return AjaxResponse.error(new CustomException(CustomExceptionType.USER_INPUT_ERROR,fieldError.getDefaultMessage()));
+}
+
+
+@ExceptionHandler(BindException.class)
+@ResponseBody
+public AjaxResponse handleBindException(BindException ex) {
+    FieldError fieldError = ex.getBindingResult().getFieldError();
+    return AjaxResponse.error(new CustomException(CustomExceptionType.USER_INPUT_ERROR,fieldError.getDefaultMessage()));
+}
+```
+
+## AOP异常处理
+
+**程序员抛出自定义异常CustomException，全局异常处理截获之后返回@ResponseBody AjaxResponse，不是ModelAndView，所以我们无法跳转到error.html页面，那我们该如何做页面的全局的异常处理？**
+答：
+
+1. 用面向切面的方式，将CustomException转换为ModelAndViewException。
+2. 全局异常处理器拦截ModelAndViewException，返回ModelAndView，即error.html页面
+3. 切入点是带@ModelView注解的Controller层方法
+
+**使用这种方法处理页面类异常，程序员只需要在页面跳转的Controller上加@ModelView注解即可**
+
+因为用到了面向切面编程，所以引入maven依赖包
+
+```xml
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+```
+
+新定义一个异常类ModelViewException
+
+```java
+public class ModelViewException extends RuntimeException{
+
+    //异常错误编码
+    private int code ;
+    //异常信息
+    private String message;
+
+    public static ModelViewException transfer(CustomException e) {
+        return new ModelViewException(e.getCode(),e.getMessage());
+    }
+
+    private ModelViewException(int code, String message){
+        this.code = code;
+        this.message = message;
+    }
+
+    int getCode() {
+        return code;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+}
+```
+
+ModelView 注解，只起到标注的作用
+
+```java
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})//只能在方法上使用此注解
+public @interface ModelView {
+
+}
+```
+
+以@ModelView注解为切入点，面向切面编程,将CustomException转换为ModelViewException抛出。
+
+```java
+@Aspect
+@Component
+@Slf4j
+public class ModelViewAspect {
+    
+    //设置切入点：这里直接拦截被@ModelView注解的方法
+    @Pointcut("@annotation(club.krislin.exception.ModelView)")
+    public void pointcut() { }
+    
+    /**
+     * 当有ModelView的注解的方法抛出异常的时候，做如下的处理
+     */
+    @AfterThrowing(pointcut="pointcut()",throwing="e")
+    public void afterThrowable(Throwable e) {
+        log.error("切面发生了异常：", e);
+        if(e instanceof  CustomException){
+            throw ModelViewException.transfer((CustomException) e);
+        }
+    }
+}
+```
+
+全局异常处理器:
+
+```java
+@ExceptionHandler(ModelViewException.class)
+    public ModelAndView viewExceptionHandler(HttpServletRequest req, ModelViewException e) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        //将异常信息设置如modelAndView
+        modelAndView.addObject("exception", e);
+        modelAndView.addObject("url", req.getRequestURL());
+        modelAndView.setViewName("error");
+
+        //返回ModelAndView
+        return modelAndView;
+    }
+```
+
 # Web开发
+
+1. 后端开发人员职责单一，只需要将异常捕获并转换为自定义异常一直对外抛出。不需要去想页面跳转404，以及异常响应的数据结构的设计。
+2. 面向前端人员友好，后端返回给前端的数据应该有统一的数据结构，统一的规范。不能一个人一个响应的数据结构。而在此过程中不需要后端开发人员做更多的工作，交给全局异常处理器去处理“异常”到“响应数据结构”的转换。
+3. 面向用户友好，用户能够清楚的知道异常产生的原因。这就要求自定义异常，全局统一处理，ajax接口请求响应统一的异常数据结构，页面模板请求统一跳转到404页面。
+4. 面向运维友好，将异常信息合理规范的持久化，以便查询。
 
 ## 原理
 
@@ -4651,6 +5561,519 @@ mockMvc.perform(MockMvcRequestBuilders
 
 - 因为在做系统的自动化持续集成的时候，会要求自动的做单元测试，只有所有的单元测试都跑通了，才能打包构建。比如：使用maven。这里重点是**自动化**，所以postman这种工具很难插入到持续集成的自动化流程中去。所以需要我们自己写代码完成单元测试。
 - 另外写代码测试能模拟出更多复杂的测试场景，类似Postman工具只能完成简单的接口测试。
+
+# 整合日志框架
+
+## 简介
+
+Spring Boot选用 `SLF4j`和`logback`
+
+Spring Boot 默认的日志记录框架使用的是 Logback，此外我们还可以选择 Log4j 和 Log4j2。其中 Log4j 可以认为是一个过时的函数库，已经停止更新，不推荐使用，相比之下，性能和功能也是最差的。logback 虽然是 Spring Boot 默认的，但性能上还是不及 Log4j2，因此，在现阶段，日志记录首选 Log4j2。
+
+常见的日志级别。
+
+1. TRACE：追踪。一般上对核心系统进行性能调试或者跟踪问题时有用，此级别很低，一般上是不开启的，开启后日志会很快就打满磁盘的。
+2. DEBUG:调试。这个大家应该不陌生了。开发过程中主要是打印记录一些运行信息之类的。
+3. INFO:信息。这个是最常见的了，大部分默认就是这个级别的日志。一般上记录了一些交互信息，一些请求参数等等。可方便定位问题，或者还原现场环境的时候使用。此日志相对来说是比较重要的。
+4. WARN:警告。这个一般上是记录潜在的可能会引发错误的信息。比如启动时，某某配置文件不存在或者某个参数未设置之类的。
+5. ERROR:错误。这个也是比较常见的，一般上是在捕获异常时输出，虽然发生了错误，但不影响系统的正常运行。但可能会导致系统出错或是宕机等。
+
+**常见术语概念解析**
+
+1. appender：主要控制日志输出到哪里，比如：文件、数据库、控制台打印等
+2. logger: 用来设置某一个包或者具体某一个类的日志打印级别、以及指定appender
+3. root：也是一个logger，是一个特殊的logger。所有的logger最终都会将输出流交给root，除非设置logger中配置了additivity="false"。
+4. rollingPolicy：所有日志都放在一个文件是不好的，所以可以指定滚动策略，按照一定周期或文件大小切割存放日志文件。
+5. RolloverStrategy：日志清理策略。通常是指日志保留的时间。
+6. 异步日志：单独开一个线程做日志的写操作，达到不阻塞主线程的目的
+
+**如何让系统中所有的日志都统一到slf4j**
+
+1. 将系统中其他日志框架先排除出去；
+2. 用中间包来替换原有的日志框架（适配器的类名和包名与替换的被日志框架一致）；
+3. 我们导入slf4j其他的实现
+
+**SpringBoot能自动适配所有的日志，而且底层使用slf4j+logback的方式记录日志，引入其他框架的时候，只需要把这个框架依赖的日志框架排除掉即可；**
+
+## 日志配置
+
+**默认配置**
+
+Spring Boot默认帮我们配置好了日志
+
+```java
+    //记录器
+    Logger logger = LoggerFactory.getLogger(getClass());
+    @Test
+    public void contextLoads() {
+        //System.out.println();
+
+        //日志的级别；
+        //由低到高   trace<debug<info<warn<error
+        //可以调整输出的日志级别；日志就只会在这个级别以以后的高级别生效
+        logger.trace("这是trace日志...");
+        logger.debug("这是debug日志...");
+        //SpringBoot默认给我们使用的是info级别的，没有指定级别的就用SpringBoot默认规定的级别；root级别
+        logger.info("这是info日志...");
+        logger.warn("这是warn日志...");
+        logger.error("这是error日志...");
+
+
+    }
+```
+
+```xml
+    日志输出格式：
+        %d表示日期时间，
+        %thread表示线程名，
+        %-5level：级别从左显示5个字符宽度
+        %logger{50} 表示logger名字最长50个字符，否则按照句点分割。 
+        %msg：日志消息，
+        %n是换行符
+    -->
+    %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n
+```
+
+**Spring Boot修改日志的默认配置**
+
+```properties
+# 也可以指定一个包路径 logging.level.com.xxx=error
+logging.level.root=error
+
+
+#logging.path=
+# 不指定路径在当前项目下生成springboot.log日志
+# 可以指定完整的路径；
+#logging.file=G:/springboot.log
+
+# 在当前磁盘的根路径下创建spring文件夹和里面的log文件夹；使用 spring.log 作为默认文件
+logging.path=/spring/log
+
+#  在控制台输出的日志的格式
+logging.pattern.console=%d{yyyy-MM-dd} [%thread] %-5level %logger{50} - %msg%n
+# 指定文件中日志输出的格式
+logging.pattern.file=%d{yyyy-MM-dd} === [%thread] === %-5level === %logger{50} ==== %msg%n
+```
+
+| logging.file | logging.path | Example  | Description                        |
+| ------------ | ------------ | -------- | ---------------------------------- |
+| (none)       | (none)       |          | 只在控制台输出                     |
+| 指定文件名   | (none)       | my.log   | 输出日志到my.log文件               |
+| (none)       | 指定目录     | /var/log | 输出到指定目录的 spring.log 文件中 |
+
+**指定配置**
+
+给类路径下放上每个日志框架自己的配置文件即可；Spring Boot就不使用他默认配置的了
+
+| Logging System          | Customization                                                |
+| ----------------------- | ------------------------------------------------------------ |
+| Logback                 | `logback-spring.xml`, `logback-spring.groovy`, `logback.xml` or `logback.groovy` |
+| Log4j2                  | `log4j2-spring.xml` or `log4j2.xml`                          |
+| JDK (Java Util Logging) | `logging.properties`                                         |
+
+logback.xml：直接就被日志框架识别了；
+
+**logback-spring.xml**：日志框架就不直接加载日志的配置项，由Spring Boot解析日志配置，可以使用Spring Boot的高级Profile功能
+
+```xml
+<springProfile name="staging">
+    <!-- configuration to be enabled when the "staging" profile is active -->
+      可以指定某段配置只在某个环境下生效
+</springProfile>
+```
+
+如：
+
+```xml
+<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <!--
+        日志输出格式：
+            %d表示日期时间，
+            %thread表示线程名，
+            %-5level：级别从左显示5个字符宽度
+            %logger{50} 表示logger名字最长50个字符，否则按照句点分割。 
+            %msg：日志消息，
+            %n是换行符
+        -->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <springProfile name="dev">
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ----> [%thread] ---> %-5level %logger{50} - %msg%n</pattern>
+            </springProfile>
+            <springProfile name="!dev">
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ==== [%thread] ==== %-5level %logger{50} - %msg%n</pattern>
+            </springProfile>
+        </layout>
+    </appender>
+```
+
+如果使用logback.xml作为日志配置文件，还要使用profile功能，会有以下错误
+
+```
+no applicable action for [springProfile]
+```
+
+## logback
+
+因为logback是spring boot的默认日志框架，所以不需要引入maven依赖，直接上logback-spring.xml放在resources下面
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--引入默认配置-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!--web信息-->
+    <logger name="org.springframework.web" level="info"/>
+
+    <!--写入日志到控制台的appender,用默认的,但是要去掉charset,否则windows下tomcat下乱码-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+    <property name="LOG_PATH" value="F:\Program\Java\Practice_Projects\SpringBoot_Practices\springboot_exception\logs"/>
+    <!--写入日志到文件的appender-->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名,每天一个文件-->
+            <FileNamePattern>${LOG_PATH}.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!--日志文件保留天数-->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+        <!--日志文件最大的大小-->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <!--异步到文件-->
+    <appender name="asyncFileAppender" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>500</queueSize>
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <!--生产环境:打印控制台和输出到文件-->
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="asyncFileAppender"/>
+        </root>
+    </springProfile>
+
+    <!--开发环境:打印控制台-->
+    <springProfile name="dev">
+        <!-- 打印sql -->
+        <logger name="club.krislin" level="DEBUG"/>
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!--测试环境:打印控制台-->
+    <springProfile name="test">
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+</configuration>
+```
+
+**测试一下**
+
+```java
+@RestController
+@Slf4j
+public class LogDemoController {
+    //private static Logger log= LoggerFactory.getLogger(LogDemo.class);
+ 
+    @GetMapping("/logdemo")
+    public String log(){
+        log.trace("======trace");
+        log.debug("======debug");
+        log.info("======info");
+        log.warn("======warn");
+        log.error("======error");
+        return "logok";
+    }
+}
+```
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200524124536.png)
+
+## log4j2
+
+
+如要使用Log4j2，需要从spring-boot-starter-web中去掉spring-boot-starter-logging依赖，同时显示声明使用Log4j2的依赖jar包，具体如下:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-log4j2</artifactId>
+</dependency>
+```
+
+另外log4j是之前使用比较广泛的软件，容易与log4j2发生冲突，如果冲突将它从相应的软件里面排除掉,比如:dozer
+
+```xml
+<dependency>
+    <groupId>net.sf.dozer</groupId>
+    <artifactId>dozer</artifactId>
+    <version>5.4.0</version>
+    <exclusions>
+        <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+```
+
+**添加配置文件log4j2.xml**
+
+在resources目录下新建一个log4j2.xml文件。
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout charset="UTF-8" pattern="[%-5p] %d %c - %m%n" />
+        </Console>
+
+        <RollingFile name="runtimeFile" fileName="./logs/boot-launch.log" filePattern="./logs/boot-launch-%d{yyyy-MM-dd}.log"
+                     append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS Z}\t%level\t%class\t%line\t%thread\t%msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <!-- 此行以下为自动清理日志的配置 -->
+            <DefaultRolloverStrategy>
+                <Delete basePath="./logs">
+                    <!-- glob 项为需要自动清理日志的pattern -->
+                    <IfFileName glob="*.log"/>
+                    <!-- 30d 表示自动清理掉30天以前的日志文件 -->
+                    <IfLastModified age="30d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+            <!-- 此行以上为自动清理日志的配置 -->
+        </RollingFile>
+
+
+    </Appenders>
+
+    <Loggers>
+        <root level="info">
+            <AppenderRef ref="CONSOLE" />
+            <AppenderRef ref="runtimeFile" />
+        </root>
+    </Loggers>
+</configuration>
+```
+
+注意：关于log4j2的定时删除如果filePattern的粒度为HH，那么在中如果age=30d则不生效
+
+**修改application.yml配置**
+
+但是这样还不够，Spring Boot并不知道log4j2.xml是干嘛的，需要通过在application.properties文件中显示声明才行
+
+```yaml
+logging:
+    config: classpath:log4j2.xml
+```
+
+**测试**
+
+```java
+@RestController
+@Slf4j
+public class LogDemoController {
+    //private static Logger log= LoggerFactory.getLogger(LogDemo.class);
+ 
+    @GetMapping("/logdemo")
+    public String log(){
+        log.trace("======trace");
+        log.debug("======debug");
+        log.info("======info");
+        log.warn("======warn");
+        log.error("======error");
+        return "logok";
+    }
+}
+```
+
+![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200524125929.png)
+
+## 拦截器实现统一访问日志
+
+**一、定义访问日志内容记录实体类**
+
+```java
+@Data
+public class AccessLog {
+    //访问者用户名
+    private String username;
+    //请求路径
+    private String url;
+    //请求消耗时长
+    private Integer duration;
+    //http 方法：GET、POST等
+    private String httpMethod;
+    //http 请求响应状态码
+    private Integer httpStatus;
+    //访问者ip
+    private String ip;
+    //此条记录的创建时间
+    private Date createTime;
+}
+```
+
+**二、自定义日志拦截器**
+
+```java
+@Slf4j
+public class AccessLogInterceptor implements HandlerInterceptor {
+    //请求开始时间标识
+    private static final String LOGGER_SEND_TIME = "SEND_TIME";
+    //请求日志实体标识
+    private static final String LOGGER_ACCESSLOG = "ACCESSLOG_ENTITY";
+
+    /**
+     * 进入SpringMVC的Controller之前开始记录日志实体
+     */
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
+
+        //创建日志实体
+        AccessLog accessLog = new AccessLog();
+
+        // 设置IP地址
+        accessLog.setIp(AdrressIpUtils.getIpAdrress(request));
+
+        //设置请求方法,GET,POST...
+        accessLog.setHttpMethod(request.getMethod());
+
+        //设置请求路径
+        accessLog.setUrl(request.getRequestURI());
+
+        //设置请求开始时间
+        request.setAttribute(LOGGER_SEND_TIME,System.currentTimeMillis());
+
+        //设置请求实体到request内，方便afterCompletion方法调用
+        request.setAttribute(LOGGER_ACCESSLOG,accessLog);
+        return true;
+    }
+
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) throws Exception {
+
+        //获取本次请求日志实体
+        AccessLog accessLog = (AccessLog) request.getAttribute(LOGGER_ACCESSLOG);
+
+        //获取请求错误码，根据需求存入数据库，这里不保存
+        int status = response.getStatus();
+        accessLog.setHttpStatus(status);
+
+        //设置访问者(这里暂时写死）
+        // 因为不同的应用可能将访问者信息放在session里面，有的通过request传递，
+        // 总之可以获取到，但获取的方法不同
+        accessLog.setUsername("admin");
+
+        //当前时间
+        long currentTime = System.currentTimeMillis();
+
+        //请求开始时间
+        long snedTime = Long.valueOf(request.getAttribute(LOGGER_SEND_TIME).toString());
+
+
+        //设置请求时间差
+        accessLog.setDuration(Integer.valueOf((currentTime - snedTime)+""));
+
+        accessLog.setCreateTime(new Date());
+        //将sysLog对象持久化保存
+        log.info(accessLog.toString());
+    }
+}
+```
+
+**三、拦截器注册**
+
+```java
+@Configuration
+public class MyWebMvcConfigurer implements WebMvcConfigurer {
+
+    //设置排除路径，spring boot 2.*，注意排除掉静态资源的路径，不然静态资源无法访问
+    private final String[] excludePath = {"/static"};
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AccessLogInterceptor()).addPathPatterns("/**").excludePathPatterns(excludePath);
+    }
+}
+```
+
+**四、获取ip访问地址的工具类**
+
+```java
+public class AdrressIpUtils {
+    /**
+     * 获取Ip地址
+     * @param request HttpServletRequest
+     * @return ip
+     */
+    public static String getIpAdrress(HttpServletRequest request) {
+        String Xip = request.getHeader("X-Real-IP");
+        String XFor = request.getHeader("X-Forwarded-For");
+        if(StringUtils.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)){
+            //多次反向代理后会有多个ip值，第一个ip才是真实ip
+            int index = XFor.indexOf(",");
+            if(index != -1){
+                return XFor.substring(0,index);
+            }else{
+                return XFor;
+            }
+        }
+        XFor = Xip;
+        if(StringUtils.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)){
+            return XFor;
+        }
+        if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+            XFor = request.getHeader("Proxy-Client-IP");
+        }
+        if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+            XFor = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+            XFor = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+            XFor = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+            XFor = request.getRemoteAddr();
+        }
+        return XFor;
+    }
+}
+```
+
+
 
 # 整合JDBC
 
@@ -7527,27 +8950,217 @@ public class RedisAutoConfiguration {
 
 2、配置连接
 
-```xml
-# REDIS (RedisProperties)
-spring.redis.host=127.0.0.1
-spring.redis.port=6379
-# Redis数据库索引（默认为0）
-spring.redis.database=0
-# 连接池最大连接数（使用负值表示没有限制）
-spring.redis.jedis.pool.max-active=8
-# 连接池最大阻塞等待时间（使用负值表示没有限制）
-spring.redis.jedis.pool.max-wait=-1
-# 连接池中的最大空闲连接
-spring.redis.jedis.pool.max-idle=8
-# 连接池中的最小空闲连接
-spring.redis.jedis.pool.min-idle=0
-# 连接超时时间（毫秒）
-spring.redis.timeout=5000
+```yaml
+spring:
+  redis:
+    database: 0 # Redis 数据库索引（默认为 0）
+    host: 192.168.161.3 # Redis 服务器地址
+    port: 6379 # Redis 服务器连接端口
+    password: 123456 # Redis 服务器连接密码（默认为空）
+    lettuce:
+      pool:
+        max-active: 8 # 连接池最大连接数（使用负值表示没有限制） 默认 8
+        max-wait: -1 # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+        max-idle: 8 # 连接池中的最大空闲连接 默认 8
+        min-idle: 0 # 连接池中的最小空闲连接 默认 0
 ```
 
-3、测试！
+**redis模板封装类**
 
-## 自定义Redis Template
+```java
+redisTemplate.opsForValue();//操作字符串
+redisTemplate.opsForHash();//操作 hash
+redisTemplate.opsForList();//操作 list
+redisTemplate.opsForSet();//操作 set
+redisTemplate.opsForZSet();//操作有序 set
+```
+
+StringRedisTemplate 与 RedisTemplate 的封装的 Reids 操作要比我们第二节讲的自己调用 Jedis 的 API 的方式更优雅了一步。
+
+**redis模板封装类的两种注入方式**
+
+```java
+public class Example {
+
+  // 注入RedisTemplate，更通用
+  @Autowired
+  private RedisTemplate<String, String> template;
+
+  // 如：注入RedisTemplate的子类ListOperations，只能操作List
+  @Resource
+  private ListOperations<String, String> listOps;
+
+}
+```
+
+而 StringRedisTemplate 与 RedisTemplate 对应 API 详细请查看此文档 [Spring Data Redis 官方操作手册](https://docs.spring.io/spring-data/redis/docs/2.0.2.RELEASE/reference/html/#redis:template) ，这里不是本节的重点介绍对象了，不再赘述。
+
+**测试**
+
+```java
+@SpringBootTest
+public class RedisConfigTest {
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String,Object> valueOperations;
+
+    @Resource(name = "redisTemplate")
+    private HashOperations<String, String, Object> hashOperations;
+
+    @Resource(name = "redisTemplate")
+    private ListOperations<String, Object> listOperations;
+
+    @Resource(name = "redisTemplate")
+    private SetOperations<String, Object> setOperations;
+
+    @Resource(name = "redisTemplate")
+    private ZSetOperations<String, Object> zSetOperations;
+
+    @Test
+    public void testValueObj(){
+        Person person = new Person("kobe","bryant");
+        person.setAddress(new Address("武汉","中国"));
+        //10秒后数据消失
+        valueOperations.set("player:1",person,20, TimeUnit.SECONDS);
+
+        Person getBack = (Person) valueOperations.get("player:1");
+        System.out.println(getBack);
+    }
+
+    @Test
+    public void testSetOperation() throws Exception{
+        Person person = new Person("kobe","bryant");
+        Person person2 = new Person("curry","stephen");
+        setOperations.add("playerset",person,person2);
+        Set<Object> result = setOperations.members("playerset");
+        System.out.println(result);
+    }
+
+    @Test
+    public void HashOperations() throws Exception{
+        Person person = new Person("kobe","bryant");
+        hashOperations.put("hash:player","firstname",person.getFirstname());
+        hashOperations.put("hash:player","lastname",person.getLastname());
+        hashOperations.put("hash:player","address",person.getAddress());
+        System.out.println(hashOperations.get("hash:player","firstname"));
+    }
+
+    @Test
+    public void  ListOperations() throws Exception{
+
+        listOperations.leftPush("list:player",new Person("kobe","bryant"));
+        listOperations.leftPush("list:player",new Person("Jordan","Mikel"));
+        listOperations.leftPush("list:player",new Person("curry","stephen"));
+
+        System.out.println(listOperations.leftPop("list:player"));
+    }
+}
+```
+
+**解决乱码**
+
+```java
+@Configuration
+public class RedisConfig {
+
+    @Bean
+    public RedisTemplate redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate redisTemplate = new RedisTemplate();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+
+        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
+
+        //重点在这四行代码
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
+
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
+    }
+}
+```
+
+乱码问题的症结在于对象的序列化问题，RedisTemplate默认使用的是JdkSerializationRedisSerializer，StringRedisTemplate默认使用的是StringRedisSerializer。
+
+**操作对象入库**
+
+第一种方式
+
+```java
+@Resource(name="redisTemplate")
+private HashOperations<String, String, Object> jacksonHashOperations;
+private HashMapper<Object, String, Object> jackson2HashMapper = new Jackson2HashMapper(false);
+@Test
+public void testHashPutAll(){
+
+    Person person = new Person("kobe","bryant");
+    person.setId("1");
+    person.setAddress(new Address("南京","中国"));
+    //将对象以hash的形式放入数据库
+    Map<String,Object> mappedHash = jackson2HashMapper.toHash(person);
+    jacksonHashOperations.putAll("player" + person.getId(), mappedHash);
+
+    //将对象从数据库取出来
+    Map<String,Object> loadedHash = jacksonHashOperations.entries("player" + person.getId());
+    Object map = jackson2HashMapper.fromHash(loadedHash);
+    Person getback = new ObjectMapper().convertValue(map,Person.class);
+    Assert.assertEquals(person.getFirstname(),getback.getFirstname());
+}
+```
+
+第二种方式：
+
+```java
+@RedisHash("people")
+public class Person {
+  @Id
+  String id;
+  
+  //其他和上一节代码一样
+
+}
+public interface PersonRepository extends CrudRepository<Person, String> {
+ // 继承CrudRepository，获取基本的CRUD操作
+}
+```
+
+在项目入口方法上加上注解@EnableRedisRepositories
+
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class RedisRepositoryTest {
+
+    @Autowired
+    PersonRepository personRepository;
+
+    @Test
+    public void test(){
+
+        Person rand = new Person("kris", "lin");
+        rand.setAddress(new Address("杭州", "中国"));
+        personRepository.save(rand);
+        Optional<Person> op = personRepository.findById(rand.getId());
+        Person p2 = op.get();
+        personRepository.count();
+        personRepository.delete(rand);
+
+    }
+
+}
+```
 
 # 集成Dubbo和Zookeeper
 
