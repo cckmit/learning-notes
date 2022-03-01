@@ -2893,11 +2893,17 @@ public class TestAutoGenerate {
 
 2. **获取SQL**：即从Mapper文件中读取类似<select>等标签再结合Mapper文件中的**namespace**以及**标签中的id**可以唯一定位到**DAO文件的接口**，配合反射生成Mapperstatement对象
 
-3. **判断走缓存还是数据库**：由**Cachingexecutor**根据缓存级别以及sql语句来判断是否走缓存，否则就委托给其他executor走数据库进行查询【缓存本质上是一个Map，并且如果涉及到相关sql数据更新，则会清空缓存】
+   - `SQL`是以`MappedStatement`形式存在`Configuration`的`Map`中，`key`为`包名+类名+方法名`，由`key`可获取`SQL`
+
+3. **判断走缓存还是数据库**：由**Cachingexecutor**根据缓存级别以及sql语句来判断是否走缓存，否则就委托给其他executor走数据库进行查询
+
+   - 缓存本质上是Map，若涉及到相关sql数据更新，则会清空缓存，且其存活时间与`SqlSession`有关，而作用范围与`缓存级别`有关
 
 4. **管理连接**：由数据库连接池打开相关连接对象
 
 5. **解析执行**：解析相关参数并且由相关的Handler执行
+
+   - 无论是走缓存还是走数据库查询，若外层有事务，则会将`SqlSession`延迟到外层事务完成
 
 ## 3、Executor执行器及区别
 
@@ -2959,7 +2965,7 @@ public interface Executor {
 
 ## 4、缓存
 
-MyBatis 提供了查询缓存来缓存数据，以提高查询的性能。MyBatis 的缓存分为`一级缓存`和`二级缓存`。涉及到DML语句的时候并且执行commit操作，则缓存会清空
+MyBatis 提供了查询缓存来缓存数据，以提高查询的性能。MyBatis 的缓存分为`一级缓存`和`二级缓存`。涉及到DML语句的时候并且执行commit操作，则缓存会清空。
 
 - 一级缓存是 SqlSession 级别的缓存
 - 二级缓存是 mapper 级别的缓存，多个 SqlSession 共享

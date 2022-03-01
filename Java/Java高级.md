@@ -3,10 +3,10 @@
 ## 1、Sleep 和 Wait 的区别
 
 - 1、sleep是Thread的静态方法，wait是Object的方法，任何对象实例都能调用。但sleep可以在任意地方进行使用，而wait只能在同步方法或者同步块中使用。
-
 - 2、sleep不会释放锁，它也不需要占用锁，到时间后会自动由操作系统选择执行；wait会释放锁，需要notify/notifyAll后重新获取到对象锁资源后才能继续执行。
-
 - 3、它们都可以被interrupted方法中断。
+
+![在这里插入图片描述](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/2019050816141738.png)
 
 ## 2、强软弱虚引用
 
@@ -226,8 +226,6 @@ public interface IUserDao {
 }
 ```
 
-
-
 - 目标对象：UserDao
 
 ```java
@@ -347,7 +345,7 @@ public class ProxyFactory implements MethodInterceptor{
 - 序列化含义：将对象写入IO流中
 - 反序列化：从IO流中恢复对象
 - 意义：序列化机制允许将实现序列化的Java对象转换为字节流，字节流可以存在于磁盘或者网络传输过程中。**所有在网络上传输、需要保存至磁盘的对象都必须是可序列化的，通常建议程序创建的JavaBean对象都需要实现serializeable接口**。
-- 对象的类名、实例变量（包括基本类型，数组，对其他对象的引用）都会被序列化；方法、类变量、transient实例变量都不会被序列化。
+- 对象的类名、实例变量（包括基本类型，数组，对其他对象的引用）都会被序列化；**方法、类变量、transient实例变量都不会被序列化。**
 
 ### 一、实现方式
 
@@ -426,7 +424,7 @@ public class test{
 
 #### 2、成员是引用的序列化
 
-**如果一个可序列化的类的成员不是基本类型，也不是String类型，那这个引用类型也必须是可序列化的；否则，会导致此类不能序列化。**
+如果一个可序列化的类的成员不是基本类型，也不是String类型，那这个引用类型也必须是可序列化的；否则，会导致此类不能序列化。
 
 #### 3、同一对象序列化多次的机制
 
@@ -447,6 +445,8 @@ public class test{
 
 #### 6、自定义序列化
 
+方法一：
+
 java提供了**可选的自定义序列化。**可以进行控制序列化的方式，或者对序列化数据进行编码加密等。
 
 ```java
@@ -454,6 +454,11 @@ java提供了**可选的自定义序列化。**可以进行控制序列化的方
     private void readObject(java.io.ObjectIutputStream in) throws IOException,ClassNotFoundException;
     private void readObjectNoData() throws ObjectStreamException;
 ```
+
+方法二：
+
+- **writeReplace：在序列化时，会先调用此方法，再调用writeObject方法。此方法可将任意对象代替目标序列化对象**
+- **readResolve：反序列化时替换反序列化出的对象，反序列化出来的对象被立即丢弃。此方法在readeObject后调用。**
 
 #### 7、Externalizable：强制自定义序列化
 
@@ -11550,7 +11555,7 @@ Class文件是一组以8位字节为基础单位的二进制流，各个数据�
 
 一致性hash算法是分布式中一个常用且好用的分片算法、或者数据库分库分表算法。常见的数据分片有：取模、划段、一致性Hash，前两者存在节点变更从而数据需要迁移等问题，故常采用一致性Hash算法。
 
-**一致性Hash**：采用大小为2^32的哈希环，对节点和数据使用Hash算法即可确定其在哈希环上的位置。此时对于某个节点来说，如果该节点不可用或者新增，只会影响其前一个节点的数据，而不会影响其他数据。同时，为了避免数据倾斜问题，我们可以引入虚拟节点的概念，将真实的节点虚拟为多个节点，在环上进行均匀分布，从而解决数据倾斜的问题。
+**一致性Hash**：采用大小为2^32的哈希环，对节点和数据使用Hash算法即可确定其在哈希环上的位置。此时对于某个节点来说，如果该节点不可用或者新增，只会影响其前一个节点的数据，而不会影响其他数据。同时，为了避免数据倾斜问题，我们可以引入**虚拟节点**的概念，将真实的节点虚拟为多个节点，在环上进行均匀分布，从而解决数据倾斜的问题。
 
 <img src="https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/67da77e2f7334aef0f26b5a8d941cbb3.png" style="zoom:50%;" />
 

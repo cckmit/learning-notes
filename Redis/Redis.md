@@ -1740,7 +1740,7 @@ Reading messages... (press Ctrl-C to quit)
 
 ## redis持久化和导入导出数据库
 
-### 1. redis持久化
+### 1.redis持久化
 
 1.rdb快照持久化
 
