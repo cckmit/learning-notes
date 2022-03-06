@@ -1200,5 +1200,57 @@ Spring MVC中的拦截器（Interceptor）类似于Servlet中的过滤器（Filt
       <bean id="stringToDateConverter" class="com.yiidian.converter.StringToDateConverter"/>
 ```
 
+# 高级
+
+## 1、介绍下Spring MVC
 
 
+
+Spring 配备构建Web 应用的全功能MVC框架。Spring可以很便捷地和其他MVC框架集成，如Struts，Spring 的MVC框架用控制反转把业务对象和控制逻辑清晰地隔离。它也允许以声明的方式把请求参数和业务对象绑定。
+
+**DispatcherServlet**
+
+Spring的MVC框架是围绕DispatcherServlet来设计的，它用来处理所有的HTTP请求和响应。
+
+**WebApplicationContext**
+
+WebApplicationContext 继承了ApplicationContext  并增加了一些WEB应用必备的特有功能，它不同于一般的ApplicationContext ，因为它能处理主题，并找到被关联的servlet。
+
+**Spring MVC框架的控制器**
+
+控制器提供一个访问应用程序的行为，此行为通常通过服务接口实现。控制器解析用户输入并将其转换为一个由视图呈现给用户的模型。Spring用一个非常抽象的方式实现了一个控制层，允许用户创建多种用途的控制器。
+
+**@Controller 注解**
+
+该注解表明该类扮演控制器的角色，Spring不需要你继承任何其他控制器基类或引用Servlet API。
+
+**@RequestMapping 注解**
+
+该注解是用来映射一个URL到一个类或一个特定的方处理法上。
+
+## 2、Spring MVC原理
+
+![图片](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/640.jpg)
+
+1. 向服务器发送 HTTP 请求，请求被前端控制器 DispatcherServlet 捕获。
+2. DispatcherServlet 根据 -servlet.xml 中的配置对请求的 URL 进行解析，得到请求资源标识符（URI）。然后根据该 URI，调用 HandlerMapping 获得该 Handler 配置的所有相关的对象（包括 Handler 对象以及 Handler 对象对应的拦截器），最后以HandlerExecutionChain 对象的形式返回。
+3. DispatcherServlet 根据获得的Handler，选择一个合适的 HandlerAdapter。（附注：如果成功获得HandlerAdapter后，此时将开始执行拦截器的 preHandler(…)方法）。
+4. 提取Request中的模型数据，填充Handler入参，开始执行Handler（Controller)。在填充Handler的入参过程中，根据你的配置，Spring 将帮你做一些额外的工作：
+   - HttpMessageConveter：将请求消息（如 Json、xml 等数据）转换成一个对象，将对象转换为指定的响应信息。
+   - 数据转换：对请求消息进行数据转换。如`String`转换成`Integer`、`Double`等。
+   - 数据根式化：对请求消息进行数据格式化。如将字符串转换成格式化数字或格式化日期等。
+   - 数据验证：验证数据的有效性（长度、格式等），验证结果存储到`BindingResult`或`Error`中。
+
+5.Handler(Controller)执行完成后，向 DispatcherServlet 返回一个 ModelAndView 对象；
+
+6.根据返回的ModelAndView，选择一个适合的 ViewResolver（必须是已经注册到 Spring 容器中的ViewResolver)返回给DispatcherServlet。
+
+7.ViewResolver 结合Model和View，来渲染视图。
+
+8.视图负责将渲染结果返回给客户端。
+
+**核心原理**
+
+本质上将controller对象都托管到ioc容器后，运用反射扫描controller对象中的Method的方法，提取相应的*@RequestMapping*等注解，将访问路径和方法连接起来。
+
+通过访问路径，即可通过反射调用相应方法进行处理，期间在方法调用前以及调用后可以运用反射增强。 

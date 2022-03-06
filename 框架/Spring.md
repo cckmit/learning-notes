@@ -1,8 +1,8 @@
-# 基础入门
+基础入门
 
 
 
-## 1.、Spring
+## 1、Spring
 
 ### 1.1 简介
 
@@ -220,7 +220,7 @@ ApplicationContext ac = new FileSystemXmlApplicationContex("C:\\user\\greyson\\.
 - BeanFactory: 它在构建核心容器时，创建对象的策略是采用延迟加载的方式，什么时候获取 id 对象了，什么时候就创建对象。
   - 多例对象适用
 
-## 4、IOC创建对象的方式
+## 4、IOC 创建对象的方式
 
 1. 使用无参构造创建对象，默认。
 2. 使用有参构造（如下）
@@ -261,7 +261,7 @@ index指的是有参构造中参数的下标，下标从0开始;
 
 总结：在配置文件加载的时候，容器(< bean>)中管理的对象就已经初始化了
 
-## 5、Spring配置
+## 5、Spring 配置
 
 ### 5.1、别名
 
@@ -276,7 +276,7 @@ index指的是有参构造中参数的下标，下标从0开始;
 -->
 ```
 
-### 5.2、Bean的配置
+### 5.2、Bean 的配置
 
 ```xml
 <!--id：bean的唯一标识符，也就是相当于我们学的对象名
@@ -308,7 +308,7 @@ import一般用于团队开发使用，它可以将多个配置文件，导入�
 
 第4点有提到
 
-### 6.2、set方式注入
+### 6.2、set 方式注入
 
 依赖注入：set注入！
 
@@ -461,7 +461,7 @@ User user = context.getBean("user",User.class);//确定class对象，就不用�
 System.out.println(user.toString());
 ```
 
-### 6.4、Bean作用域
+### 6.4、Bean 作用域
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614905784203-7766277a-324e-436a-9373-c436ed73e825.png)
 
@@ -489,7 +489,7 @@ System.out.println(user.toString());
 
 3. 其余的request、session、application这些只能在web开放中使用！
 
-## 7、Bean的自动装配
+## 7、Bean 的自动装配
 
 - 自动装配是Spring满足bean依赖的一种方式
 - Spring会在上下文自动寻找，并自动给bean装配属性
@@ -686,7 +686,7 @@ public class User {
 }
 ```
 
-### 8.2、属性如何注入@value 
+### 8.2、属性如何注入 @value
 
 ```java
 @Component
@@ -722,7 +722,7 @@ public class User {
 
 @Resource：默认是byName方式，如果匹配不上，就会byType
 
-### 8.5、作用域@scope
+### 8.5、作用域 @scope
 
 ```java
 //原型模式prototype，单例模式singleton
@@ -757,7 +757,7 @@ public class User {
 
 - 要开启注解支持
 
-## 9、使用Java的方式配置Spring
+## 9、使用 Java 的方式配置 Spring
 
 不使用Spring的xml配置，完全交给java来做！
 
@@ -1089,11 +1089,11 @@ public class ProxyInvocationHandler implements InvocationHandler {
 
 ## 11、AOP
 
-### 11.1、什么是AOP
+### 11.1、什么是 AOP
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614907534903-404c4d72-140c-460c-8415-d412a4c11bee.png)
 
-### 11.2、AOP在Spring中的使用
+### 11.2、AOP 在 Spring 中的使用
 
 提供声明式事务，允许用户自定义切面
 
@@ -1116,7 +1116,7 @@ SpringAOP中，通过Advice定义横切逻辑，Spring中支持5种类型的Advi
 
 **即AOP在不改变原有代码的情况下，去增加新的功能。**（代理）
 
-### 11.3、使用Spring实现AOP
+### 11.3、使用 Spring 实现 AOP
 
 导入jar包
 
@@ -1129,7 +1129,7 @@ SpringAOP中，通过Advice定义横切逻辑，Spring中支持5种类型的Advi
 </dependency>
 ```
 
-#### 11.3.1、方法一：使用原生spring接口
+#### 11.3.1、方法一：使用原生 spring 接口
 
 springAPI接口实现
 
@@ -1249,7 +1249,7 @@ public class MyTest5 {
 }
 ```
 
-#### 11.3.2、方法二：自定义类实现AOP
+#### 11.3.2、方法二：自定义类实现 AOP
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1383,7 +1383,7 @@ public class MyTest5 {
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1614907987976-3ccb0bff-7c89-42b1-937e-bd2968e20354.png)
 
-## 12、整合mybatis
+## 12、整合 mybatis
 
 mybatis-spring官网：https://mybatis.org/spring/zh/
 
@@ -1394,7 +1394,7 @@ mybatis-spring官网：https://mybatis.org/spring/zh/
 - 编写接口
 - 编写Mapper.xml
 
-### 12.1、mybatis-spring-方式一
+### 12.1、mybatis-spring 方式一
 
 - 编写数据源配置
 - sqISessionFactory
@@ -1659,7 +1659,7 @@ public class MyTest6 {
 }
 ```
 
-### 12.2、mybatis-spring-方式二
+### 12.2、mybatis-spring 方式二
 
 UserServiceImpl2
 
@@ -2086,11 +2086,11 @@ public class MyTest7 {
 
 # 高级
 
-## 1、什么是Spring
+## 1、什么是 Spring
 
 Spring 是个java企业级应用的开源开发框架。Spring主要用来开发Java应用，但是有些扩展是针对构建J2EE平台的web应用。Spring框架**目标是简化Java企业级应用开发**，并通过POJO为基础的编程模型促进良好的编程习惯。
 
-## 2、使用Spring框架的好处
+## 2、使用 Spring 框架的好处
 
 轻量：Spring 是轻量的，基本的版本大约2MB
 
@@ -2106,7 +2106,7 @@ MVC框架：Spring的WEB框架是个精心设计的框架，是Web框架的一�
 
 异常处理：Spring 提供方便的API把具体技术相关的异常转化为一致的unchecked 异常
 
-## 3、Spring的模块组成
+## 3、Spring 的模块组成
 
 简单可以分成6大模块：
 
@@ -2131,7 +2131,7 @@ Spring IOC 负责创建对象，管理对象（通过依赖注入（DI），装�
 
 依赖注入，是IOC的一个方面，是个通常的概念。即不用创建对象，而只需要描述它如何被创建。你不在代码里直接组装你的组件和服务，但是要在配置文件里描述哪些组件需要哪些服务，之后IOC容器负责把他们组装起来。
 
-## 5、**有哪些不同类型的IOC方式**
+## 5、**有哪些不同类型的 IOC 方式**
 
 构造器依赖注入：构造器依赖注入通过容器触发一个类的构造器来实现的，该类有一系列参数，每个参数代表一个对其他类的依赖。
 
@@ -2141,7 +2141,7 @@ Setter方法注入：Setter方法注入是容器通过调用无参构造器或�
 
 两种依赖方式都可以使用，构造器注入和Setter方法注入。最好的解决方案是用构造器参数实现强制依赖，setter方法实现可选依赖。
 
-## 7、**ApplicationContext通常的实现是什么**
+## 7、**ApplicationContext 通常的实现是什么**
 
 FileSystemXmlApplicationContext ：此容器从一个XML文件中加载beans的定义，XML Bean 配置文件的全路径名必须提供给它的构造函数。
 
@@ -2169,7 +2169,7 @@ WebXmlApplicationContext：此容器加载一个XML文件，此文件定义了�
 
 ## 10、**Spring中bean生命周期**
 
-![img](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/5/22/16387d3402caad9e~tplv-t2oaga2asx-watermark.awebp)
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/6ca29c4f1cf4656f3c8b5e1b0f5f5a9a.png)
 
 1. Spring容器 从XML 文件中读取bean的定义，并实例化bean。
 2. Spring根据bean的定义填充所有的属性。
@@ -2198,7 +2198,7 @@ WebXmlApplicationContext：此容器加载一个XML文件，此文件定义了�
 
 - autodetect：首先尝试使用constructor来自动装配，如果无法工作，则使用byType方式。
 
-## 13、**Spring 装配Bean总结**
+## 13、**Spring 装配 Bean 总结**
 
 ![img](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2018/5/22/16387d351767a6fd~tplv-t2oaga2asx-watermark.awebp)
 
@@ -2226,11 +2226,11 @@ WebXmlApplicationContext：此容器加载一个XML文件，此文件定义了�
 
 **Spring中可以注入一个null 和一个空字符串**
 
-## 15、**什么是Spring的内部bean**
+## 15、**什么是 Spring 的内部 bean**
 
 当一个bean仅被用作另一个bean的属性时，它能被声明为一个内部bean，为了定义inner bean，在Spring 的 基于XML的 配置元数据中，可以在 <property/>或 <constructor-arg/> 元素内使用<bean/> 元素，内部bean通常是匿名的，它们的Scope一般是prototype。
 
-## 16、**在 Spring中如何注入一个java集合**
+## 16、**在 Spring 中如何注入一个 java 集合**
 
 Spring提供以下几种集合的配置元素：
 
@@ -2251,7 +2251,7 @@ Spring提供以下几种集合的配置元素：
 
 - 模糊特性：自动装配不如显式装配精确，如果有可能，建议使用显式装配。
 
-## 18、**Spring中bean的作用域**
+## 18、**Spring 中 bean 的作用域**
 
 Spring框架支持以下五种bean的作用域：
 
@@ -2329,7 +2329,7 @@ Spring支持两种类型的事务管理：
 
 - 声明式事务管理：这意味着你可以将业务代码和事务管理分离，你只需用注解和XML配置来管理事务。
 
-## 23、**Spring框架的事务管理有哪些优点**
+## 23、**Spring 框架的事务管理有哪些优点**
 
 - 它为不同的事务API  如 JTA，JDBC，Hibernate，JPA 和JDO，提供一个不变的编程模式。
 
@@ -2343,7 +2343,7 @@ Spring支持两种类型的事务管理：
 
 大多数Spring框架的用户选择声明式事务管理，因为它对应用代码的影响最小，因此更符合一个无侵入的轻量级容器的思想。声明式事务管理要优于编程式事务管理，虽然比编程式事务管理（这种方式允许你通过代码控制事务）少了一点灵活性。
 
-## 24、介绍下Spring 面向切面编程AOP
+## 24、介绍下 Spring 面向切面编程 AOP
 
 AOP的底层实际上是动态代理，动态代理分成了JDK动态代理、CGLib动态代理。**Spring AOP默认是使用JDK动态代理，如果代理的类没有接口则会使用CGLib代理。**（关于动态代理反射实现细节看Java笔记）
 
@@ -2410,55 +2410,73 @@ Spring切面可以应用五种类型的通知：
 
 - **适配器模式** :Spring AOP 的增强或通知(Advice)使用到了适配器模式、spring MVC 中也是用到了适配器模式适配`Controller`。
 
-## 27、介绍下Spring MVC
+## 27、Spring 解决三级循环依赖问题
 
+![在这里插入图片描述](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200823170033101.png)
 
+- **构造器循环依赖**，依赖的对象是通过构造方法传入的，在实例化bean的时候发生。（**使用注解 @Lazy**）
+- **赋值属性循环依赖**，依赖的对象是通过setter方法传入的，对象已经实例化，在属性赋值和依赖注入的时候发生。（对于单例可解决）
 
-Spring 配备构建Web 应用的全功能MVC框架。Spring可以很便捷地和其他MVC框架集成，如Struts，Spring 的MVC框架用控制反转把业务对象和控制逻辑清晰地隔离。它也允许以声明的方式把请求参数和业务对象绑定。
+**Spring在创建单例bean时，进行缓存并提前暴露该单例，使得其他实例可以提前引用到该单例bean。**Spring是使用三级缓存（Map）解决的循环依赖问题。
 
-**DispatcherServlet**
+1. A依次执行doGetBean方法、依次查询三个缓存是否存在该bean、没有就createBean，实例化完成（早期引用，未完成属性装配），放入三级缓存中，接着执行populateBean方法装配属性，但是发现装配的属性是B对象，走下面步骤。
 
-Spring的MVC框架是围绕DispatcherServlet来设计的，它用来处理所有的HTTP请求和响应。
+2. 创建B实例，依次执行doGetBean、查询三个缓存、createBean创建实例，接着执行populateBean发现属性中需要A对象。
 
-**WebApplicationContext**
+3. 再次调用doGetBean创建A实例，查询三个缓存，在三级缓存singletonFactories得到了A的早期引用（在第一步的时候创建出来了），将它放到二级缓存并移除3级缓存并返回，B完成属性装配，一个完整的对象放到一级缓存singletonObjects中。
 
-WebApplicationContext 继承了ApplicationContext  并增加了一些WEB应用必备的特有功能，它不同于一般的ApplicationContext ，因为它能处理主题，并找到被关联的servlet。
+4. B完成之后就回到A了，A得到完整的B，肯定也完成全部初始化，也存入一级缓存中。
 
-**Spring MVC框架的控制器**
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/2027777-20200822224312938-1691750102.png)
 
-控制器提供一个访问应用程序的行为，此行为通常通过服务接口实现。控制器解析用户输入并将其转换为一个由视图呈现给用户的模型。Spring用一个非常抽象的方式实现了一个控制层，允许用户创建多种用途的控制器。
+getEarlyBeanReference这个方法主要逻辑大概描述下如果bean被AOP切面代理则返回的是beanProxy对象，如果未被代理则返回的是原bean实例。
 
-**@Controller 注解**
+都是Map集合，单例对象先实例化存在于singletonFactories中，后存在于earlySingletonObjects中，最后初始化完成后放入singletonObjects。
 
-该注解表明该类扮演控制器的角色，Spring不需要你继承任何其他控制器基类或引用Servlet API。
+## 28、为何要不用一、二级缓存来解决循环依赖
 
-**@RequestMapping 注解**
+bean 的创建过程分三个阶段：
 
-该注解是用来映射一个URL到一个类或一个特定的方处理法上。
+- 创建实例 createBeanInstance
+- 填充依赖 populateBean
+- initializeBean
 
-## 28、Spring MVC原理
+假设 bean 是需要 AOP 增强的，那么最终放到缓存中的应该是一个代理 bean。而代理 bean 的产生是在 initializeBean(第三阶段) 完成后的时期。
 
-![图片](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/640.jpg)
+对象存在 AOP 的话，二级缓存也是能解决这个问题的，本质应该说是初始 Spring 是没有解决循环引用问题的，但为了解决循环依赖但又尽量不打破这个 Spring 之前的设计原则的情况下，使用了存储了函数式接口的第三级缓存；三级缓存**目的是为了提前暴露早期对象引用，若对象有实现AOP，则得到的是代理AOP对象的早期引用，否则则是原则原始对象的引用。**
 
-1. 向服务器发送 HTTP 请求，请求被前端控制器 DispatcherServlet 捕获。
-2. DispatcherServlet 根据 -servlet.xml 中的配置对请求的 URL 进行解析，得到请求资源标识符（URI）。然后根据该 URI，调用 HandlerMapping 获得该 Handler 配置的所有相关的对象（包括 Handler 对象以及 Handler 对象对应的拦截器），最后以HandlerExecutionChain 对象的形式返回。
-3. DispatcherServlet 根据获得的Handler，选择一个合适的 HandlerAdapter。（附注：如果成功获得HandlerAdapter后，此时将开始执行拦截器的 preHandler(…)方法）。
-4. 提取Request中的模型数据，填充Handler入参，开始执行Handler（Controller)。在填充Handler的入参过程中，根据你的配置，Spring 将帮你做一些额外的工作：
-   - HttpMessageConveter：将请求消息（如 Json、xml 等数据）转换成一个对象，将对象转换为指定的响应信息。
-   - 数据转换：对请求消息进行数据转换。如`String`转换成`Integer`、`Double`等。
-   - 数据根式化：对请求消息进行数据格式化。如将字符串转换成格式化数字或格式化日期等。
-   - 数据验证：验证数据的有效性（长度、格式等），验证结果存储到`BindingResult`或`Error`中。
+如果使用二级缓存的话，可将 AOP 的代理工作提前到**提前暴露实例的阶段**执行；即 Bean 的创建工作中先生成代理对象再初始化和其他工作，但与 Spring 的 AOP 设计原则相驳，AOP 的实现需要与 Bean 的正常生命周期的创建分离。
 
-5.Handler(Controller)执行完成后，向 DispatcherServlet 返回一个 ModelAndView 对象；
+## 29、Spring 为什么只支持单例模式下的 bean 的赋值情况下的循环依赖
 
-6.根据返回的ModelAndView，选择一个适合的 ViewResolver（必须是已经注册到 Spring 容器中的ViewResolver)返回给DispatcherServlet。
+当prototype模式下的bean，使用了一个ThreadLocal变量来记录当前线程正在创建中的beanName，在创建前记录，创建后删除，保证了同一个bean在一个线程中只能有一个正在创建。
 
-7.ViewResolver 结合Model和View，来渲染视图。
+```java
+// prototypesCurrentlyInCreation即为threalLocal变量，且其value是Set<String>
+protected void afterPrototypeCreation(String beanName) {
+      Object curVal = this.prototypesCurrentlyInCreation.get();
+      if (curVal instanceof String) {
+          this.prototypesCurrentlyInCreation.remove();
+      }
+      else if (curVal instanceof Set) {
+          Set<String> beanNameSet = (Set<String>) curVal;
+          beanNameSet.remove(beanName);
+          if (beanNameSet.isEmpty()) {
+              this.prototypesCurrentlyInCreation.remove();
+          }
+      }
+  }
 
-8.视图负责将渲染结果返回给客户端。
+```
 
-**核心原理**
+之后在对循环依赖进行注入的时候有
 
-本质上将controller对象都托管到ioc容器后，运用反射扫描controller对象中的Method的方法，提取相应的*@RequestMapping*等注解，将访问路径和方法连接起来。
+```java
+protected boolean isPrototypeCurrentlyInCreation(String beanName) {
+        Object curVal = this.prototypesCurrentlyInCreation.get();
+        return curVal != null && (curVal.equals(beanName) || curVal instanceof Set && ((Set)curVal).contains(beanName));
+    }
 
-通过访问路径，即可通过反射调用相应方法进行处理，期间在方法调用前以及调用后可以运用反射增强。 
+```
+
+因为有了这个机制，spring在原型模式下是解决不了bean的循环依赖的，当发现有循环依赖的时候会直接抛出`BeanCurrentlyInCreationException`异常的。
