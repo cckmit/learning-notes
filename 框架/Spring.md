@@ -1,6 +1,4 @@
-基础入门
-
-
+# 基础入门
 
 ## 1、Spring
 
@@ -2321,7 +2319,7 @@ The bean 标签有两个重要的属性（init-method和destroy-method）。用�
 - @Service：此注解是组件注解的特化。它不会对 @Component 注解提供任何其他行为。您可以在服务层类中使用 @Service 而不是 @Component，因为它以更好的方式指定了意图。
 - @Repository：这个注解是具有类似用途和功能的 @Component 注解的特化。它为 DAO 提供了额外的好处。它将 DAO 导入 IoC 容器，并使未经检查的异常有资格转换为 Spring DataAccessException。
 
-## 22、**Spring支持的事务管理类型**
+## 22、**Spring 支持的事务管理类型**
 
 Spring支持两种类型的事务管理：
 
@@ -2480,3 +2478,87 @@ protected boolean isPrototypeCurrentlyInCreation(String beanName) {
 ```
 
 因为有了这个机制，spring在原型模式下是解决不了bean的循环依赖的，当发现有循环依赖的时候会直接抛出`BeanCurrentlyInCreationException`异常的。
+
+## 30、Spring 事务及特性
+
+事务逻辑上的一组操作，组成这组操作的各个逻辑单元，要么一起成功，要么一起失败。
+
+**事务特性**
+
+- 原子性：强调事务的不可分割。
+- 一致性：事务的执行的前后数据的完整性保持一致。
+- 隔离性：一个事务执行的过程中,不应该受到其他事务的干扰。
+- 持久性：事务一旦结束，数据就持久到数据库。
+
+**如果不考虑隔离性引发安全性问题:**
+
+- **脏读**：一个事务读到了另一个事务的未提交的数据。
+- **不可重复读**：一个事务读到了另一个事务已经提交的 update 的数据导致多次查询结果不一致。
+- **幻读**：一个事务读到了另一个事务已经提交的 insert 的数据导致多次查询结果不一致。
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1154170-20190707225223844-1635343234.png)
+
+## 31、Spring 事务的传播行为
+
+![image-20220307003024336](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/image-20220307003024336.png)
+
+**propagion_XXX** :事务的传播行为，指的就是当一个事务方法被另一个事务方法调用时，这个事务方法应该如何进行。 
+
+- 例如：methodA事务方法调用methodB事务方法时，methodB是继续在调用者methodA的事务中运行呢，还是为自己开启一个新事务运行，这就是由methodB的事务传播行为决定的。
+
+**保证同一个事务中**
+
+- **propagion_required:** 支持当前事务，如果不存在就新建一个(默认)
+- **propagion_supports:** 支持当前事务，如果不存在，就不使用事务
+- **propagion_mandatory:** 支持当前事务，如果不存在，抛出异常
+
+**保证没有在同一个事务中**
+
+- **propagion_requires_new:**  如果有事务存在，挂起当前事务，创建一个新的事务
+- **propagion_not_supported:** 以非事务方式运行，如果有事务存在，挂起当前事务
+- **propagion_never:** 以非事务方式运行，如果有事务存在，抛出异常
+- **propagion**_**nested:** 如果当前事务存在，则嵌套事务执行
+
+## 32、Spring 事务失效的场景
+
+1. 数据库引擎不支持，如MyISAM
+2. 没有被Spring容器管理，即数据源没有配置事务管理器
+3. 非public方法，@Transcational注解只能添加到public方法上，底层是代理
+4. 异常被捕捉，需要抛出异常，事务才能回滚
+5. 抛出异常类型错误，默认捕捉的是RuntimeException，而抛出的为Exception
+6. 自身调用，即实际为原生对象调用，此时非代理对象调用，故并无事务
+
+## 33、Spring 自定义注解
+
+**定义注解：采用元注解标识**
+
+1. @Target：用于描述注解的使用范围
+   - CONSTRUCTOR:用于描述构造器
+   - FIELD:用于描述符
+   - LOCAL_VARIABLE:用于描述局部变量
+   - METHOD:用于描述方法
+   - PACKAGE:用于描述包
+   - PARAMETER: 用于描述参数
+   - TYPE: 用于描述类、接口（包括注解类型）或者enum声明
+2. @Retention：表示需要在什么级别保存该注释信息，用于描述注解的生命周期
+   - SOURCE:在源文件中有效（即源文件保留）
+   - CLASS:在class文件中有效（即class保留）
+   - RUNTIME:在运行时有效（即运行时保留）
+3. @Documented：用于描述其它类型的annotation应该被作为被标注的程序成员的公共API，可被文档化。Documented是一个标记注解，没有成员。
+
+4. @Inherited：元注解是一个标记注解，@Inherited阐述了某个被标注的类型是被继承的。
+
+```java
+import java.lang.annotation.*;
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface CacheRedis {
+    String key();
+
+    int expireTime() default 600;
+}
+```
+
+**使用方式：可用 AOP 进行注解拦截，在方法内进行参数处理等操作。**

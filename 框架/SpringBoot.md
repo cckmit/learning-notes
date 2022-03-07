@@ -1,12 +1,12 @@
-#  SpringBoot简介
+# 基础入门
 
-## 回顾什么是Spring
+## **SpringBoot简介**
 
 Spring是一个开源框架，2003 年兴起的一个轻量级的Java 开发框架，作者：Rod Johnson 。
 
 Spring是为了解决企业级应用开发的复杂性而创建的，简化开发。
 
-## Spring是如何简化Java开发的
+**Spring是如何简化Java开发的**
 
 为了降低Java开发的复杂性，Spring采用了以下4种关键策略：
 
@@ -18,7 +18,7 @@ Spring是为了解决企业级应用开发的复杂性而创建的，简化开�
 
 4、通过切面和模版减少样式代码，RedisTemplate，xxxTemplate；
 
-## 什么是SpringBoot
+### 什么是SpringBoot
 
 Spring Boot期望通过结合自动配置和starters来解决了这个问题。 另外，Spring Boot还提供了一些功能，可以更快地构建可用于生产环境的应用程序。
 
@@ -33,7 +33,7 @@ Spring Boot Starter是一组被依赖第三方类库的集合。
 - 嵌入式 Servlet Container — Tomcat
 - 日志框架Logging — logback, slf4j
 
-## Spring Boot的主要优点：
+### Spring Boot的主要优点
 
 - 为所有Spring开发者更快的入门
 
@@ -47,9 +47,9 @@ Spring Boot Starter是一组被依赖第三方类库的集合。
 
 中文文档： https://www.springcloud.cc/spring-boot.html
 
-# 微服务介绍
+### 微服务介绍
 
-## 什么是微服务
+**什么是微服务**
 
  随着互联网的发展，网站应用的规模不断扩大，常规的垂直应用架构已无法应对，分布式服务架构以及流动计算架构势在必行，亟需一个治理系统确保架构有条不紊的演进。
 
@@ -83,7 +83,7 @@ all in one的架构方式，我们把所有的功能单元放在一个应用里�
 
 优点：节省了调用资源、每个功能元素的服务都度是一个可替换的、可独立升级的软件代码。
 
-## 如何构建微服务
+**如何构建微服务**
 
 一个大型系统的微服务架构，各功能模块通过http相互请求调用。比如一个电商系统，查缓存、连数据库、浏览页面、结账、支付等服务都是一个个独立的功能服务，都被微化了，它们作为一个个微服务共同构建了一个庞大的系统。如果修改其中的一个功能，只需要更新升级其中一个功能服务单元即可。
 
@@ -97,13 +97,13 @@ all in one的架构方式，我们把所有的功能单元放在一个应用里�
 
 spring为我们想清楚了整个从开始构建应用到大型分布式应用全流程方案。
 
-# 第一个SpringBoot程序
+### 第一个SpringBoot程序
 
 Spring官方提供了非常方便的工具让我们快速构建应用
 
 Spring Initializr： https://start.spring.io/
 
-## 创建SpringBoot项目
+**创建SpringBoot项目**
 
 **创建方式一：**使用Spring Initializr 的 Web页面创建项目
 
@@ -170,9 +170,7 @@ Spring Initializr： https://start.spring.io/
 </project>
 ```
 
-
-
-## Hello World
+**Hello World**
 
 在主程序的同级目录下，新建一个controller包，一定要在同级目录下，否则识别不到
 
@@ -189,7 +187,7 @@ public class HelloSpringBoot {
 
 访问 http://localhost:8080/hello
 
-## 将项目打成jar包
+**将项目打成jar包**
 
 若遇到错误，可以配置打包时跳过项目运行测试用例
 
@@ -211,7 +209,7 @@ public class HelloSpringBoot {
 
 如果打包成功，则会在target目录下生成一个 jar 包，便可在其他地方运行
 
-## 彩蛋
+**彩蛋**
 
 1、修改项目的端口号
 
@@ -221,9 +219,9 @@ public class HelloSpringBoot {
 
 图案可以到：https://www.bootschool.net/ascii 这个网站生成，然后拷贝到文件中即可！
 
-# 运行原理初探
+### 运行原理初探
 
-## 父依赖
+**父依赖**
 
 其中它主要是依赖一个父项目，主要是管理项目的资源过滤及插件！
 
@@ -249,7 +247,7 @@ public class HelloSpringBoot {
 
 这是真正管理SpringBoot应用里面所有依赖版本的地方，SpringBoot的版本控制中心；
 
-## 启动器 spring-boot-starter
+**启动器 spring-boot-starter**
 
 ```xml
 <dependency>
@@ -266,7 +264,7 @@ spring-boot-starter-web：帮我们导入了web模块正常运行所依赖的组
 
 SpringBoot将所有的功能场景都抽取出来，做成starter （启动器），只需要在项目中引入这些starter即可，所有相关的依赖都会导入进来。
 
-## 主启动类
+**主启动类**
 
 默认的主启动类
 
@@ -484,13 +482,13 @@ public SpringApplication(ResourceLoader resourceLoader, Class... primarySources)
 
 
 
-## run方法流程分析
+### run方法流程分析
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615214764080-a6a130cc-aa11-4ea0-9d6b-e2a1083b20b3.png)![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615214771249-cc3aacb1-9377-41e4-a8f7-a6e0c8ba43e9.png)
 
-# yaml配置注入
+## yaml配置注入
 
-## 配置文件
+### 配置文件
 
 SpringBoot使用一个全局的配置文件 ， 配置文件名称是固定的
 
@@ -506,7 +504,7 @@ SpringBoot使用一个全局的配置文件 ， 配置文件名称是固定的
 
 **全局配置文件的作用**：修改SpringBoot自动配置的默认值，SpringBoot在底层给我们做自动加载。
 
-## yaml概述
+### yaml概述
 
 在开发的yaml时，YAML 的意思其实是：“Yet Another Markup Language”（仍是一种标记语言）
 
@@ -533,7 +531,7 @@ server:
  port: 8080
 ```
 
-## yaml基础语法
+### yaml基础语法
 
 说明：语法要求严格！
 
@@ -601,7 +599,7 @@ server:
   port: 8082
 ```
 
-## yaml注入配置文件
+### yaml注入配置文件
 
 yaml文件更强大的地方在于，他可以给我们的实体类直接注入匹配值！
 
@@ -733,7 +731,7 @@ class DemoApplicationTests {
 
 结果：所有值全部注入成功！
 
-## 加载指定的配置文件
+### 加载指定的配置文件
 
 **@PropertySource ：**加载指定的配置文件；
 
@@ -777,7 +775,7 @@ private Integer age;
 private Boolean boss;
 ```
 
-## 配置文件占位符
+### 配置文件占位符
 
 配置文件还可以编写占位符生成随机数
 
@@ -801,7 +799,7 @@ person:
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615215422356-3384ce1d-6ef5-4cd2-82bf-e2c8751a4ee9.png)
 
-## 回顾properties配置
+### 回顾properties配置
 
 配置文件除了yml还有我们之前常用的properties ，
 
@@ -866,7 +864,7 @@ class DemoApplicationTests {
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615215544163-4eaf9a81-9d0c-4db4-9ab1-db5954a9d816.png)
 
-## 对比小结
+### 对比小结
 
 @Value这个使用起来并不友好！我们需要为每个属性单独注解赋值，比较麻烦；我们来看个功能对比图
 
@@ -886,7 +884,7 @@ class DemoApplicationTests {
 - 如果我们在某个业务中，只需要获取配置文件中的某个值，可以使用一下 @value；
 - 如果说，我们专门编写了一个JavaBean来和配置文件进行一一映射，就直接@configurationProperties，不要犹豫！
 
-# JSR303数据校验
+## JSR303数据校验
 
 需要先导入依赖
 
@@ -913,7 +911,7 @@ public class Person {
 
 使用数据校验，可以保证数据的正确性；
 
-## 常见参数
+### 常见参数
 
 ```java
 @NotNull(message="名字不能为空")
@@ -943,11 +941,11 @@ Booelan检查
 
 除此以外，我们还可以自定义一些数据校验规则
 
-#  多环境切换
+##  多环境切换
 
 profile是Spring对不同环境提供不同配置功能的支持，可以通过激活不同的环境版本，实现快速切换环境；
 
-## 多配置文件
+### 多配置文件
 
 我们在主配置文件编写的时候，文件名可以是 application-{profile}.properties/yml , 用来指定多个环境版本；
 
@@ -968,7 +966,7 @@ spring.profiles.active=dev
 #springboot的多环境配置： 可以选择激活哪一个配置文件
 ```
 
-## yaml的多文档模块
+### yaml的多文档模块
 
 和properties配置文件中一样，但是使用yml去实现不需要创建多个配置文件，更加方便了 !
 
@@ -993,7 +991,7 @@ spring:
 
 注意：如果yml和properties同时都配置了端口，并且没有激活其他环境 ， 默认会使用properties配置文件的！
 
-## 配置文件加载位置
+### 配置文件加载位置
 
 外部加载配置文件的方式十分多，我们选择最常用的即可，在开发的资源文件中进行配置！
 
@@ -1024,7 +1022,7 @@ server.servlet.context-path=/kuang
 
 
 
-## 拓展，运维小技巧
+### 拓展，运维小技巧
 
 指定位置加载配置文件
 
@@ -1036,7 +1034,7 @@ server.servlet.context-path=/kuang
 java -jar spring-boot-config.jar --spring.config.location=F:/application.properties
 ```
 
-# 自动配置原理
+## 自动配置原理
 
 配置文件到底能写什么？怎么写？
 
@@ -1044,7 +1042,7 @@ SpringBoot官方文档中有大量的配置，我们无法全部记住
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615216859342-03d93c43-f68c-4c01-aefa-665a7ebf2a36.png)
 
-## 分析自动配置原理
+### 分析自动配置原理
 
 ```java
 //表示这是一个配置类，和以前编写的配置文件一样，也可以给容器中添加组件；
@@ -1115,7 +1113,7 @@ public class HttpProperties {
 
 这就是自动装配的原理！
 
-## 精髓
+### 精髓
 
 1、SpringBoot启动会加载大量的自动配置类
 
@@ -1129,7 +1127,7 @@ public class HttpProperties {
 
 **xxxxProperties:封装配置文件中相关属性；**
 
-## 了解：@Conditional
+### 了解：@Conditional
 
 了解完自动装配的原理后，我们来关注一个细节问题，自动配置类必须在一定的条件下才能生效；
 
@@ -1152,7 +1150,7 @@ Negative matches:（没有启动，没有匹配成功的自动配置类：负匹
 
 Unconditional classes: （没有条件的类）
 
-# MVC自动配置原理
+## MVC自动配置原理
 
 **官网阅读**
 
@@ -1288,7 +1286,7 @@ public class MyMvcConfig implements WebMvcConfigurer {
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615219237941-f51cf178-d37a-42dc-8a68-43b55dab0d96.png)
 
-## 转换器和格式化器
+### 转换器和格式化器
 
 在WebMvcAutoConfiguration中找到格式化转换器：
 
@@ -1322,7 +1320,7 @@ private String dateFormat;
 
 如果配置了自己的格式化方式，就会注册到Bean中生效，我们可以在配置文件中配置日期格式化的规则：
 
-## 修改SpringBoot的默认配置
+### 修改SpringBoot的默认配置
 
 SpringBoot在自动配置很多组件的时候，先看容器中有没有用户自己配置的（如果用户自己配置@bean），如果有就用用户配置的，如果没有就用自动配置的；
 
@@ -1400,7 +1398,7 @@ public void addViewControllers(ViewControllerRegistry registry) {
 
 
 
-## 全面接管SpringMVC
+### 全面接管SpringMVC
 
 全面接管即：SpringBoot对SpringMVC的自动配置不需要了，所有都是我们自己去配置！
 
@@ -1457,9 +1455,9 @@ public class WebMvcAutoConfiguration {
 1. @EnableWebMvc将WebMvcConfigurationSupport组件导入进来；
 2. 导入的WebMvcConfigurationSupport只是SpringMVC最基本的功能；
 
-# 自定义starter
+## 自定义starter
 
-## 说明
+### 说明
 
 启动器模块是一个 空 jar 文件，仅提供辅助性依赖管理，这些依赖可能用于自动装配或者其他类库；
 
@@ -1477,7 +1475,7 @@ xxx-spring-boot-starter
 
 比如：mybatis-spring-boot-starter
 
-## 编写启动器
+### 编写启动器
 
 1、在IDEA中新建一个空项目 spring-boot-starter-diy
 
@@ -1581,7 +1579,7 @@ com.kuang.HelloServiceAutoConfiguration
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615217560837-0b43a51c-3c3b-4540-84e3-ffab3ff51c0b.png)
 
-## 新建项目测试我们自己写的启动器
+### 新建项目测试我们自己写的启动器
 
 1、新建一个SpringBoot 项目
 
@@ -1620,9 +1618,9 @@ kuang.hello.suffix="sss"
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615217591727-0bc83527-146c-47ad-95eb-8ce15711af72.png)
 
-# 拦截器、过滤器、监听器
+## 拦截器、过滤器、监听器
 
-## 监听器
+### 监听器
 
 Servlet 监听器是 Servlet 规范中定义的一种特殊类，用于监听 ServletContext、HttpSession 和 ServletRequest 等域对象的创建与销毁事件，以及监听这些域对象中属性发生修改的事件。监听器是观察者模式的应用，它关注特定事物，并伺机而动，所以监听器具有**异步**的特性。
 
@@ -1660,7 +1658,7 @@ public class Customlister implements ServletRequestListener{
 
 在启动类中加入@ServletComponentScan进行自动注册即可。
 
-## 过滤器
+### 过滤器
 
 过滤器是一种可重用的代码，可以转换 HTTP 请求、响应和头信息，通俗来说就是过滤器可以在请求到达服务器之前，对请求头进行预先处理，在响应内容到达客户端之前，对服务器做出的响应进行后置处理。
 位于 Listener 的下游，Servlet 的上游。在 Listener 执行之后，在请求到达 Servlet 之前进行预处理。
@@ -1762,7 +1760,7 @@ public class FilterRegistration {
 
 注册多个时，就注册多个FilterRegistrationBean即可,启动后，效果和第一种是一样的。
 
-## 拦截器
+### 拦截器
 
 在 Servlet 规范中并没有拦截器的概念，它是面向切面编程的一种应用：在需要对方法进行增强的场景下，例如在方法调用前执行一段代码，或者在方法完成后额外执行一段操作，拦截器的一种实现方式就是动态代理。
 
@@ -1823,7 +1821,7 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer
 
 ![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200426151331.png)
 
-## 自定义事件发布与监听
+### 自定义事件发布与监听
 
 **自定义事件和自定义监听器类的实现方式**
 
@@ -1954,7 +1952,7 @@ public class CustomListenerTest {
 
 由日志打印可以看出，SpringBoot四种事件的实现方式监听是有序的。无论执行多少次都是这个顺序。
 
-## 应用启动的监听
+### 应用启动的监听
 
 Spring Boot提供了两个接口：CommandLineRunner、ApplicationRunner，用于启动应用时做特殊处理，这些代码会在SpringApplication的run()方法运行完成之前被执行。
 
@@ -2031,7 +2029,7 @@ public class BeanRunner {
 
 
 
-# 模板引擎
+## 模板引擎
 
 jsp支持非常强大的功能，包括能写Java代码，而SpringBoot这个项目首先是以jar的方式，不是war，其次用的还是嵌入式的Tomcat，所以呢，他现在**默认是不支持jsp**的。
 
@@ -2041,7 +2039,7 @@ jsp支持非常强大的功能，包括能写Java代码，而SpringBoot这个项
 
 模板引擎的作用就是配置页面模板后，从后台封装一些数据，将模板和数据交给我们模板引擎解析。
 
-## 引入Thymeleaf
+### 引入Thymeleaf
 
 Thymeleaf 官网：https://www.thymeleaf.org/
 
@@ -2065,7 +2063,7 @@ Maven会自动下载jar包，我们可以去看下载的东西；
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615218194997-61d7cc64-9a44-4d17-8c42-01a7b875891a.png)
 
-## Thymeleaf分析
+### Thymeleaf分析
 
 找下Thymeleaf的自动配置类：ThymeleafProperties
 
@@ -2126,7 +2124,7 @@ public class TestController {
 
 - 小结：只要需要使用thymeleaf，只需要导入对应的依赖就可以了，我们需要将html页面放在我们的templates目录下即可
 
-## Thymeleaf 语法学习
+### Thymeleaf 语法学习
 
 - Thymeleaf 官网：https://www.thymeleaf.org/ ， 简单看一下官网！我们去下载Thymeleaf的官方文档！
 
@@ -2388,11 +2386,11 @@ thymeleaf内联js中使用的标准格式为：`[[${xx}]]` ，可以读取服务
 
 
 
-# 页面国际化（i18n）
+## 页面国际化（i18n）
 
 有的时候，我们的网站会去涉及中英文甚至多语言的切换，这时候就需要学习国际化.
 
-## 准备工作
+### 准备工作
 
 先在IDEA中统一设置properties的编码问题！
 
@@ -2402,7 +2400,7 @@ thymeleaf内联js中使用的标准格式为：`[[${xx}]]` ，可以读取服务
 
 编写国际化配置文件，抽取页面需要显示的国际化页面消息。我们可以去登录页面查看一下，哪些内容我们需要编写国际化的配置！
 
-## 配置文件编写
+### 配置文件编写
 
 1、我们在resources资源文件下新建一个i18n目录，存放国际化配置文件
 
@@ -2458,7 +2456,7 @@ login.properties ：默认
 
 OK，配置文件步骤搞定！
 
-## 配置文件生效探究
+### 配置文件生效探究
 
 我们去看一下SpringBoot对国际化的自动配置！这里又涉及到一个类：MessageSourceAutoConfiguration
 
@@ -2495,7 +2493,7 @@ public MessageSource messageSource(MessageSourceProperties properties) {
 spring.messages.basename=i18n.login
 ```
 
-## 配置页面国际化值
+### 配置页面国际化值
 
 去页面获取国际化的值，查看Thymeleaf的文档，找到message取值操作为：#{…}。我们去页面测试下：
 
@@ -2509,7 +2507,7 @@ IDEA还有提示，非常智能的！
 
 但是我们想要更好！可以根据按钮自动切换中文英文！
 
-## 配置国际化解析
+### 配置国际化解析
 
 在Spring中有一个国际化的Locale （区域信息对象）；里面有一个叫做LocaleResolver （获取区域信息对象）的解析器！
 
@@ -2614,11 +2612,11 @@ public LocaleResolver localeResolver(){
 
 - 将自己写的组件配置到spring容器中----@Bean
 
-# 异步、定时、邮件任务
+## 异步、定时、邮件任务
 
 
 
-## 异步任务
+### 异步任务
 
 相关方法添加@sync注解后，SpringBoot就会自己开一个线程池，进行调用！但是要让这个注解生效，我们还需要在主程序上添加一个注解@EnableAsync ，开启异步注解功能；
 
@@ -2730,7 +2728,7 @@ public class AsyncExecutorTask extends AbstractTask {
 
 
 
-## 定时任务
+### 定时任务
 
 项目开发中经常需要执行一些定时任务，比如需要在每天凌晨的时候，分析一次前一天的日志信息，Spring为我们提供了异步执行任务调度的方式，提供了两个接口。
 
@@ -3050,7 +3048,7 @@ public class QuartzController {
 
 
 
-## 邮件任务
+### 邮件任务
 
 邮件发送，在我们的日常开发中，也非常的多，Springboot也帮我们做了支持
 
@@ -3193,7 +3191,7 @@ public void sendMail(Boolean html, String subject, String text) throws Exception
 }
 ```
 
-# 服务器推送
+## 服务器推送
 
 1、WebSocket：全双工双向通信，本质上是一个额外的tcp连接，建立和关闭时握手使用http协议，其他数据传输不使用http协议 ，更加复杂一些。
 
@@ -3206,7 +3204,7 @@ public void sendMail(Boolean html, String subject, String text) throws Exception
 | SSE       | 否（`Http`）   | 否（服务器单向） | 否（Firefox 支持跨域） | 低       |
 | WebSocket | 是（`ws`）     | 是               | 是                     | 略高     |
 
-## **SSE**
+### **SSE**
 
 ```html
 <!DOCTYPE html>
@@ -3302,7 +3300,7 @@ public class SSEControler {
 }
 ```
 
-## **websocket**
+### **websocket**
 
 ```xml
 <!-- 引入websocket依赖 -->
@@ -3552,7 +3550,7 @@ public class WebSocketController {
 }  
 ```
 
-# Spring事务
+## Spring事务
 
 **事务的具体定义**
 
@@ -3626,9 +3624,9 @@ spring事务本质上是依赖于数据库事务
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/83b7902520146de4b8468a6c12210d56_955x538.png)
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/312679a3bf90c280b9f4fed1f77a8e37_640x369.png)
 
-# Spring Data
+## Spring Data
 
-## JPA
+### JPA
 
 **Spring Data JPA** 是 Spring 基于 ORM 框架、JPA 规范的基础上封装的一套 JPA 应用框架，底层使用了 Hibernate 的 JPA 技术实现，可使开发者用极简的代码即可实现对数据的访问和操作。
 
@@ -3666,7 +3664,7 @@ spring:
 - `update`：最常用的属性，第一次加载hibernate时根据model类会自动建立起表的结构（前提是先建立好数据库），以后加载hibernate时根据model类自动更新表结构，即使表结构改变了但表中的行仍然存在不会删除以前的行。要注意的是当部署到服务器后，表结构是不会被马上建立起来的，是要等应用第一次运行起来后才会。
 - `validate`：每次加载hibernate时，验证创建数据库表结构，只会和数据库中的表进行比较，不会创建新表，但是会插入新值。
 
-### 基本使用
+#### 基本使用
 
 **实体类**
 
@@ -3819,7 +3817,7 @@ Web开发其他具体的关键字，使用方法和生产成 SQL 如下表所示
 
 可以看到我们这里没有任何类SQL语句就完成了两个条件查询方法。这就是Spring-data-jpa的一大特性：**通过解析方法名创建查询**。
 
-### 分页、排序
+#### 分页、排序
 
 定义一个接口`ArticleRepository`继承`PagingAndSortingRepository`。`PagingAndSortingRepository`接口不仅包含基础的CURD函数，还支持排序、分页的接口函数定义。
 
@@ -3866,7 +3864,7 @@ articleRepository.findAll(Sort.by("author").ascending()
 Pageable pageable = PageRequest.of(0, 10,Sort.by("createTime"));
 ```
 
-### Slice与Page
+#### Slice与Page
 
 在`ArticleRepository`我们看到了一个方法返回Slice和另一个方法返回了Page。它们都是Spring Data JPA的数据响应接口，其中 Page 是 Slice的子接口。它们都用于保存和返回数据。
 
@@ -3906,7 +3904,7 @@ Slice关心是不是存在下一个分片(分页)，不关心总共有多少页�
 
 Page比较适合传统应用中的table开发，需要知道总页数和总条数。
 
-### 多数据源
+#### 多数据源
 
 **方式**
 
@@ -4024,7 +4022,7 @@ public class JPAPrimaryConfig {
 
 测试：
 
-# Spring Cache
+## Spring Cache
 
 **常用缓存操作流程**
 
@@ -4174,7 +4172,7 @@ caching:
 
 
 
-# 统一全局异常处理
+## 统一全局异常处理
 
 ![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200427102245.png)
 
@@ -4190,7 +4188,7 @@ caching:
 3. 自定义异常里面有message属性，一定用友好的语言描述异常，并赋值给message.
 4. 不允许对父类Excetion统一catch，要分小类catch，这样能够清楚地将异常转换为自定义异常传递给前端。
 
-## 数据结构设计
+### 数据结构设计
 
 原则：
 
@@ -4342,7 +4340,7 @@ return AjaxResponse.success();
 
 ![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200427104408.png)
 
-## 全局异常处理器
+### 全局异常处理器
 
 ControllerAdvice注解的作用就是监听所有的Controller，一旦Controller抛出CustomException，就会在@ExceptionHandler(CustomException.class)对该异常进行处理。
 
@@ -4423,7 +4421,7 @@ public AjaxResponse handleBindException(BindException ex) {
 }
 ```
 
-## AOP异常处理
+### AOP异常处理
 
 **程序员抛出自定义异常CustomException，全局异常处理截获之后返回@ResponseBody AjaxResponse，不是ModelAndView，所以我们无法跳转到error.html页面，那我们该如何做页面的全局的异常处理？**
 答：
@@ -4527,14 +4525,14 @@ public class ModelViewAspect {
     }
 ```
 
-# Web开发
+## Web开发
 
 1. 后端开发人员职责单一，只需要将异常捕获并转换为自定义异常一直对外抛出。不需要去想页面跳转404，以及异常响应的数据结构的设计。
 2. 面向前端人员友好，后端返回给前端的数据应该有统一的数据结构，统一的规范。不能一个人一个响应的数据结构。而在此过程中不需要后端开发人员做更多的工作，交给全局异常处理器去处理“异常”到“响应数据结构”的转换。
 3. 面向用户友好，用户能够清楚的知道异常产生的原因。这就要求自定义异常，全局统一处理，ajax接口请求响应统一的异常数据结构，页面模板请求统一跳转到404页面。
 4. 面向运维友好，将异常信息合理规范的持久化，以便查询。
 
-## 原理
+### 原理
 
 **使用SpringBoot的步骤：**
 
@@ -4556,7 +4554,7 @@ public class ModelViewAspect {
 8. favicon
 9. 错误处理
 
-## 静态资源映射规则
+### 静态资源映射规则
 
 SpringBoot中，SpringMVC的web配置都在 WebMvcAutoConfiguration 这个配置类里面；
 
@@ -4669,7 +4667,7 @@ spring.resources.static-locations=classpath:/coding/,classpath:/kuang/
 
 一旦自己定义了静态文件夹的路径，原来的自动配置就都会失效了！
 
-## 欢迎页映射
+### 欢迎页映射
 
 静态资源文件夹说完后，继续向下看源码！可以看到一个欢迎页的映射，就是我们的首页
 
@@ -4722,7 +4720,7 @@ spring.mvc.favicon.enabled=false
 
 3、清除浏览器缓存！刷新网页，发现图标已经变化
 
-## 整合jsp
+### 整合jsp
 
 spring-boot-starter-web 包依赖了 spring-boot-starter-tomcat 不需要再单独配置。
 引入 jstl 和内嵌的 tomcat，jstl 是一个 JSP 标签集合，它封装了 JSP 应用的通用核心功能。
@@ -4821,7 +4819,7 @@ public class TemplateController {
 
 所以，无法用jar包的形式运行jsp应用。
 
-## 整合freemarker
+### 整合freemarker
 
 FreeMarker是一个模板引擎，一个基于模板生成文本输出的通用工具，使用纯Java编写。
 
@@ -4895,7 +4893,7 @@ public class TemplateController {
 
 
 
-## 整合thymeleaf
+### 整合thymeleaf
 
 Thymeleaf 是一个服务器端 Java 模板引擎，能够处理 HTML、XML、CSS、JAVASCRIPT 等模板文件。Thymeleaf 模板可以直接当作静态原型来使用，它主要目标是为开发者的开发工作流程带来优雅的自然模板，也是 Java 服务器端 HTML5 开发的理想选择。
 
@@ -4975,7 +4973,7 @@ public class TemplateController {
 </html>
 ```
 
-## PO、BO、VO
+### PO、BO、VO
 
 **PO:** persistent object 持久对象，对应数据库中的entity。
 
@@ -5051,7 +5049,7 @@ dozer:
 
 这样一个对象里面有String属性到Date属性转换的时候，就会自动应用这个转换规则， 不再报错。
 
-# RESTful接口开发及测试
+## RESTful接口开发及测试
 
 API（Application Programming Interface），顾名思义：是一组编程接口规范，客户端与服务端通过请求响应进行数据通信。REST（Representational State Transfer）决定了接口的形式与规则。**RESTful是基于http方法的API设计风格，而不是一种新的技术.**
 
@@ -5562,9 +5560,9 @@ mockMvc.perform(MockMvcRequestBuilders
 - 因为在做系统的自动化持续集成的时候，会要求自动的做单元测试，只有所有的单元测试都跑通了，才能打包构建。比如：使用maven。这里重点是**自动化**，所以postman这种工具很难插入到持续集成的自动化流程中去。所以需要我们自己写代码完成单元测试。
 - 另外写代码测试能模拟出更多复杂的测试场景，类似Postman工具只能完成简单的接口测试。
 
-# 整合日志框架
+## 整合日志框架
 
-## 简介
+### 简介
 
 Spring Boot选用 `SLF4j`和`logback`
 
@@ -5595,7 +5593,7 @@ Spring Boot 默认的日志记录框架使用的是 Logback，此外我们还可
 
 **SpringBoot能自动适配所有的日志，而且底层使用slf4j+logback的方式记录日志，引入其他框架的时候，只需要把这个框架依赖的日志框架排除掉即可；**
 
-## 日志配置
+### 日志配置
 
 **默认配置**
 
@@ -5712,7 +5710,7 @@ logback.xml：直接就被日志框架识别了；
 no applicable action for [springProfile]
 ```
 
-## logback
+### logback
 
 因为logback是spring boot的默认日志框架，所以不需要引入maven依赖，直接上logback-spring.xml放在resources下面
 
@@ -5805,7 +5803,7 @@ public class LogDemoController {
 
 ![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200524124536.png)
 
-## log4j2
+### log4j2
 
 
 如要使用Log4j2，需要从spring-boot-starter-web中去掉spring-boot-starter-logging依赖，同时显示声明使用Log4j2的依赖jar包，具体如下:
@@ -5919,7 +5917,7 @@ public class LogDemoController {
 
 ![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200524125929.png)
 
-## 拦截器实现统一访问日志
+### 拦截器实现统一访问日志
 
 **一、定义访问日志内容记录实体类**
 
@@ -6075,9 +6073,9 @@ public class AdrressIpUtils {
 
 
 
-# 整合JDBC
+## 整合JDBC
 
-## SpringData简介
+### SpringData简介
 
 对于数据访问层，无论是 SQL(关系型数据库) 还是 NOSQL(非关系型数据库)，Spring Boot 底层都是采用 Spring Data 的方式进行统一处理。
 
@@ -6091,7 +6089,7 @@ https://docs.spring.io/spring-boot/docs/2.2.5.RELEASE/reference/htmlsingle/#usin
 
 
 
-## 整合JDBC
+### 整合JDBC
 
 创建测试项目测试数据源
 
@@ -6271,7 +6269,7 @@ public class JdbcController {
 
 到此，CURD的基本操作，使用 JDBC 就搞定了。
 
-## 配置多数据源
+### 配置多数据源
 
 **配置多个数据源**
 
@@ -6362,7 +6360,7 @@ public class SpringJdbcTest {
 }
 ```
 
-## JTA实现分布式事务
+### JTA实现分布式事务
 
 > 分布式事务就是跨数据库连接的事务。一个事务的数据库操作，要么都成功，要么都失败回滚。后面我们专门做一个章节讲解事务与分布式事务。
 
@@ -6484,9 +6482,9 @@ public class TransactionManagerConfig {
 
 
 
-# 整合Druid
+## 整合Druid
 
-## Druid简介
+### Druid简介
 
 Java程序很大一部分要操作数据库，为了提高性能操作数据库的时候，又不得不使用数据库连接池。
 
@@ -6528,7 +6526,7 @@ Github地址：https://github.com/alibaba/druid/
 
 
 
-## 配置数据源
+### 配置数据源
 
 1、添加上 Druid 数据源依赖。
 
@@ -6650,7 +6648,7 @@ class SpringbootDataJdbcApplicationTests {
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615249747225-f97cd7ad-ec4b-4b81-a635-ae2cca67cf01.png)
 
-## 配置Druid数据源监控
+### 配置Druid数据源监控
 
 Druid 数据源具有监控的功能，并提供了一个 web 界面方便用户查看，类似安装 路由器 时，人家也提供了一个默认的 web 页面。
 
@@ -6708,7 +6706,7 @@ public FilterRegistrationBean webStatFilter() {
 
 平时在工作中，按需求进行配置即可，主要用作监控！
 
-# 整合MyBatis
+## 整合MyBatis
 
 官方文档：http://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/
 
@@ -6725,7 +6723,7 @@ Maven仓库地址：https://mvnrepository.com/artifact/org.mybatis.spring.boot/m
 | 自定义SQL    | SQL写在注解里面，写动态SQL有些费劲                           | SQL可以写在XML里面，是书写动态SQL语法利器。也支持注解SQL。   |
 | 学习成本     | 略高                                                         | 较低 ,基本会写SQL就会用                                      |
 
-## 整合测试
+### 整合测试
 
 1、导入 MyBatis 所需要的依赖
 
@@ -6885,7 +6883,7 @@ public class UserController {
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615250439789-76b5d8c2-8123-4d97-9ae7-e53d76889159.png)
 
-## 多数据源
+### 多数据源
 
 在application.yml配置双数据源，第一个数据源访问testdb库，第二个数据源访问testdb2库
 
@@ -6993,15 +6991,15 @@ public class SecondaryDataSourceConfig {
 }
 ```
 
-# 集成SpringSecurity
+## 集成SpringSecurity
 
-## 安全简介
+### 安全简介
 
 Spring 是一个非常流行和成功的 Java 应用开发框架。Spring Security 基于 Spring 框架，提供了一套 Web 应用安全性的完整解决方案。一般来说，Web 应用的安全性包括用户认证（Authentication）和用户授权（Authorization）两个部分。
 
 对于上面提到的两种应用情景，Spring Security 框架都有很好的支持。在用户认证方面，Spring Security 框架支持主流的认证方式，包括 HTTP 基本认证、HTTP 表单验证、HTTP 摘要认证、OpenID 和 LDAP 等。在用户授权方面，Spring Security 提供了基于角色的访问控制和访问控制列表（Access Control List，ACL），可以对应用中的领域对象进行细粒度的控制。
 
-## 实战测试
+### 实战测试
 
 **实验环境搭建**
 
@@ -7435,7 +7433,7 @@ http.rememberMe().rememberMeParameter("remember");
 
 7、测试，OK
 
-## 完整配置代码
+### 完整配置代码
 
 ```java
 @EnableWebSecurity
@@ -7480,9 +7478,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 }
 ```
 
-# 集成Shiro
+## 集成Shiro
 
-## 简介
+### 简介
 
 Apache Shiro是一个Java 的安全（权限）框架。
 
@@ -7569,7 +7567,7 @@ Shiro可以完成，认证，授权，加密，会话管理，Web集成，缓存
 
 
 
-## 快速开始
+### 快速开始
 
 查看官网文档：http://shiro.apache.org/tutorial.html
 
@@ -7782,7 +7780,7 @@ public class Quickstart {
 }
 ```
 
-## SpringBoot整合Shiro环境搭建
+### SpringBoot整合Shiro环境搭建
 
 新建SpringBoot项目,勾选web和thymeleaf
 
@@ -7858,7 +7856,7 @@ public class MyController {
 
 
 
-## shiro整合mybatis
+### shiro整合mybatis
 
 ```xml
 <dependency>
@@ -8014,7 +8012,7 @@ class ShiroSpringbootApplicationTests {
 
 **测试成功**
 
-## Shiro整合Thymeleaf
+### Shiro整合Thymeleaf
 
 ```xml
 <!--shiro-->
@@ -8430,11 +8428,11 @@ mybatis:
 </dependencies>
 ```
 
-# 集成Swagger终极版
+## 集成Swagger终极版
 
 ![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/1615302133870-a008108b-e651-4bdf-9461-b893e989bc19.png)
 
-## Swagger简介
+### Swagger简介
 
 **前后端分离**
 
@@ -8471,7 +8469,7 @@ Restful Api 文档在线自动生成器 => API 文档 与API 定义同步更新
 
 官网：https://swagger.io/
 
-## SpringBoot集成Swagger
+### SpringBoot集成Swagger
 
 SpringBoot集成Swagger => springfox，两个jar包
 
@@ -8530,7 +8528,7 @@ public class SwaggerConfig {
 
 
 
-## 配置Swagger
+### 配置Swagger
 
 1、Swagger实例Bean是Docket，所以通过配置Docket实例来配置Swaggger。
 
@@ -8575,7 +8573,7 @@ public Docket docket() {
 
 
 
-## 配置扫描接口
+### 配置扫描接口
 
 1、构建Docket时通过select()方法配置怎么扫描接口。
 
@@ -8635,7 +8633,7 @@ ant(final String antPattern) // 通过ant()控制
 - 判断是不是生产环境
 - 注入enable（false）
 
-## 配置Swagger开关
+### 配置Swagger开关
 
 1、通过enable()方法配置是否启用swagger，如果是false，swagger将不能在浏览器中访问了
 
@@ -8681,7 +8679,7 @@ public Docket docket(Environment environment) {
 
 
 
-## 配置API分组
+### 配置API分组
 
 
 
@@ -8725,7 +8723,7 @@ public Docket docket3(){
 
 
 
-## 实体配置
+### 实体配置
 
 1、新建一个实体类
 
@@ -8760,7 +8758,7 @@ public User getUser(){
 
 
 
-## 常用注解
+### 常用注解
 
 Swagger的所有注解定义在io.swagger.annotations包下
 
@@ -8785,7 +8783,7 @@ public String kuang(@ApiParam("这个名字会被返回")String username){
 
 给一些难理解的属性或者接口增加一些配置信息，更容易阅读。
 
-##  接口文档导出
+###  接口文档导出
 
 使用了swagger2markup的插件。
 
@@ -8894,7 +8892,7 @@ HTML接口文档显示的效果如下
 
 ![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200417143833.png)
 
-# 集成Redis
+## 集成Redis
 
 SpringBoot 操作数据: spring-data jpa jdbc mongodb redis !
 
@@ -9162,9 +9160,9 @@ public class RedisRepositoryTest {
 }
 ```
 
-# 集成Dubbo和Zookeeper
+## 集成Dubbo和Zookeeper
 
-## 什么是分布式系统？
+### 什么是分布式系统？
 
 在《分布式系统原理与范型》一书中有如下定义：“分布式系统是若干独立计算机的集合，这些计算机对于用户来说就像单个相关系统”；
 
@@ -9176,7 +9174,7 @@ public class RedisRepositoryTest {
 
 
 
-## Dubbo文档
+### Dubbo文档
 
 随着互联网的发展，网站应用的规模不断扩大，常规的垂直应用架构已无法应对，分布式服务架构以及流动计算架构势在必行，急需一个治理系统确保架构有条不紊的演进。
 
@@ -9264,7 +9262,7 @@ RPC【Remote Procedure Call】是指远程过程调用，是一种进程间通�
 
 
 
-## Dubbo
+### Dubbo
 
 Apache Dubbo |ˈdʌbəʊ| 是一款高性能、轻量级的开源Java RPC框架，它提供了三大核心能力：面向接口的远程方法调用，智能容错和负载均衡，以及服务自动注册和发现。
 
@@ -9306,7 +9304,7 @@ l 服务消费者和提供者，在内存中累计调用次数和调用时间，
 
 
 
-## Dubbo环境搭建
+### Dubbo环境搭建
 
 点进dubbo官方文档，推荐我们使用Zookeeper 注册中心
 
@@ -9435,7 +9433,7 @@ java -jar dubbo-admin-0.0.1-SNAPSHOT.jar
 
 
 
-## SpringBoot + Dubbo + zookeeper
+### SpringBoot + Dubbo + zookeeper
 
 **框架搭建**
 
@@ -9492,7 +9490,7 @@ public class UserService {
 
 
 
-## 服务提供者
+### 服务提供者
 
 1、将服务提供者注册到注册中心，我们需要整合Dubbo和zookeeper，所以需要导包
 
@@ -9576,7 +9574,7 @@ public class TicketServiceImpl implements TicketService {
 
 
 
-## 服务消费者
+### 服务消费者
 
 1、导入依赖，和之前的依赖一样；
 
@@ -9676,7 +9674,7 @@ public class ConsumerServerApplicationTests {
 }
 ```
 
-## 启动测试
+### 启动测试
 
 1. 开启zookeeper
 
@@ -9696,9 +9694,9 @@ ok , 这就是SpingBoot + dubbo + zookeeper实现分布式开发的应用，其�
 
 
 
-# 集成富文本编辑器
+## 集成富文本编辑器
 
-## 简介
+### 简介
 
 思考：我们平时在博客园，或者CSDN等平台进行写作的时候，有同学思考过他们的编辑器是怎么实现的吗？
 
@@ -9737,7 +9735,7 @@ ok , 这就是SpingBoot + dubbo + zookeeper实现分布式开发的应用，其�
 - **froala Editor**——界面非常好看，功能非常强大，非常好用（非免费）    
 - 官网：https://www.froala.com/wysiwyg-editor
 
-## Editor.md
+### Editor.md
 
 我这里使用的就是Editor.md，作为一个资深码农，Mardown必然是我们程序猿最喜欢的格式，看下面，就爱上了！
 
@@ -9753,7 +9751,7 @@ ok , 这就是SpingBoot + dubbo + zookeeper实现分布式开发的应用，其�
 
 
 
-## 基础工程搭建
+### 基础工程搭建
 
 ------
 
@@ -9886,7 +9884,7 @@ type-aliases-package: com.kuang.pojo
 
 
 
-## 文章编辑整合（重点）
+### 文章编辑整合（重点）
 
 1、导入 editor.md 资源 ，删除多余文件
 
@@ -10097,7 +10095,7 @@ editormd.emoji     = {
 };
 ```
 
-## 文章展示
+### 文章展示
 
 1、Controller 中增加方法
 
