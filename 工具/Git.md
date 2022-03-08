@@ -317,6 +317,20 @@ git push -u origin master
 1. untrack     表示是新文件，没有被add过，是为跟踪的意思。
 2. not staged  表示add过的文件，即跟踪文件，再次修改没有add，就是没有暂存的意思
 
+# 存储模型
+
+git 区别与其他 vcs 系统的一个最主要原因之一是：git 对文件版本管理和其他 vcs 系统对文件版本的实现理念完成不一样。这也就是 git 版本管理为什么如此强大的最核心的地方。
+
+Svn 等其他的 VCS 对文件版本的理念是以文件为水平维度，记录每个文件在每个版本下的 delta 改变。
+
+Git 对文件版本的管理理念却是以每次提交为一次快照，提交时对所有文件做一次全量快照，然后存储快照引用。
+
+Git 在存储层，如果文件数据没有改变的文件，Git 只是存储指向源文件的一个引用，并不会直接多次存储文件，这一点可以在 pack 文件中看见。
+
+如下图所示：
+
+![img](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200520124026883.png)
+
 # 向开源项目提交代码
 
 🍎 [gist.github.com/zxhfighter/…](https://gist.github.com/zxhfighter/62847a087a2a8031fbdf)

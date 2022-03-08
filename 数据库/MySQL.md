@@ -1,10 +1,8 @@
-# MySQL基础
+# MySQL 基础
 
 ## 入门
 
-!数据库（Database)是按照数据结构来组织、存储和管理数据的仓库，所谓的关系型数据库，是建立在关系模型基础上的数据库，借助于集合代数等数学概念和方法来处理数据库中的数据。
-
-
+数据库（Database）是按照数据结构来组织、存储和管理数据的仓库，所谓的关系型数据库，是建立在关系模型基础上的数据库，借助于集合代数等数学概念和方法来处理数据库中的数据。
 
 RDBMS即关系数据库管理系统(Relational Database Management System)的特点：
 
@@ -57,8 +55,6 @@ RDBMS即关系数据库管理系统(Relational Database Management System)的特
     /sbin/iptables -I INPUT -p tcp --dport 8011 -j ACCEPT #开启8011端口
     /etc/init.d/iptables restart
 ```
-
-
 
 ## 管理
 
@@ -136,8 +132,6 @@ RDBMS即关系数据库管理系统(Relational Database Management System)的特
 - char型，如果不够M个字符，内部用空格补齐，取出时会把右侧空格删除，意味着本身有的空格会被丢弃。varchar类型则不会。
 - 速度上定长比不定长的更快。
 - blob是二进制类型，用来储存图像、音频等类型。可以防止字符集问题导致信息丢失。
-
-
 
 ### 枚举和集合
 
@@ -239,8 +233,6 @@ CREATE TABLE student (
 );
 ```
 
-
-
 ##### **在原表上添加新的列**
 
 ```sql
@@ -275,8 +267,6 @@ ALTER TABLE 表名 DROP 列名
 ALTER TABLE student DROP COLUMN sn;
 ```
 
-
-
 ##### **清空表内容**
 
 TRUNCATE相当与drop和create表两个操作。
@@ -289,8 +279,6 @@ TRUNCATE 表名
 TRUNCATE student;
 ```
 
-
-
 ##### **修改表名称**
 
 ```sql
@@ -300,8 +288,6 @@ ALTER TABLE 旧表名 RENAME TO 新表名
 # 示例
 ALTER TABLE student RENAME TO stu;
 ```
-
-
 
 ##### **修改列属性**
 
@@ -313,8 +299,6 @@ ALTER TABLE 表名 MODIFY  列名 列类型 列属性
 ALTER TABLE student MODIFY sid TINYINT UNSIGNED;
 ```
 
-
-
 ##### **修改列名称和属性**
 
 ```sql
@@ -324,8 +308,6 @@ ALTER TABLE 表名 CHANGE 旧列名 新列名 列类型 列属性
 # 示例
 ALTER TABLE student CHANGE sid id INT UNSIGNED;
 ```
-
-
 
 ##### **添加主键约束**
 
@@ -337,8 +319,6 @@ ALTER TABLE 表名 ADD CONSTRAINT PRIMARY KEY 表名(列名)
 ALTER TABLE student ADD CONSTRAINT PRIMARY KEY student(sid);
 ```
 
-
-
 ##### **删除主键约束**
 
 ```sql
@@ -348,8 +328,6 @@ ALTER TABLE 表名 DROP PRIMARY KEY
 # 示例
 ALTER TABLE student DROP PRIMARY KEY;
 ```
-
-
 
 ##### **删除查询缓存**
 
@@ -374,8 +352,6 @@ RESET QUERY CACHE
 主键与自增搭配使用，例如：id INT PRIMARY KEY AUTO_INCREMENT
 
 提高效率建表原则：定长与变长分离，常用和不常用分离。
-
-
 
 ### 表引擎
 
@@ -489,8 +465,6 @@ MySQL的比较运算和逻辑运算符：
 | REGEXP 或 RLIKE | 正则式匹配                                                   |
 | IS NULL         | 为空                                                         |
 | IS NOT NULL     | 不为空                                                       |
-
-
 
 | 逻辑运算符号 | 作用     |
 | :----------- | :------- |
@@ -659,8 +633,6 @@ SELECT goods_name,shop_price,click_count FROM goods ORDER BY click_count DESC LI
 SELECT cat_id,goods_id,goods_name,shop_price FROM goods WHERE goods_id IN (SELECT max(goods_id) FROM goods GROUP BY cat_id);
 ```
 
-
-
 #### **from子查询**
 
 内层select作为一张表(AS table)，外层select从内层表取出数据。
@@ -670,8 +642,6 @@ SELECT cat_id,goods_id,goods_name,shop_price FROM goods WHERE goods_id IN (SELEC
 SELECT cat_id,goods_id,goods_name,shop_price FROM (SELECT * FROM goods ORDER BY cat_id ASC,goods_id DESC) AS tmp GROUP BY cat_id;
 ```
 
-
-
 #### **exists子查询**
 
 exists指定一个子查询，检测行的存在。该子查询实际上并不返回任何数据，而是返回值True或False。exists子查询能完成的where子查询 in也能完成。
@@ -680,8 +650,6 @@ exists指定一个子查询，检测行的存在。该子查询实际上并不�
 # 取出没有商品的栏目
 SELECT * FROM category WHERE NOT exists(SELECT * FROM goods WHERE category.cat_id=goods.cat_id);
 ```
-
-
 
 ### **子查询练习**
 
@@ -723,8 +691,6 @@ SELECT * FROM category WHERE exists(SELECT * FROM goods WHERE category.cat_id=go
 SELECT * FROM boy INNER JOIN girl ON boy.hid=girl.hid;
 ```
 
-
-
 #### **LEFT JOIN左连接查询**
 
 以左边的表为标准，有匹配条件取出值来，没有则填充默认值。
@@ -734,8 +700,6 @@ SELECT * FROM boy INNER JOIN girl ON boy.hid=girl.hid;
 SELECT * FROM boy LEFT JOIN girl ON boy.hid=girl.hid;
 ```
 
-
-
 #### **RIGHT JOIN右连接查询**
 
 以右边的表为标准，有匹配条件取出值来，没有则填充默认值。
@@ -744,8 +708,6 @@ SELECT * FROM boy LEFT JOIN girl ON boy.hid=girl.hid;
 # 以girl表为标准，把boy表和girl表进行同组匹配
 SELECT * FROM boy RIGHT JOIN girl ON boy.hid=girl.hid;
 ```
-
-
 
 #### **连接查询练习**
 
@@ -1022,19 +984,13 @@ REVOKE [权限1, 权限2 ......] ON 数据库名.该库下的表名 FROM 用户�
 
 因为整形、time类型运算快又节省空间；char、varchar要考虑字符集的转换与排序时的校对集(a B排序哪个优先)、速度慢；blob无法使用内存临时表，设计到排序必须在硬盘完成，速度慢。
 
-
-
 **字段长度够用就行(tinyint、 varchar(N))**
 
 因为大的字段浪费内存，影响速度，例如某字段varchar(30)能存下的内容，如果用varchar(100)的话，在联表查询时，varchar(100)要花跟多内存。
 
-
-
 **避免使用null**
 
 因为null不利于索引，要用多一个字节来特殊标注该字段值是否为null，在磁盘上占据多一个字节。一般声明字段时都带有not null define属性
-
-
 
 **对于字段属性分类数量确定而且数量比较少时，优先选择枚举类型enum，例如性别、学历等**
 
@@ -1070,8 +1026,6 @@ B-tree索引的误区：
 
 注意：上面语句只能用上gender或age索引，因为是独立索引，同时只能用上一个，上面sql查询要完全使用索引，需要建立多列索引，例如：index(gender,age)
 
-
-
 ### hash索引
 
 哈希索引包含以数组形式组织的Bucket集合。哈希函数将索引键映射到哈希索引中对应的Bucket，使用哈希索引必须要使用哈希集群。哈希索引可能是访问数据库中数据的最快方法(时间复杂度为O(1))，但它也有自身的缺点，只支持等值计算，不支持范围搜索或排序。
@@ -1083,16 +1037,12 @@ hash索引查找速度最快，为什么不用hash索引呢？
 - hash无法利用前缀索引，不能前缀优化。例如在mysql查找列值为zhangsan，B-tree索引支持’zhang’或’zhangsan’关键字索引，而hash必须为’zhangsan’全部搜索。
 - 排序也无法优化
 
-
-
 B-tree索引和hash索引区别：
 
 - hash索引查找数据基本上能一次定位数据，当然有大量碰撞的话性能也会下降。而btree索引就得在节点上挨着查找了，很明显在数据精确查找方面hash索引的效率是要高于btree的。
 - 那么不精确查找呢，也很明显，因为hash算法是基于等值计算的，所以对于“like”等范围查找hash索引无效，不支持。
 - 对于btree支持的联合索引的最优前缀，hash也是无法支持的，联合索引中的字段要么全用要么全不用。
 - hash不支持索引排序，索引值和计算出来的hash值大小并不一定一致。
-
-
 
 ### 聚簇索引
 
@@ -1141,8 +1091,6 @@ SELECT id FROM ts ORDER BY id,val;
 
 当把str1和str2内容比较大的列删除后，两条语句执行速度差别不大。 如果表类驱动型为MyISAM两条语句执行速度差别不大。
 
-
-
 ### 多列索引
 
 在建立多列索引后，必须满足左前缀要求(从左到右按顺序，中间不能断开)，索引才能发挥作用，例如多列索引index(a,b,c)
@@ -1163,13 +1111,9 @@ SELECT id FROM ts ORDER BY id,val;
 
 注意：多列索引一定要结合业务逻辑进行优化，例如查100~200元的男装商品，这条查询涉及到价格和商品栏目两列，可以把这两列作为一个多列索引。
 
-
-
 ### 伪哈希索引
 
 为了避免hash整个字段值，可hash字段中的部分具有区分度的长度，从而大大减少索引的长度，提高查询速度。
-
-
 
 ### 延时索引
 
@@ -1206,16 +1150,12 @@ CREATE TABLE user(
 
 注意index AB(A,B)和index BA(B,A)是不同的索引，对于列A或B来说，AB和BA属于冗余索引。
 
-
-
 ### 索引的长度和区分度
 
 对于一般系统，区别度能达到10%时，索引性能就可以接受。 针对列中的值，从左到右截取来建立索引：
 
 - 截得越短，重复度越高，区分度越低，索引效果越不好。
 - 截得越长，重复度越低，区分度越高，索引效果越好，但是带来负面影响越大，占有空间越大，也会减慢查询速度，增删改操作变慢。
-
-
 
 ### 索引与排序
 
@@ -1390,8 +1330,6 @@ select sleep(2);
 cat /usr/local/mysql/data/slow.log
 ```
 
-
-
 **索引碎片和维护**
 
 索引碎片的形成原因：在长期的数据更改中，索引文件和数据文件都将会产生空洞，形成碎片，索引碎片会对查询速度有影响。
@@ -1471,8 +1409,6 @@ slave数据库通过一个I/O线程与主服务器保持通信，并监控master
 
 ![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200531091948.png)
 
-
-
 配置主从复制流程：
 
 - 主mysql配置binlog
@@ -1539,8 +1475,6 @@ CHANGE MASTER TO
 所谓双主备份，其实也就是互做主从复制，每台master既是master，又是另一台服务器的slave。这样，任何一方所做的变更，都会通过复制应用到另外一方的数据库中。
 
 ![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200531092528.png)
-
-
 
 配置主主复制流程：
 
@@ -1637,8 +1571,6 @@ sudo service mysql restart
 
 ![](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20200531093124.png)
 
-
-
 ```bash
 # 安装mysql-proxy中间件
 # 下载源码
@@ -1657,8 +1589,6 @@ mysql-proxy启动参数思路： - 代理了哪个端口? - 代理了哪写mysql
 
 mysql-proxy是自动负载均衡的，这里的均衡并不是sql语句上的均衡，而是mysql-proxy和用户连接上的均衡，例如当前有20台mysql服务器，有1000个用户连接过来，此时mysql-proxy会把1000个连接数平均分给20台mysql服务器，一旦用户连接上了一台mysql服务器，在用户没有断开连接之前，用户的增删改查或事务操作都是该mysql服务器操作的。
 
-
-
 **(2) 启动mysql-proxy**
 
 ```bash
@@ -1671,8 +1601,6 @@ mysql-proxy是自动负载均衡的，这里的均衡并不是sql语句上的均
 # -b 参数指定mysql服务器的ip地址和端口
 # --daemon 表示在后台启动
 ```
-
-
 
 **(3) 设置读写分离mysql启动方式**
 
@@ -1726,8 +1654,6 @@ SHOW TRIGGERS;
 DROP TRIGGER 触发器名;
 ```
 
-
-
 监控insert行为时，引用变量用new，监控delete行为时，引用变量用old
 
 ```bash
@@ -1766,8 +1692,6 @@ BEGIN
 END;
 ```
 
-
-
 监控update行为时，引用变量update前用old，update后用new。
 
 ```bash
@@ -1804,8 +1728,6 @@ SHOW PROCEDURE STATUS;
 DROP PROCEDURE 存储过程名字;
 ```
 
-
-
 存储过程是可以编程的，意味着可以使用变量、表达式、控制结构来完成复杂的功能。
 
 **声明变量**
@@ -1826,8 +1748,6 @@ CREATE PROCEDURE test1()
     SELECT leng*widch;
   END;
 ```
-
-
 
 **参数**
 
@@ -1857,8 +1777,6 @@ CALL add_1(@v);
 SELECT @v;  # 结果：2
 ```
 
-
-
 ### **if条件控制结构**
 
 ```bash
@@ -1882,8 +1800,6 @@ CREATE PROCEDURE compare(v1 INT,v2 INT)
     END IF;
   END;
 ```
-
-
 
 ### **case选择控制结构**
 
@@ -1914,10 +1830,6 @@ CREATE PROCEDURE cs()
   END;
 ```
 
-
-
-
-
 ### **while循环结构**
 
 ```bash
@@ -1941,8 +1853,6 @@ CREATE PROCEDURE cusum (v INT)
 # 调用：
 CALL cusum(100);  # 结果：5050
 ```
-
-
 
 ### **repeat循环结构**
 
@@ -2008,8 +1918,6 @@ CREATE PROCEDURE cursor1()
 # 调用
 CALL cursor1();
 ```
-
-
 
 在mysql的cursor中可以用declare exit或continue handler for not fond来操作越界标志。类似于js中的事件，当读取游标完毕则触发该事件。其中exit和continue的区别是是否执行后面的sql语句。
 
@@ -2184,8 +2092,6 @@ SHOW VARIABLES LIKE '%ssl%';
 
 从mysql安装目录/var/lib/mysql下复制出来3个客户端安全连接时需要的文件：**client-cert.pem、client-key.pem、ca.pem**。
 
-
-
 **没有强制使用ssl安全连接情况**
 
 默认情况下，mysql配置文件my.cnf的[mysqld]下require_secure_transport = OFF，说明不强制要求ssl连接，但mysql客户端连接时添加选项–ssl-mode也可以使用ssl安全连接，–ssl-mode选项值有以下5种类型：
@@ -2203,8 +2109,6 @@ mysql -h 192.168.101.88 -u zhuyasen -P 33060 --ssl-cert=./client-cert.pem --ssl-
 # 使用x509连接和mysql服务颁发证书ca.pem连接
 mysql -h 192.168.101.88 -u zhuyasen -P 33060 --ssl-mode=VERIFY_CA --ssl-cert=./client-cert.pem --ssl-key=./client-key.pem --ssl-ca=./ca.pem -p
 ```
-
-
 
 在require_secure_transport = OFF(不需要ssl连接)，可以设置指定用户必须使用ssl传输数据。
 
@@ -2235,8 +2139,6 @@ mysql -h 192.168.101.88 -u vison --ssl-cert=./client-cert.pem --ssl-key=./client
 \s
 ```
 
-
-
 **强制所有用户使用ssl安全连接**
 
 在配置文件my.cnf的[mysqld]下添加参数，强制所有用户传输使用ssl安全传输，
@@ -2251,14 +2153,10 @@ mysql -h 192.168.101.88 -u root -P 33060 --ssl-cert=./client-cert.pem --ssl-key=
 mysql -h 192.168.101.88 -u vison -P 33060 --ssl-cert=./client-cert.pem --ssl-key=./client-key.pem --ssl-ca=./ca.pem --ssl-mode=VERIFY_CA -p
 ```
 
-
-
 **未使用SS和使用SSL安全性对比**
 
 - 未使用SSL情况下，在数据库服务器端可以通过抓包的方式获取数据，安全性不高。
 - 没有抓到该语句，采用SSL加密后，tshark抓不到数据，安全性高。
-
-
 
 **使用SSL前后性能对比**
 
@@ -2270,7 +2168,7 @@ mysql -h 192.168.101.88 -u vison -P 33060 --ssl-cert=./client-cert.pem --ssl-key
 
 **注：如果用户是采用本地localhost或者sock连接数据库，不会使用SSL方式的。**
 
-# MySQL高级
+# MySQL 高级
 
 ## MySQL 逻辑架构
 
@@ -2397,7 +2295,7 @@ ERROR 1142 (42000): SELECT command denied to user 'b'@'localhost' for table 'T'
 
 为了解决 MySQL 更新操作都需要写进磁盘，然后磁盘也要找到对应的那条记录，然后再更新，整个过程 IO 成本、查找成本都很高。MySQL 的设计者采用了 WAL 技术来提升更新效率，WAL 的全称是 Write-Ahead Logging。它的关键点就是先写日志，再写磁盘。
 
-而采用写redo log是顺序写，无需像更新数据需要找位置，具体来说，当有一条记录需要更新的时候，InnoDB 引擎就会先把记录写到 redo log 里，并更新内存，在适当的时候，将这个操作记录更新到磁盘里面。
+而采用写redo log是**顺序写**，无需像更新数据需要找位置，具体来说，当有一条记录需要更新的时候，InnoDB 引擎就会先把记录写到 redo log 里，并更新内存，在适当的时候，将这个操作记录更新到磁盘里面。
 
 ![下载](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/%E4%B8%8B%E8%BD%BD.png)
 
@@ -2410,6 +2308,8 @@ InnoDB 中的 redo log 大小是固定的，write pos 是当前记录的位置�
 redo log 是 InnoDB 引擎特有的日志，而 Server 层也有自己的日志，称为 binlog（归档日志）。
 
 Binlog有两种模式，statement 格式的话是记sql语句， row格式会记录行的内容，记录更新前和更新后的内容。
+
+**只记录update/delete等语句，不记录select等不发生实际修改的语句，并且主从架构是依靠binlog来同步数据的。**
 
 ### 两者区别
 
@@ -2439,6 +2339,14 @@ redo log 和 binlog 都可以用于表示事务的提交状态，而两阶段提
 redo log 用于保证 crash-safe 能力。innodb_flush_log_at_trx_commit 参数设成 1 时，表示每次事务的 redo log 都直接持久化到磁盘，保证 MySQL 异常重启之后数据不丢失。
 
 sync_binlog 参数设成 1 时，表示每次事务的 binlog 都持久化到磁盘，保证 MySQL 异常重启之后 binlog 不丢失。
+
+### undo log
+
+主要作用：回滚和多版本控制（MVCC）
+
+如果因为某些原因导致事务失败或回滚了，可以用`undo log`进行回滚。
+
+`undo log`主要存储的也是逻辑日志，比如我们要`insert`一条数据了，那`undo log`会记录的一条对应的`delete`日志。我们要`update`一条记录时，它会记录一条对应**相反**的update记录。
 
 ## 事务隔离
 
@@ -2496,3 +2404,288 @@ MySQL 的事务启动方式有以下几种：
 
 多表优化：左连接加索引在右表，右连接加索引在左表，理解数据量不同【小表驱动大表】
 
+# MySQL 面试
+
+## 1、B+树索引和哈希索引的区别
+
+B+树是一个平衡的多叉树，从根节点到每个叶子节点的高度差值不超过1，而且同层级的节点间有指针相互链接。
+
+哈希索引就是采用一定的哈希算法，把键值换算成新的哈希值，检索时无需B+树那样从根节点到叶子节点逐级查找，只需一次哈希算法即可定位到相应的位置，速度快。
+
+B+树索引和哈希索引的明显区别是：
+
+- **如果是等值查询，那么哈希索引明显有绝对优势**，只需要经过一次算法即可找到相应的键值；前提是键值都是唯一的。如果键值不是唯一的，就需要先找到该键所在位置，然后再根据链表往后扫描，直到找到相应的数据；
+- **如果是范围查询检索，这时候哈希索引就毫无用武之地了**，因为原先是有序的键值，经过哈希算法后，有可能变成不连续的了，就没办法再利用索引完成范围查询检索；
+- **哈希索引也没办法利用索引完成排序**，以及like ‘xxx%’ 这样的部分模糊查询（这种部分模糊查询，其实本质上也是范围查询）；
+- **哈希索引也不支持多列联合索引的最左匹配规则**；
+- B+树索引的关键字检索效率比较平均，不像B树那样波动幅度大，**在有大量重复键值情况下，哈希索引的效率也是极低的，因为存在所谓的哈希碰撞问题**。
+
+## 2、MVCC原理
+
+MVCC 是一种并发控制的方法，实现对数据库的并发访问；在编程语言中实现事务内存。它使得大部分支持行锁的事务引擎，不再单纯的使用行锁来进行数据库的并发控制，取而代之的是把数据库的行锁与行的多个版本结合起来，只需要很小的开销，就可以实现非锁定读，从而大大提高数据库系统的并发性能。
+
+一句话讲，MVCC就是用 同一份数据临时保留多版本的方式 的方式，实现并发控制。
+
+1. 系统版本号：每开启一个事务，系统版本号就会自增
+2. 事务版本号：事务创建时的系统版本号
+3. 创建版本号：创建一个数据行快照时的系统版本号
+4. 删除版本号：如果快照的删除版本号大于事务版本号，说明该快照有效；否则表示该快照已经被删除。
+5. innodb存储的最基本row中包含一些额外的存储信息 DATA_TRX_ID，DATA_ROLL_PTR，DB_ROW_ID，DELETE BIT
+6. 6字节的DATA_TRX_ID 标记了最新更新这条行记录的transaction id，每处理一个事务，其值自动+1
+7. 7字节的DATA_ROLL_PTR 指向当前记录项的rollback segment的undo log记录，找之前版本的数据就是通过这个指针
+8. 6字节的DB_ROW_ID，当由innodb自动产生聚集索引时，聚集索引包括这个DB_ROW_ID的值，否则聚集索引中不包括这个值.，这个用于索引当中
+9. DELETE BIT位用于标识该记录是否被删除，这里的不是真正的删除数据，而是标志出来的删除。真正意义的删除是在commit的时候
+
+MVCC使用的快照保存在日志中，该日志通过回滚指针把一个数据行的所有快照连接起来。
+
+与redo log相反，undo log是为了回滚事务而写的日志，具体内容就是copy事务开始前的数据（行）到undo buffer。
+
+与redo buffer一样，undo buffer也是环形缓冲，当缓冲满的时候buffer内容会被刷新到磁盘。
+
+与redo log不同的是，undo log没有独立的磁盘文件，所有的undo log均被存在主ibd数据文件中（表空间）。
+
+**快照读和当前读**
+
+快照读：读取的是快照版本，也就是历史版本,MVCC读取的是快照中的数据，可以减少加锁带来的开销。
+
+当前读：读取的是最新版本,读的是最新数据，需要加锁。
+
+普通的SELECT就是快照读，而UPDATE、DELETE、INSERT、SELECT ...  LOCK IN SHARE MODE、SELECT ... FOR UPDATE是当前读。
+
+**实现过程**
+
+innodb MVCC主要是为Repeatable-Read事务隔离级别做的。在此隔离级别下，A、B客户端所示的数据相互隔离，互相更新不可见
+
+了解innodb的行结构、Read-View的结构对于理解innodb mvcc的实现由重要意义具体的执行过程
+
+begin->用排他锁锁定该行->记录redo log->记录undo log->修改当前行的值，写事务编号，回滚指针指向undo log中的修改前的行
+
+上述过程确切地说是描述了UPDATE的事务过程，其实undo log分insert和update undo log，因为insert时，原始的数据并不存在，所以回滚时把insert undo log丢弃即可，而update undo log则必须遵守上述过程
+
+下面分别以select、delete、 insert、 update语句来说明
+
+关键：开启一个事务时，该事务版本号肯定大于当前所有数据行的创建版本号
+
+SELECT
+
+Innodb检查每行数据，确保他们符合两个标准：
+
+1、InnoDB只查找版本早于当前事务版本的数据行(也就是数据行的版本必须小于等于事务的版本)，这确保当前事务读取的行都是事务之前已经存在的，或者是由当前事务创建或修改的行
+
+2、行的删除操作的版本一定是未定义的或者大于当前事务的版本号，确定了当前事务开始之前，行没有被删除
+
+符合了以上两点则返回查询结果。
+
+INSERT
+
+InnoDB为每个新增行记录当前系统版本号作为创建ID。
+
+DELETE
+
+InnoDB为每个删除行的记录当前系统版本号作为行的删除ID。
+
+UPDATE
+
+新插入一行（复制了要删除的记录），并以当前事务的版本号作为新行的创建版本号，同时将原记录行的删除版本号设置为当前事务版本号
+
+说明
+
+insert操作时 “创建时间”=DB_ROW_ID，这时，“删除时间 ”是未定义的；
+
+update时，复制新增行的“创建时间”=DB_ROW_ID，删除时间未定义，旧数据行“创建时间”不变，删除时间=该事务的DB_ROW_ID；
+
+delete操作，相应数据行的“创建时间”不变，删除时间=该事务的DB_ROW_ID；
+
+select操作对两者都不修改，只读相应的数据
+
+六、对于MVCC的总结
+
+上述更新前建立undo log，根据各种策略读取时非阻塞就是MVCC，undo log中的行就是MVCC中的多版本，这个可能与我们所理解的MVCC有较大的出入，一般我们认为MVCC有下面几个特点：
+
+1. 每行数据都存在一个版本，每次数据更新时都更新该版本
+2. 修改时Copy出当前版本随意修改，各个事务之间无干扰
+3. 保存时比较版本号，如果成功（commit），则覆盖原记录；失败则放弃copy（rollback）
+4. 事务以排他锁的形式修改原始数据
+5. 把修改前的数据存放于undo log，通过回滚指针与主数据关联
+6. 修改成功（commit）啥都不做，失败则恢复undo log中的数据（rollback）
+
+## 3、了解count(1)、count(*)、count(列名)区别吗
+
+1. 当 count() 统计某一列时，比如 count(a)，a 表示列名，是不统计 null 的。
+2. count(*) 无论是否包含空值，都会统计。
+3. count(1)中的 1 是恒真表达式，因此也会统计所有结果。
+
+在 MySQL 5.6之后的版本里，count(*)与count(1)都会选择非聚簇索进行优化执行，因为由于主键索引树的特性，其大小会比聚簇索引大得多。
+
+## 4、分页查询如何优化
+
+- 通常在MySQL中通过limit #{limit},#{offset}来进行分页查询。
+- 当表中记录较多且页数（#{limit}）较大时，分页查询效率变慢。
+- 变慢的原因时，分页查询时，会先查询出limit + offset条记录，然后截取后面的offset记录。
+
+**原始SQL**
+
+```mysql
+-- 原始分页查询，耗时：4500ms
+select * 
+from big_table
+limit 2000000,10;
+```
+
+慢的原因：
+
+- 1.查询条件为`*`
+- 2.`limit = 2000000`太大
+
+**优化一（推荐）：用具体字段2代替*（1600ms）***
+
+```mysql
+-- 用明确字段代替*，耗时：1600ms
+select id,uid,media_id,media_name,news_id,comment 
+from big_table
+limit 2000000,10;
+```
+
+**优化二：先查询索引（450ms）**
+
+```mysql
+-- 方法1：先对索引进行分页查询，耗时：450ms
+select * from big_table AS h inner join
+ (select id from big_table
+  limit 2000000,10) AS ss 
+ on h.id = ss.id;
+
+-- 方法2：先查询出起始位置的索引，耗时：450ms
+select * from big_table
+where id > (
+	select id from big_table limit 2000000,1
+)
+limit 10;
+
+```
+
+**优化三：between … and （5ms）**
+
+```mysql
+-- 上一页保留最后一条记录所在id，耗时：5ms
+select * from big_table
+where id between 4882489 and 4882489 + 10 ;
+```
+
+**优化四：保留上一页所在的id（5ms）**
+
+```mysql
+-- 上一页需要保留最后一条记录所在id，耗时：5ms
+select * from big_table
+where id > 4882488
+limit 10;
+```
+
+## 5、常见的SQL预防手段
+
+SQL注入攻击是输入参数未经过滤，然后直接拼接到SQL语句当中解析，执行达到预想之外的一种行为，称之为SQL注入攻击。
+
+1）严格检查输入变量的类型和格式
+
+对于整数参数，加判断条件：不能为空、参数类型必须为数字
+
+对于字符串参数，可以使用正则表达式进行过滤：如：必须为[0-9a-zA-Z]范围内的字符串
+
+2）过滤和转义特殊字符
+
+在username这个变量前进行转义，对'、"、\等特殊字符进行转义，如：php中的addslashes()函数对username参数进行转义
+
+3）利用mysql的预编译机制
+
+把sql语句的模板（变量采用占位符进行占位）发送给mysql服务器，mysql服务器对sql语句的模板进行编译，编译之后根据语句的优化分析对相应的索引进行优化，在最终绑定参数时把相应的参数传送给mysql服务器，直接进行执行，节省了sql查询时间，以及mysql服务器的资源，达到一次编译、多次执行的目的，除此之外，还可以防止SQL注入。
+
+## 6、为什么说B+树比B树更适合数据库索引？
+
+1、 B+树的磁盘读写代价更低：B+树的内部节点并没有指向关键字具体信息的指针，因此其内部节点相对B树更小，如果把所有同一内部节点的关键字存放在同一盘块中，那么盘块所能容纳的关键字数量也越多，一次性读入内存的需要查找的关键字也就越多，相对IO读写次数就降低了。
+
+2、B+树的查询效率更加稳定：由于非终结点并不是最终指向文件内容的结点，而只是叶子结点中关键字的索引。所以任何关键字的查找必须走一条从根结点到叶子结点的路。所有关键字查询的路径长度相同，导致每一个数据的查询效率相当。
+
+3、由于B+树的数据都存储在叶子结点中，分支结点均为索引，方便扫库，只需要扫一遍叶子结点即可，但是B树因为其分支结点同样存储着数据，我们要找到具体的数据，需要进行一次中序遍历按序来扫，所以B+树更加适合在区间查询的情况，所以通常B+树用于数据库索引。
+
+## 7、聚簇索引与非聚簇索引之间的区别
+
+聚集索引与非聚集索引的区别是：叶节点是否存放一整行记录
+
+InnoDB 主键使用的是聚簇索引，MyISAM 不管是主键索引，还是二级索引使用的都是非聚簇索引
+
+![img](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/5/16/16ac10253b8748df~tplv-t2oaga2asx-watermark.awebp)
+
+1.对于**非聚簇索引表**来说（右图），表数据和索引是分成两部分存储的，主键索引和二级索引存储上没有任何区别。使用的是B+树作为索引的存储结构，所有的节点都是索引，叶子节点存储的是索引+索引对应的记录的数据。
+
+2.对于**聚簇索引表**来说（左图），表数据是和主键一起存储的，主键索引的叶结点存储行数据(包含了主键值)，二级索引的叶结点存储行的主键值。使用的是B+树作为索引的存储结构，非叶子节点都是索引关键字，但非叶子节点中的关键字中不存储对应记录的具体内容或内容地址。叶子节点上的数据是主键与具体记录(数据内容)。
+
+**聚簇索引的优点**
+
+​	1.当你需要取出一定范围内的数据时，用聚簇索引也比用非聚簇索引好。
+
+​	2.当通过聚簇索引查找目标数据时理论上比非聚簇索引要快，因为非聚簇索引定位到对应主键时还要多一次目标记录寻址,即多一次I/O。
+
+​	3.使用覆盖索引扫描的查询可以直接使用页节点中的主键值。
+
+**聚簇索引的缺点**
+
+​	1.**插入速度严重依赖于插入顺序**，按照主键的顺序插入是最快的方式，否则将会出现页分裂，严重影响性能。因此，对于InnoDB表，我们一般都会定义一个自增的ID列为主键。
+
+​	2.**更新主键的代价很高，因为将会导致被更新的行移动**。因此，对于InnoDB表，我们一般定义主键为不可更新。
+
+​	3.**二级索引访问需要两次索引查找，第一次找到主键值，第二次根据主键值找到行数据。**
+
+​	二级索引的叶节点存储的是主键值，而不是行指针（非聚簇索引存储的是指针或者说是地址），这是为了减少当出现行移动或数据页分裂时二级索引的维护工作，但会让二级索引占用更多的空间。
+
+​	4.**采用聚簇索引插入新值比采用非聚簇索引插入新值的速度要慢很多**，因为插入要保证主键不能重复，判断主键不能重复，采用的方式在不同的索引下面会有很大的性能差距，聚簇索引遍历所有的叶子节点，非聚簇索引也判断所有的叶子节点，但是聚簇索引的叶子节点除了带有主键还有记录值，记录的大小往往比主键要大的多。这样就会导致聚簇索引在判定新记录携带的主键是否重复时进行昂贵的I/O代价。
+
+## 8、自增主键的优缺点
+
+这种方式是使用数据库提供的自增数值型字段作为自增主键，它的优点是：
+
+（1）数据库自动编号，速度快，而且是增量增长，按顺序存放，对于检索非常有利；
+
+（2）数字型，占用空间小，易排序，在程序中传递也方便；
+
+（3）如果通过非系统增加记录时，可以不用指定该字段，不用担心主键重复问题。
+
+其实它的缺点也就是来自其优点，缺点如下：
+
+（1）因为自动增长，在手动要插入指定ID的记录时会显得麻烦，尤其是当系统与其它系统集成时，需要数据导入时，很难保证原系统的ID不发生主键冲突（前提是老系统也是数字型的）。特别是在新系统上线时，新旧系统并行存在，并且是异库异构的数据库的情况下，需要双向同步时，自增主键将是你的噩梦；
+
+（2）在系统集成或割接时，如果新旧系统主键不同是数字型就会导致修改主键数据类型，这也会导致其它有外键关联的表的修改，后果同样很严重；
+
+（3）若系统也是数字型的，在导入时，为了区分新老数据，可能想在老数据主键前统一加一个字符标识（例如“o”，old）来表示这是老数据，那么自动增长的数字型又面临一个挑战。
+
+## 9、MySQL、Oracle区别
+
+- 事务提交区别：MySQL默认是自动提交，而Oracle默认不自动提交，需要用户手动提交，需要在写commit;指令或者点击commit按钮
+- 分页查询区别：MySQL是直接在SQL语句中写"select... from ...where...limit  x, y",有limit就可以实现分页;而Oracle则是需要用到伪列ROWNUM和嵌套查询
+- 事务隔离级别：MySQL是read commited的隔离级别，而Oracle是repeatable read的隔离级别，同时二者都支持serializable串行化事务隔离级别，可以实现最高级别的
+  读一致性。每个session提交后其他session才能看到提交的更改。Oracle通过在undo表空间中构造多版本数据块来实现读一致性，每个session
+  查询时，如果对应的数据块发生变化，Oracle会在undo表空间中为这个session构造它查询时的旧的数据块
+  MySQL没有类似Oracle的构造多版本数据块的机制，只支持read commited的隔离级别。一个session读取数据时，其他session不能更改数据，但
+  可以在表最后插入数据。session更新数据时，要加上排它锁，其他session无法访问数据
+- 对事务的支持：MySQL在innodb存储引擎的行级锁的情况下才可支持事务，而Oracle则完全支持事务
+- 保存数据的持久性：MySQL是在数据库更新或者重启，则会丢失数据，Oracle把提交的sql操作线写入了在线联机日志文件中，保持到了磁盘上，可以随时恢复
+- 并发性：MySQL以表级锁为主，对资源锁定的粒度很大，如果一个session对一个表加锁时间过长，会让其他session无法更新此表中的数据。虽然InnoDB引擎的表可以用行级锁，但这个行级锁的机制依赖于表的索引，如果表没有索引，或者sql语句没有使用索引，那么仍然使用表级锁。 Oracle使用行级锁，对资源锁定的粒度要小很多，只是锁定sql需要的资源，并且加锁是在数据库中的数据行上，不依赖与索引。所以Oracle对并 发性的支持要好很多。
+- 逻辑备份：MySQL逻辑备份时要锁定数据，才能保证备份的数据是一致的，影响业务正常的dml使用,Oracle逻辑备份时不锁定数据，且备份的数据是一致
+- 复制：MySQL:复制服务器配置简单，但主库出问题时，丛库有可能丢失一定的数据。且需要手工切换丛库到主库。
+  Oracle:既有推或拉式的传统数据复制，也有dataguard的双机或多机容灾机制，主库出现问题是，可以自动切换备库到主库，但配置管理较复杂。
+- 性能诊断：MySQL的诊断调优方法较少，主要有慢查询日志。
+  Oracle有各种成熟的性能诊断调优工具，能实现很多自动分析、诊断功能。比如awr、addm、sqltrace、tkproof等    
+- 权限与安全：MySQL的用户与主机有关，感觉没有什么意义，另外更容易被仿冒主机及ip有可乘之机。
+  Oracle的权限与安全概念比较传统，中规中矩。
+- 分区表和分区索引：MySQL的分区表还不太成熟稳定。
+  Oracle的分区表和分区索引功能很成熟，可以提高用户访问db的体验。
+- 管理工具：MySQL管理工具较少，在linux下的管理工具的安装有时要安装额外的包（phpmyadmin， etc)，有一定复杂性。
+  Oracle有多种成熟的命令行、图形界面、web管理工具，还有很多第三方的管理工具，管理极其方便高效。
+- 最重要的区别：MySQL是轻量型数据库，并且免费，没有服务恢复数据。
+  Oracle是重量型数据库，收费，Oracle公司对Oracle数据库有任何服务。
+
+## 9、数据库四个范式区别
+
+1. 第一范式：无重复的列
+2. 第二范式：属性完全依赖于主键
+3. 第三范式：属性不依赖于其他非主属性
+4. 第四范式：禁止主键列和非主键列一对多关系不受约束
