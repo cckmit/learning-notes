@@ -748,9 +748,28 @@ public class CGLibProxy implements MethodInterceptor {
 ![在这里插入图片描述](https://isbut-blog.oss-cn-shenzhen.aliyuncs.com/markdown-img/20190105163846560.jpg)
 
 - IO多路复用模型：通过一种新的系统调用，一个进程可以监视多个文件描述符，一旦某个描述符就绪（一般是内核缓冲区可读/可写），内核kernel能够通知程序进行相应的IO系统调用。
+
 - 支持IO多路复用的系统调用，有 select、poll、epoll等，将目标提前注册到select/epoll的socket查询列表中，再开启整个模型的读流程。
+
 - 优点：利用一条线程同时监测多个文件描述符，大大减小了系统的开销。
+
 - 缺点：本质上，select/epoll系统调用，属于同步IO，也是阻塞IO。都需要在读写事件就绪后，自己负责进行读写，也就是说这个读写过程是阻塞的。
+
+  - **select**
+    1. select 有最大文件描述符限制
+    2. 为了获取具体哪个文件描述符有事件可用，select 需要对所有监听的文件描述符进行线性扫描
+    3. 每次调用 select ，操作系统都需把文件描述符集合在内核和用户空间中相互拷贝
+  - **poll**
+    1. poll 没有最大文件描述符限制
+    2. 为了获取哪个文件描述符，poll 也需要对监听的文件描述符进行线性扫描
+
+  - **epoll**
+
+    1. epoll 有两种执行模式，一种是水平触发（level-triggered），一种是边缘触发（edge-triggered），默认是水平触发。
+    2. **水平触发：**level-triggered 是一个文件描述符就绪了，也就是有事件准备读或准备写，调用 epoll 之后内核会把这个文件描述符从内核拷贝到用户空间，并通知用户对应的事件，如果用户此时选择不处理该描述符的事件，即用户不进行数据读或不进行数据写，下次调用 epoll 时，内核依然会返回这个事件。![img](https://sanyuesha.com/python-server-tutorial/book/imgs/level-triggered.jpg)
+    3. **边缘触发：**edge-triggered 是如何一个文件描述符就绪了，也就是有事件准备读或准备写，调用 epoll 之后内核会把这个文件描述符从内核拷贝到用户空间，并通知用户对应的事件，如果用户选择不处理该描述符的事件，即用户不进行数据读或不进行数据写，下次调用 epoll 时，内核不会再返回这个事件，除非把对应的事件重新激活，内核才会在下次调用中返回该事件。![img](https://sanyuesha.com/python-server-tutorial/book/imgs/edge-triggered.jpg)
+
+    4. evel-triggered 模式是尽可能的让事件被用户应用程序感知到，而 edge-triggered 可能的问题是也许会会让用户应用程序错过某些事件，因为它只在事件发生的那一刻才会通知用户。edge-triggered 更高效，但是 level-triggered 更可靠。
 
 #### 4、异步IO
 
