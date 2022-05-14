@@ -869,9 +869,9 @@ JDBC API提供以下接口和类 -
 			    }
 			```
 
-# Request、Response
+## Request、Response
 
-## Request
+### Request
 
 1. request对象和response对象的原理
 	1. request和response对象是由服务器创建的。我们来使用它们
@@ -1042,7 +1042,7 @@ JDBC API提供以下接口和类 -
 		1. 本质：图片
 		2. 目的：防止恶意表单注册
 
-# ServletContext
+## ServletContext
 
 1. 概念：代表整个web应用，可以和程序的容器(服务器)来通信
 2. 获取：
@@ -1071,7 +1071,7 @@ JDBC API提供以下接口和类 -
 	        String a = context.getRealPath("/WEB-INF/classes/a.txt");//src目录下的资源访问
 	        System.out.println(a);
 
-# Cookie&Session
+## Cookie&Session
 
 两者区别：
 
@@ -1081,7 +1081,7 @@ JDBC API提供以下接口和类 -
 - session 可以放在 文件、数据库、或内存中都可以。
 - 用户验证这种场合一般会用 session
 
-## **Cookie**
+### **Cookie**
 
 1. 概念：客户端会话技术，将数据保存到客户端
 
@@ -1129,7 +1129,7 @@ JDBC API提供以下接口和类 -
 		1. cookie一般用于存出少量的不太敏感的数据
 		2. 在不登录的情况下，完成服务器对客户端的身份识别
 
-## Session
+### Session
 
 1. 概念：服务器端会话技术，在一次会话的多次请求间共享数据，将数据保存在服务器端的对象中。HttpSession
 

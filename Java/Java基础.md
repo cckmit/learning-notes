@@ -615,38 +615,32 @@ do {
 
 - 类
 
-- - 类的理解
+  - 类的理解
+    - 类是对现实生活中一类具有共同属性和行为的事物的抽象
+    - 类是对象的数据类型，类是具有相同属性和行为的一组对象的集合
+    - 简单理解：类就是对现实事物的一种描述
 
-- - - 类是对现实生活中一类具有共同属性和行为的事物的抽象
-
-- - - 类是对象的数据类型，类是具有相同属性和行为的一组对象的集合
-
-- - - 简单理解：类就是对现实事物的一种描述
-
-- - 类的组成
-
-- - - 属性：指事物的特征
+  - 类的组成
+    - 属性：指事物的特征
     - 行为：指事物能执行的操作
 
 - 类和对象的关系
 
-- - 类：类是对现实生活中一类具有共同属性和行为的事物的抽象
+  - 类：类是对现实生活中一类具有共同属性和行为的事物的抽象
 
-- - 对象：是能够看得到摸的着的真实存在的实体
+  - 对象：是能够看得到摸的着的真实存在的实体
 
-- - 简单理解：**类是对事物的一种描述，对象则为具体存在的事物**
+  - 简单理解：**类是对事物的一种描述，对象则为具体存在的事物**
 
 - **成员变量与局部变量**
 
-- - 类中位置不同：成员变量（类中方法外）局部变量（方法内部或方法声明上）
+  - 类中位置不同：成员变量（类中方法外）局部变量（方法内部或方法声明上）
 
-- - 内存中位置不同：成员变量（堆内存）局部变量（栈内存）
+  - 内存中位置不同：成员变量（堆内存）局部变量（栈内存）
 
-- - 生命周期不同：成员变量（随着对象的存在而存在，随着对象的消失而消失）局部变量（随着方法的调用而存在，醉着方法的调用完毕而消失）
+  - 生命周期不同：成员变量（随着对象的存在而存在，随着对象的消失而消失）局部变量（随着方法的调用而存在，醉着方法的调用完毕而消失）
 
-- - 初始化值不同：成员变量（有默认初始化值）局部变量（没有默认初始化值，必须先定义，赋值才能使用）
-
-- 
+  - 初始化值不同：成员变量（有默认初始化值）局部变量（没有默认初始化值，必须先定义，赋值才能使用）
 
 ### 方法
 
@@ -654,9 +648,9 @@ do {
 
 - 注意：
 
-- - 方法必须先创建才可以使用，该过程成为方法定义
+  - 方法必须先创建才可以使用，该过程成为方法定义
 
-- - 方法创建后并不是直接可以运行的，需要手动使用后，才执行，该过程成为方法调用
+  - 方法创建后并不是直接可以运行的，需要手动使用后，才执行，该过程成为方法调用
 
 - 形参：方法定义中的参数，等同于变量定义格式
 
@@ -701,17 +695,17 @@ public static 数据类型 方法名 ( 参数 ) {
 - 方法重载概念
   方法重载指同一个类中定义的多个方法之间的关系，满足下列条件的多个方法相互构成重载
 
-- - 多个方法在同一个类中
-
-- - 多个方法具有相同的方法名
-
-- - 多个方法的参数不相同，类型不同或者数量不同
-
+  - 多个方法在同一个类中
+  
+  - 多个方法具有相同的方法名
+  
+  - 多个方法的参数不相同，类型不同或者数量不同
+  
 - 注意：
 
-- - 重载仅对应方法的定义，与方法的调用无关，调用方式参照标准格式
+  - 重载仅对应方法的定义，与方法的调用无关，调用方式参照标准格式
 
-- - **重载仅针对同一个类中方法的名称与参数进行识别，与返回值无关**，换句话说不能通过返回值来判定两个方法是否相互构成重载
+  - **重载仅针对同一个类中方法的名称与参数进行识别，与返回值无关**，换句话说不能通过返回值来判定两个方法是否相互构成重载
 
 ### 继承
 
@@ -745,7 +739,7 @@ Java的接口特指`interface`的定义，表示一个接口类型和一组方�
 
 抽象类和接口的对比如下：
 
-|            | abstractclass        | interface                   |
+|            | abstract  class      | interface                   |
 | ---------- | -------------------- | --------------------------- |
 | 继承       | 只能extends一个class | 可以implements多个interface |
 | 字段       | 可以定义实例字段     | 不能定义实例字段            |
@@ -1472,7 +1466,7 @@ SLF4J的日志接口传入的是一个带占位符的字符串，用后面的变
 
 `class`是由JVM在执行过程中动态加载的。JVM在第一次读取到一种`class`类型时，将其加载进内存。
 
-每加载一种`class`，JVM就为其创建一个`Class`类型的实例，并关联起来。注意：这里的`Class`类型是一个名叫`Class`的`class`。
+每加载一种`class`，JVM就为其创建一个`Class`类型的实例，并关联起来。注意：这里的`Class`类型是一个名叫`Class`的o`class`。
 
 **通过`Class`实例获取`class`信息的方法称为反射（Reflection）,`Class`实例在JVM中是唯一的。**
 
@@ -1481,8 +1475,6 @@ Class cls = String.class; //直接通过一个class的静态变量class获取
 String s = "Hello";
 Class cls = s.getClass(); //方通过该实例变量提供的getClass()方法获取：
 Class cls = Class.forName("java.lang.String"); //class的完整类名，可以通过静态方法Class.forName()获取
-
-
 ```
 
 **动态加载**：JVM在执行Java程序的时候，并不是一次性把所有用到的class全部加载到内存，而是第一次需要用到class时才加载。
@@ -2152,6 +2144,8 @@ Properties props = new Properties();    props.setProperty("url", "http://www.lia
 | 取队首元素并删除   | E remove()     | E poll()           |
 | 取队首元素但不删除 | E element()    | E peek()           |
 
+
+
 ```java
     // 这是一个List:
     List<String> list = new LinkedList<>();
@@ -2591,7 +2585,7 @@ Java标准库的`java.io.OutputStream`定义了所有输出流的超类：
 Java的IO标准库使用Filter模式为`InputStream`和`OutputStream`增加功能：
 
 - 可以把一个`InputStream`和任意个`FilterInputStream`组合；
-- 可以把一个`OutputStream`和任意个`FilterOutputStream`组合。
+- 可以把一个`OutputStream`和任意个      `FilterOutputStream`组合。
 
 Filter模式可以在运行期动态增加功能（又称Decorator模式）。
 
@@ -3566,7 +3560,8 @@ Java提供的`System.currentTimeMillis()`返回的就是以毫秒表示的当前
 - Blocked：运行中的线程，因为某些操作被阻塞而挂起；
 - Waiting：运行中的线程，因为某些操作在等待中；
 - Timed Waiting：运行中的线程，因为执行`sleep()`方法正在计时等待；
-- Terminated：线程已终止，因为`run()`方法执行完毕。
+  - Terminated：线程已终止，因为`run()`方法执行完毕。】
+
 
 线程终止的原因有：
 
@@ -4113,8 +4108,8 @@ public interface Function<T, R> {  R apply(T t);    }
                 return fetchPrice(code);
             });
             // cfFetch成功后打印结果:
-            cfFetch.thenAccept((result) -> {
-                System.out.println("price: " + result);
+                                             cfFetch.thenAccept((result) -> {
+                System.out.println("p rice: " + result);
             });
             // 主线程不要立刻结束，否则CompletableFuture默认使用的线程池会立刻关闭:
             Thread.sleep(2000);
@@ -4128,12 +4123,12 @@ public interface Function<T, R> {  R apply(T t);    }
             return "601857";
         }
     
-        static Double fetchPrice(String code) {
+        static Double fetchPrice(Strin g code) {
             try {
                 Thread.sleep(100);
-            } catch (InterruptedException e) {
-            }
-            return 5 + Math.random() * 20;
+            } catch (InterruptedException  e) {
+            }    
+            retur                n 5 + Math.random() * 20;
         }
     }
 ```
@@ -4417,6 +4412,8 @@ Java中的正则表达式支持的元字符如下:
 | \w   | 一个字符。与[a-zA-Z_0-9]相同。                               |
 | \W   | 非字字符。与[ ^ \w]相同。                                    |
 
+
+
 ```java
     import java.util.regex.Matcher;
     import java.util.regex.Pattern;
@@ -4456,7 +4453,7 @@ Java中的正则表达式支持的元字符如下:
 `compile()`方法是重载的。
 
 ```java
-    static Pattern  compile(String regex)
+    static Pattern compile(String regex)
     static Pattern compile(String regex, int flags)
 ```
 
