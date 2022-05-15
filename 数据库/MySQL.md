@@ -2384,7 +2384,40 @@ MySQL 的事务启动方式有以下几种：
 
 在 InnoDB 中，表都是根据主键顺序以索引的形式存放的，这种存储方式的表称为索引组织表。InnoDB 使用了 B+ 树索引模型，所以数据都是存储在 B+ 树中的。每一个索引在 InnoDB 里面对应一棵 B+ 树。
 
+## 优化
 
+### 增删改查
+
+其中INSERT和DELETE操作的时候会锁表，注意操作的数据量。同时凡增删改对于索引记录来说，都需要相关的IO操作来维护索引。
+
+对于大规模数据删除的话，先删除索引后在删除数据，并重新创建索引的方式，永远比直接删除产生的各种时间花费及后果好。
+
+**Insert**
+
+- 由于MySQL需要对每条语句进行解析，故同时插入多条数据是一种优化
+- 将进程/线程数控制在2倍于CPU
+- 采用顺序主键策略，例如自增主键等
+- 考虑用replace代替insert语句
+
+**Delete**
+
+- truncate table删除速度更快，但truncate table删除后不记录mysql日志，不可以恢复数据（谨慎使用）
+- 如果没有外键关联，innodb执行truncate是先drop table(原始表)，再创建一个跟原始表一样空表，速度要远远快于delete逐条删除行记录。
+- 如果使用innodb_file_per_table参数，truncate table 能重新利用释放的硬盘空间，在InnoDB Plugin中，truncate table为自动回收。若不是在InnoDB Plugin则使用optimize table来优化表，释放空间。
+- 表有外键关联，truncate table删除表数据为逐行删除，如果外键指定级联删除(delete cascade)，关联的子表也会会被删除所有表数据。如果外键未指定级联(cascde)，truncate table逐行删除数据，如果是父行关联子表行数据，将会报错。
+
+**Update**
+
+- 尽量不要修改主键字段。
+- 当修改VARCHAR型字段时，尽量使用相同长度内容的值代替。
+- 尽量最小化对于含有UPDATE触发器的表的UPDATE操作。
+- 避免UPDATE将要复制到其他数据库的列。
+- 避免UPDATE建有很多索引的列。
+- 避免UPDATE在WHERE子句条件中的列。
+
+**Replace**
+
+- 等同于Insert与Delete的结合体，在有重复记录的时候更新，无重复记录的时候插入。在重复记录的时候即先删除后再插入。
 
 1、存储过程
 
