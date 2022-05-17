@@ -972,6 +972,306 @@ REVOKE [权限1, 权限2 ......] ON 数据库名.该库下的表名 FROM 用户�
 # 最后重启mysql服务。
 ```
 
+## 存储过程和函数
+
+**存储过程和存储函数的区别**
+
+存储过程和函数是事先经过编译并存储在数据库中的一段 SQL 语句的集合。
+存储过程和函数的区别在于函数必须有返回值，而存储过程没有。
+
+**存储过程的创建**
+
+语法结构
+
+```mysql
+delimiter $ --将sql语句结束符号修改为$,这样只有sql遇到$时才开始执行
+create procedure 存储过程名(参数列表)
+begin
+sql 语句集合
+end$
+delimiter ; --将结束符修改为默认的分号 
+
+```
+
+**存储过程的调用**
+
+```mysql
+call 存储过程名(参数列表);
+```
+
+**存储过程的查看**
+
+```mysql
+select * from information_schema.routines where routine_schema='数据名' \G;
+```
+
+**存储过程的删除**
+
+```mysql
+drop procedure [if exists] 存储过程名;
+```
+
+**具体语法**
+
+存储过程和函数是可以编程的，意味着可以使用变量，表达式，控制结构 等语法来完成比较复杂的功能。
+
+- 变量
+
+  - 声明变量语法：通过declare可以定义一个局部变量，该变量的作用范围只能在 BEGIN…END 块中。
+
+  - ```mysql
+    declare 变量名[,...] type [default 默认值]
+    ```
+
+  - 为变量赋值语法：
+
+  - ```mysql
+    # 第一种 
+    # 直接赋值常量或者赋值表达式
+    set 变量名=表达式 
+    #示例：
+    create procedure show_pro()
+    begin
+    declare intro varchar(100);
+    set intro = 'db1数据库包含以下存储过程:';
+    select intro;
+    select routine_name 存储名, routine_type 类型 from information_schema.routines where routine_schema='db1' ;
+    end$
+    
+    
+    # 第二种
+    # 通过select … into 方式进行赋值操作
+    select 筛选字段(或聚合函数) into 变量名 from 表名;
+    # 示例
+    create procedure pro_t2()
+    begin
+    declare num int;
+    select count(*) into num from city;
+    select num;
+    end$
+    ```
+
+- **if条件判断**
+
+  - 语法结构：
+
+    ```mysql
+    if 满足条件 then
+    执行语句
+    elseif 满足条件 then
+    执行语句
+    else 
+    执行语句
+    end if;
+    
+    # 示例
+    create procedure pro_t3()
+    begin
+    declare height int default 175;
+    declare description varchar(50);
+    if height >= 180 then
+    set description = '身材高挑';
+    elseif height >= 170 and height < 180 then
+    set description = '标准身材';
+    else
+    set description = '一般身材';
+    end if;
+    select description ;
+    end$
+    ```
+
+- **传递参数**
+
+  - 语法结构：
+
+    ```mysql
+    create procedure 存储过程名([in/out/inout] 参数名 参数类型)
+    ...
+    ```
+
+  - IN : 该参数可以作为输入，也就是需要调用方传入值 ,
+
+  - OUT: 该参数作为输出，也就是该参数可以作为返回值
+
+  - INOUT: 既可以作为输入参数，也可以作为输出参数
+
+- **case结构**
+
+  - 语法结构：
+
+    ```mysql
+    case 
+    when 条件 then
+    执行sql语句
+    when 条件 then
+    执行sql语句
+    ...
+    else
+    执行sql语句
+    end case;
+    ```
+
+- **while循环**
+
+  - 语法结构：
+
+    ```mysql
+    while 满足的条件 do
+    执行sql语句
+    end while;
+    ```
+
+- **repeat结构**
+
+  - 语法结构：
+
+    ```mysql
+    repeat
+    执行sql语句
+    until 不满的条件
+    end repeat;
+    
+    # 示例
+    create procedure pro_t7(n int)
+    begin
+    declare total int default 0;
+    repeat
+    set total = total + n;
+    set n = n - 1;
+    until n=0
+    end repeat;
+    select total ;
+    end$
+    ```
+
+- **loop和leave语句**
+
+  - 语法结构：
+
+    ```mysql
+    [loop标签名:] loop
+    执行sql语句(sql语句中应该包括，退出循环的命令：leave loop标签名;如果没有将会造成死循环)
+    end loop [loop标签名];
+    
+    # 示例
+    create procedure pro_t8(n int)
+    begin
+    declare total int default 0;
+    lb:loop
+    if n<=0 then
+    leave lb;
+    end if;
+    set total=total+n;
+    set n=n-1;
+    end loop lb;
+    select total;
+    end$
+    ```
+
+- **游标**
+
+  - 游标又称光标是用来存储查询结果集的数据类型，在存储过程和函数中可以使用光标对结果集进行循环的处理。光标的使用包括光标的声明、open、fetch和 close，其语法分别如下：
+
+    - 声明光标：
+
+      ```mysql
+      declare 光标名称 cursor for sql语句;
+      ```
+
+    - 打开光标：
+
+      ```mysql
+      open 光标名;
+      ```
+
+    - 获取光标(将光标当前数据存储到变量中)：
+
+      ```mysql
+      fetch 光标名 into 变量名[,变量名...];
+      ```
+
+    - 关闭光标：
+
+      ```mysql
+      close 光标名;
+      ```
+
+    - 例子：
+
+      ```mysql
+      create procedure pro_t9()
+      begin
+      declare id int(10);
+      declare name varchar(50);
+      declare age int(10);
+      declare salary int(10);
+      declare has_data int default 1; -- 终止循环的条件
+      -- 定义游标
+      declare emp_cursor cursor for select * from emp;
+      -- 如果游标数据为空，则执行sql语句，并退出
+      declare exit handler for not found set has_data=0;
+      -- 打开游标
+      open emp_cursor;
+      -- repeat循环获取游标中的数据
+      repeat
+      -- 获取游标中的数据
+      fetch emp_cursor into id,name,age,salary;
+      select concat('id: ',id,' name: ',name,' age: ',age,' salary: ',salary);
+      until has_data=0
+      end repeat;
+      -- 关闭游标
+      close emp_cursor;
+      end$
+      ```
+
+- **存储函数**
+
+  在意义上，存储函数与存储过程唯一区别就是存储函数具有返回值，而存储过程没有返回值。但是，因为存储过程传递的参数有输出参数类型，也用来可以代替返回值，因此，存储过程完全可以完成存储函数的操作。
+  在语法上，存储函数具体的语法都和存储过程一样。
+
+  - 语法结构：
+
+    ```mysql
+    delimiter $ --将sql语句结束符号修改为$,这样只有sql遇到$时才开始执行
+    
+    create function 存储函数名([参数名 类型,...])
+    returns type --返回值类型
+    begin
+    ... 
+    return 变量名;
+    end$
+    
+    delimiter ; --将结束符修改为默认的分号 
+    
+    ```
+
+  - 调用：
+
+    ```mysql
+    select 存储函数名(参数列表);
+    ```
+
+  - 删除：
+
+    ```mysql
+    drop function 存储函数名
+    ```
+
+  - 示例：
+
+    ```mysql
+    SET GLOBAL log_bin_trust_function_creators = 1;
+    create function get_count(cid int)
+    returns int
+    begin
+    declare num int;
+    select count(*) into num from city where country_id=cid;
+    return num;
+    end$
+    ```
+
+    
+
 ## 优化
 
 **表的优化**
@@ -2418,6 +2718,73 @@ MySQL 的事务启动方式有以下几种：
 **Replace**
 
 - 等同于Insert与Delete的结合体，在有重复记录的时候更新，无重复记录的时候插入。在重复记录的时候即先删除后再插入。
+
+### 单表查询优化
+
+- 使用 EXPLAIN 关键字分析查询语句或是表结构的性能瓶颈。
+- 写sql要明确需要的字段，不滥用 select *。
+- 可以用使用连接（JOIN）来代替子查询。
+- 使用分页语句：limit start , count 或者条件 where子句时，有什么可限制的条件尽量加上，查一条就limit一条。做到不滥用。
+- 根据需求开启查询缓存：
+
+### 多表联合查询
+
+- 对于要求全面的结果时，我们需要使用连接操作（LEFT JOIN / RIGHT JOIN / FULL JOIN）。
+- 应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描。
+- in 和 not in 也要慎用，否则会导致全表扫描。
+- 尽量使用数字型字段，若只含数值信息的字段尽量不要设计为字符型，这会降低查询和连接的性能，并会增加存储开销。这是因为引擎在处理查询和连 接时会逐个比较字符串中每一个字符，而对于数字型而言只需要比较一次就够了。
+- 尽量使用表变量来代替临时表。如果表变量包含大量数据，请注意索引非常有限（只有主键索引）。
+- 不要以为使用MySQL的一些连接操作对查询有多么大的改善，多利用索引。
+
+### 索引优化
+
+索引的原理很简单，就是把无序的数据变成有序的查询
+
+1. 把创建了索引的列的内容进行排序
+2. 对排序结果生成倒排表
+3. 在倒排表内容上拼上数据地址链
+4. 在查询的时候，先拿到倒排表内容，再取出数据地址链，从而拿到具体数据
+
+**创建索引规则**
+
+1. 最左前缀匹配原则，组合索引非常重要的原则，mysql会一直向右匹配直到遇到范围查询(>、<、between、like)就停止匹配，比如a = 1 and b = 2 and c > 3 and d = 4 如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整。
+2. 较频繁作为查询条件的字段才去创建索引
+3. 更新频繁字段不适合创建索引
+4. 若是不能有效区分数据的列不适合做索引列(如性别，男女未知，最多也就三种，区分度实在太低)
+5. 尽量的扩展索引，不要新建索引。比如表中已经有a的索引，现在要加(a,b)的索引，那么只需要修改原来的索引即可。
+6. 定义有外键的数据列一定要建立索引。
+7. 对于那些查询中很少涉及的列，重复值比较多的列不要建立索引。
+8. 对于定义为text、image和bit的数据类型的列不要建立索引。
+
+### 表设计及优化
+
+- 优化①：创建规范化表，消除数据冗余
+  - 根据三范式以及反范式等，在数据冗余和处理速度之间找到合适的平衡点
+- 优化②：合适的字段属性
+  - 数值型字段的比较比字符串的比较效率高得多，所以字段类型尽量使用最小、最简单的数据类型，如IP地址可以使用int类型。
+  - 建议不要使用DOUBLE，不仅仅只是存储长度的问题，同时还会存在精确性的问题。
+  - 对于整数的存储，在数据量较大的情况下，建议区分开 TINYINT / INT / BIGINT 的选择
+  - char是固定长度，所以它的处理速度比varchar快得多，但缺点是浪费存储空间，不能在行尾保存空格。在MySQL中，MyISAM建议使用固定长度代替可变长度列；InnoDB建议使用varchar类型，因为在InnoDB中，内部行存储格式没有区分固定长度和可变长度。
+  - 尽量不要允许NULL，除非必要，可以用NOT NULL+DEFAULT代替。
+  - text与blob区别：blob保存二进制数据；text保存字符数据，有字符集。text和blob不能有默认值。实际场景：text与blob主要区别是text用来保存字符数据（如文章，日记等），blob用来保存二进制数据（如照片等）。blob与text在执行了大量删除操作时候，有性能问题（产生大量的“空洞“），为提高性能建议定期optimize table 对这类表进行碎片整理。
+  - 自增字段要慎用，不利于数据迁移
+  - 强烈反对在数据库中存放 LOB 类型数据，虽然数据库提供了这样的功能，但这不是他所擅长的，我们更应该让合适的工具做他擅长的事情，才能将其发挥到极致。
+  - 尽量将表字段定义为NOT NULL约束，这是由于在MySQL中含有空值的列很难进行查询优化，NULL值会使索引以及索引的统计信息变得很复杂，可以使用0或者空字符串来代替。
+  - 尽量使用TIMESTAMP类型，因为其存储空间只需要 DATETIME 类型的一半，且日期类型中只有它能够和实际时区相对应。对于只需要精确到某一天的数据类型，建议使用DATE类型，因为他的存储空间只需要3个字节，比TIMESTAMP还少。
+- 优化③：索引
+  - 根据索引优化原则建立合适的索引
+- 优化④：表的拆分（大表拆小表）
+  - 垂直拆分：
+    - 通常我们按以下原则进行垂直拆分:
+      1. 把不常用的字段单独放在一张表;
+      2. 把text，blob等大字段拆分出来放在附表中;
+      3. 经常组合查询的列放在一张表中;
+    - 缺点：若使用冗余字段，则需join操作
+  - 水平拆分
+- 优化⑤：‘三少原则’
+  - 数据库的表越少越好
+  - 表的字段越少越好
+  - 字段中的组合主键、组合索引越少越好
 
 1、存储过程
 
